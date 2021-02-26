@@ -18,6 +18,7 @@ import {
   Logo,
   Button,
   StatusBar,
+  Outset,
 } from 'react-native';
 
 import {
@@ -52,14 +53,17 @@ class App extends React.Component {
   }
   render() {
     return (
-      <View>
+      <View style = {{flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-around',}} >
       <Button
           title="Use Sensor"
           style={styles.button}
           onPress={() => this.onPress()}
           color="#FFD433"
+          
         />
-        <Text>
+        <Text style={styles.sectionTitle}>
         Accelerometer value: {this.state.accel}
         </Text>
         </View>
