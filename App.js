@@ -6,15 +6,26 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
+  TextInput,
+  Image,
+  Logo,
+  Button,
   StatusBar,
 } from 'react-native';
+
+import {
+  accelerometer,
+  gyroscope,
+  setUpdateIntervalForType,
+  SensorTypes
+} from "react-native-sensors";
 
 import {
   Header,
@@ -29,18 +40,32 @@ import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
 
-const App: () => React$Node = () => {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-      }}>
-      <Text>Hello, world!</Text>
-    </View>
-  );
-};
+class App extends React.Component {
+  state = {
+    accel: 0,
+  }
+  onPress = () => {
+  accelerometer.subscribe(({x, y, z, time}) => {
+    console.log({ x, y, z, time })
+    this.setState({ accel: y});
+  });
+  }
+  render() {
+    return (
+      <View>
+      <Button
+          title="Use Sensor"
+          style={styles.button}
+          onPress={() => this.onPress()}
+          color="#FFD433"
+        />
+        <Text>
+        Accelerometer value: {this.state.accel}
+        </Text>
+        </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   scrollView: {
