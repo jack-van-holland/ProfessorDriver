@@ -44,11 +44,17 @@ const { s, c } = bootstrapStyleSheet;
 class App extends React.Component {
   state = {
     accel: 0,
+    baseline: 0,
   }
   onPress = () => {
   accelerometer.subscribe(({x, y, z, time}) => {
-    console.log({ x, y, z, time })
-    this.setState({ accel: y});
+    if (!this.state.baseline) {
+      this.setState({baseline: Math.abs(x) + Math.abs(y) + Math.abs(z)});
+    }
+    let base = this.state.baseline;
+    let curr = Math.abs(x) + Math.abs(y) + Math.abs(z);
+    console.log({ x, y, z, time, base, curr})
+    this.setState({ accel: curr});
   });
   }
   render() {
@@ -65,6 +71,9 @@ class App extends React.Component {
         />
         <Text style={styles.sectionTitle}>
         Accelerometer value: {this.state.accel}
+        </Text>
+        <Text style={styles.sectionTitle}>
+        Safe? {Math.abs(this.state.accel - this.state.baseline) < 0.47 ? "yes" : "no"}
         </Text>
         </View>
     );
