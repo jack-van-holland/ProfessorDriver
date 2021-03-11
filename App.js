@@ -19,6 +19,7 @@ import {
   Button,
   StatusBar,
   Outset,
+  Platform
 } from 'react-native';
 
 import {
@@ -48,11 +49,11 @@ class App extends React.Component {
   }
   onPress = () => {
   accelerometer.subscribe(({x, y, z, time}) => {
+    let curr = Platform.OS === 'ios' ? Math.sqrt(x * x + y * y + z * z) * 9.8 : Math.sqrt(x * x + y * y + z * z);
     if (!this.state.baseline) {
-      this.setState({baseline: Math.abs(x) + Math.abs(y) + Math.abs(z)});
+      this.setState({baseline: curr});
     }
     let base = this.state.baseline;
-    let curr = Math.abs(x) + Math.abs(y) + Math.abs(z);
     console.log({ x, y, z, time, base, curr})
     this.setState({ accel: curr});
   });
