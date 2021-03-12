@@ -65,9 +65,9 @@ class App extends React.Component {
       accelerometer.subscribe(({x, y, z, time}) => {
 
         //scale based on platform
-        x = Platform.OS === 'ios' ? x * 9.8: x;
-        y = Platform.OS === 'ios' ? y * 9.8: y;
-        z = Platform.OS === 'ios' ? z * 9.8: z;
+        x = Platform.OS === 'ios' ? x : x / 9.8;
+        y = Platform.OS === 'ios' ? y : y / 9.8;
+        z = Platform.OS === 'ios' ? z : z / 9.8;
         
         //scale from calibration
         x = x - this.state.xbase;
