@@ -6,7 +6,10 @@ platform :ios, '10.0'
 target 'ProfessorDriver' do
   config = use_native_modules!
 
-  use_react_native!(:path => config["reactNativePath"])
+  use_react_native!
+
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
 
   target 'ProfessorDriverTests' do
     inherit! :complete
