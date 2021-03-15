@@ -21,6 +21,8 @@
     "@babel/runtime": "^7.8.4",
     "@react-native-community/cli-platform-ios": "^3.0.0",
     "@react-native-community/eslint-config": "^1.1.0",
+    "@react-native-firebase/app": "11.1.0",
+    "@react-native-firebase/auth": "11.1.0",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",

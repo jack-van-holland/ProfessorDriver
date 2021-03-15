@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -39,10 +39,61 @@ import {
 
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 
+import auth from '@react-native-firebase/auth';
+
+auth()
+  .signInAnonymously()
+  .then(() => {
+    console.log('User signed in anonymously');
+  })
+  .catch(error => {
+    if (error.code === 'auth/operation-not-allowed') {
+      console.log('Enable anonymous in your firebase console.');
+    }
+
+    console.error(error);
+  });
+
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
 
+function LoginApp() {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <View>
+        <Text>Login</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      <Text>Welcome {user.email}</Text>
+    </View>
+  );
+}
+
 class App extends React.Component {
+
+
+
   state = {
     accel: 0,
     baseline: 0,
@@ -63,6 +114,7 @@ class App extends React.Component {
       <View style = {{flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-around',}} >
+      <LoginApp />
       <Button
           title="Use Sensor"
           style={styles.button}
