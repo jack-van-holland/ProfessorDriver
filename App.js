@@ -39,7 +39,11 @@ import {
 
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+
 import auth from '@react-native-firebase/auth';
+import { WelcomeScreen, SignupScreen} from './app/screens';
 
 auth()
   .signInAnonymously()
@@ -90,9 +94,11 @@ function LoginApp() {
   );
 }
 
-class App extends React.Component {
+const Stack = createStackNavigator();
 
+//class App extends React.Component {
 
+const App = () => {
 
   state = {
     accel: 0,
@@ -109,13 +115,31 @@ class App extends React.Component {
     this.setState({ accel: curr});
   });
   }
-  render() {
+  //render() {
     return (
+      <NavigationContainer>
+        <Stack.Navigator 
+          initialRouteName="WelcomeScreen"
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+          <Stack.Screen name="SignupScreen" component={SignupScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      );
+    {/*
+
+      <SafeAreaView style={styles.loginButton}>
+        <Image source={require("./app/assets/icon.png")}/>
+        <LoginApp />
+      </SafeAreaView>
+      -------------
+
       <View style = {{flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-around',}} >
-      <LoginApp />
-      <Button
+       <Button
           title="Use Sensor"
           style={styles.button}
           onPress={() => this.onPress()}
@@ -129,11 +153,18 @@ class App extends React.Component {
         Safe? {Math.abs(this.state.accel - this.state.baseline) < 0.47 ? "yes" : "no"}
         </Text>
         </View>
-    );
-  }
+      */}
+    //);
+  //}
 }
 
 const styles = StyleSheet.create({
+  loginButton: {
+    flex: 1,
+    backgroundColor: "#F3F3F5",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },
