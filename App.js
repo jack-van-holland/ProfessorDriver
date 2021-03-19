@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -39,10 +39,65 @@ import {
 
 import BootstrapStyleSheet from 'react-native-bootstrap-styles';
 
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+
+import auth from '@react-native-firebase/auth';
+import { WelcomeScreen, SignupScreen} from './app/screens';
+
+auth()
+  .signInAnonymously()
+  .then(() => {
+    console.log('User signed in anonymously');
+  })
+  .catch(error => {
+    if (error.code === 'auth/operation-not-allowed') {
+      console.log('Enable anonymous in your firebase console.');
+    }
+
+    console.error(error);
+  });
+
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
 
+function LoginApp() {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <View>
+        <Text>Login</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View>
+      <Text>Welcome {user.email}</Text>
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
 class App extends React.Component {
+
   state = {
     accel: 0,
     xhistory: [],
@@ -99,12 +154,36 @@ class App extends React.Component {
   }
   render() {
     return (
+      <NavigationContainer>
+        <Stack.Navigator 
+          initialRouteName="WelcomeScreen"
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+          <Stack.Screen name="SignupScreen" component={SignupScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      );
+    {/*
+
+      <SafeAreaView style={styles.loginButton}>
+        <Image source={require("./app/assets/icon.png")}/>
+        <LoginApp />
+      </SafeAreaView>
+      -------------
+
+      <View style = {{flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-around',}} >
+       <Button
+          title="Use Sensor"
       
       <View style = {{flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-around',}} >
       {/*display certain text/buttons depending on state*/}
-      { //if ready, display acceleration and whether this is safe
+      {/* //if ready, display acceleration and whether this is safe
         this.state.ready ? (<><Text style={styles.sectionTitle}>
         Accelerometer value: {this.state.accel} 
         </Text>
@@ -127,6 +206,7 @@ class App extends React.Component {
         : 
           <Button
           title="Start Drive"
+
           style={styles.button}
           onPress={() => this.setState({pressed:true})}
           color="#FFD433"
@@ -136,11 +216,18 @@ class App extends React.Component {
       
         
         </View>
-    );
-  }
+      */}
+    //);
+  //}
 }
 
 const styles = StyleSheet.create({
+  loginButton: {
+    flex: 1,
+    backgroundColor: "#F3F3F5",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },

@@ -1,4 +1,5 @@
 {
   "name": "ProfessorDriver",
-  "displayName": "ProfessorDriver"
+  "displayName": "ProfessorDriver",
+  "icon": "./app/assets/icon.png"
 }
