@@ -43,56 +43,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import auth from '@react-native-firebase/auth';
-import { WelcomeScreen, SignupScreen} from './app/screens';
-
-auth()
-  .signInAnonymously()
-  .then(() => {
-    console.log('User signed in anonymously');
-  })
-  .catch(error => {
-    if (error.code === 'auth/operation-not-allowed') {
-      console.log('Enable anonymous in your firebase console.');
-    }
-
-    console.error(error);
-  });
+import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
+  SignupParent, SignupGoals, Home} from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
 
-function LoginApp() {
-  // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
 
-  // Handle user state changes
-  function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
-  if (initializing) return null;
-
-  if (!user) {
-    return (
-      <View>
-        <Text>Login</Text>
-      </View>
-    );
-  }
-
-  return (
-    <View>
-      <Text>Welcome {user.email}</Text>
-    </View>
-  );
-}
 
 const Stack = createStackNavigator();
 
@@ -161,7 +118,12 @@ class App extends React.Component {
             headerShown: false,
           }}>
           <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-          <Stack.Screen name="SignupScreen" component={SignupScreen} />
+          <Stack.Screen name="SignupRole" component={SignupRole} />
+          <Stack.Screen name="SignupContact" component={SignupContact} />
+          <Stack.Screen name="SignupParent" component={SignupParent} />
+          <Stack.Screen name="SignupExperience" component={SignupExperience} />
+          <Stack.Screen name="SignupGoals" component={SignupGoals} />
+          <Stack.Screen name="Home" component={Home} />
         </Stack.Navigator>
       </NavigationContainer>
       );

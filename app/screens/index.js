@@ -1,2 +1,7 @@
 export { default as WelcomeScreen } from './WelcomeScreen'
-export { default as SignupScreen } from './SignupScreen'
+export { default as SignupRole} from './SignupRole'
+export { default as SignupContact} from './SignupContact'
+export { default as SignupGoals} from './SignupGoals'
+export { default as SignupExperience} from './SignupExperience'
+export { default as SignupParent} from './SignupParent'
+export { default as Home} from './Home'

@@ -16,16 +16,15 @@ const WelcomeScreen = ({ navigation }) => {
                 <Image style={styles.logo} source={require("../assets/icon.png")}/>
                 <Text style={styles.name}>Professor Driver</Text>
             </View>
-            <TouchableHighlight onPress={_onPressButton}>
-                <View style={styles.loginButton}>
+            <TouchableHighlight onPress={_onPressButton} 
+            style={styles.loginButton} underlayColor="rgba(135, 178, 88, 0.2)">
                     <Text style={styles.text}>Log In</Text>
-                </View>
             </TouchableHighlight>
             
-            <TouchableHighlight onPress={() => navigation.navigate('SignupScreen')}>
-            <View style={styles.registerButton}>
+            <TouchableHighlight style={styles.registerButton} 
+            onPress={() => navigation.navigate('SignupRole')}
+            underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Sign Up</Text>
-            </View>
             </TouchableHighlight>
         </View>
     );
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     registerButton: {
         width: 261,
