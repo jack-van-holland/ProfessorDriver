@@ -24,13 +24,15 @@ A quick introduction of the minimal setup you need to get the app up & running.
 git clone git@github.com:jack-van-holland/ProfessorDriver.git
 cd ProfessorDriver
 
-npm install .
+npm install 
 npm install -g ios-deploy
 
 cd ios
 pod install
 
 cd ..
+npx react-native link
+
 npx react-native start # on another terminal at the same directory
 
 # to run it in the simulator
