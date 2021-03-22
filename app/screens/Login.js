@@ -1,60 +1,22 @@
 import React, {Component} from "react";
 import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,} from "react-native";
+import auth from '@react-native-firebase/auth';
 
 import colors from "../config/colors";
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 
+const Login = ({ navigation }) => {
+    
+    submit = () => {
+        console.log("beginning login");
+        auth().signInWithEmailAndPassword(email, password).then(() => {
+            console.log("logged in");
+            navigation.navigate("Home");
+        }).catch((error) => {console.log("fail"); console.error(error);});
+        
+    };
 
-
-
-
-const SignupContact = ({ navigation, route }) => {
-
-    let [firstName, setFirstName] = React.useState("");
-    let [lastName, setLastName] = React.useState("");
     let [email, setEmail] = React.useState("");
     let [password, setPassword] = React.useState("");
-    let [confirmPassword, setConfirmPassword] = React.useState("");
-
-    submit = () => {
-        if (password !== confirmPassword) {
-            return;
-        }
-
-        auth().createUserWithEmailAndPassword(email, password)
-        .then(firestore().collection('users').doc(email).set({
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            role: route.params.role,
-            level: route.params.level,
-            child: route.params.child,
-        })).then(() => {
-            console.log('User account created & signed in!');
-            auth().currentUser.email;
-        
-            console.log(firstName);
-            console.log(lastName);
-            console.log(password);
-            console.log(email);
-            console.log(route.params.role);
-            console.log(route.params.level);
-            console.log(route.params.child);
-            navigation.navigate("Home");
-        })
-    .catch(error => {
-            if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
-            }
-
-            if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
-            }
-        
-            console.error(error);
-        });
-    };
 
     return (
         <View style={styles.background}>
@@ -63,32 +25,23 @@ const SignupContact = ({ navigation, route }) => {
             </View>
 
             <View>
-                <Text style={styles.titletext}>Almost done...</Text>
-                <TextInput style={styles.input} value={firstName} onChangeText={setFirstName}
-                placeholder = "First Name" placeholderTextColor="#C4D9B3"
-                autoCompleteType="name" ></TextInput>
-                <TextInput style={styles.input} value={lastName} onChangeText={setLastName}
-                placeholder = "Last Name" placeholderTextColor="#C4D9B3"
-                autoCompleteType="name" ></TextInput>
+                <Text style={styles.titletext}>Sign In</Text>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
                 placeholder = "Email" autoCapitalize = {false} keyboardType="email-address"
                 autoCompleteType="email" placeholderTextColor="#C4D9B3"></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
                 onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
                 autoCapitalize = {false} autoCompleteType="password"></TextInput>
-                <TextInput style={styles.input} value={confirmPassword} secureTextEntry={true}
-                onChangeText={setConfirmPassword} placeholder = "Confirm Password"
-                autoCapitalize = {false} placeholderTextColor="#C4D9B3"></TextInput>
             </View>
 
             <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
                 <Text style={styles.nexttext}>Back</Text>
             </TouchableHighlight>
             <TouchableHighlight onPress={submit}
-            disabled={firstName && lastName && email && password && confirmPassword ? false : true}
-            style={firstName && lastName && email && password && confirmPassword ? styles.nextButtonSelected : styles.nextButtonUnselected}
+            disabled={email && password ? false : true}
+            style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
             >
-                <Text style={styles.nexttext}>Submit</Text>
+                <Text style={styles.nexttext}>Sign In</Text>
             </TouchableHighlight>
         </View>
     );
@@ -231,4 +184,4 @@ const styles = StyleSheet.create({
     }, 
 })
 
-export default SignupContact;
+export default Login;

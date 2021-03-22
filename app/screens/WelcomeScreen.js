@@ -5,20 +5,15 @@ import colors from "../config/colors";
 
 //function WelcomeScreen(props) 
 const WelcomeScreen = ({ navigation }) => {
-
-    const _onPressButton = () => {
-        alert('You tapped the button!')
-    }
-
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
                 <Image style={styles.logo} source={require("../assets/icon.png")}/>
                 <Text style={styles.name}>Professor Driver</Text>
             </View>
-            <TouchableHighlight onPress={_onPressButton} 
+            <TouchableHighlight onPress={() => navigation.navigate('Login')}
             style={styles.loginButton} underlayColor="rgba(135, 178, 88, 0.2)">
-                    <Text style={styles.text}>Log In</Text>
+                    <Text style={styles.text}>Sign In</Text>
             </TouchableHighlight>
             
             <TouchableHighlight style={styles.registerButton} 
