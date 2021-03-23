@@ -1,27 +1,41 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import React, {Component, useEffect} from "react";
+import {StyleSheet, View, Image, Text, TextInput, 
+    TouchableHighlight, AppRegistry} from "react-native";
 
 import colors from "../config/colors";
 
-const SignupParent = ({ navigation }) => {
 
-    let [code, setCode] = React.useState("");
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import { RNCamera } from 'react-native-camera';
+
+const SignupParent = ({ navigation }) => {
+    const scanner = React.useRef(null);
+    onSuccess = e => {
+        navigation.navigate("SignupScanConfirm", {onGoBack: () => {scanner.current.reactivate(); }, role: "parent", child: e.data, level: ""});
+    };
+
+    
 
     return (
-        <View style={styles.background}>
+    <View style={styles.background}>
+      <QRCodeScanner
+        ref={scanner}
+        onRead={this.onSuccess}
+        topContent={
+            <Text style={styles.titletext}>Scan your learning driver's code</Text>
+        }
+        bottomContent={
             <View>
-                <Text style={styles.titletext}>Scan your learning driver's code</Text>
-            </View>
-
             <TouchableHighlight style={styles.backButtonSelected}
             onPress={() => navigation.goBack()}>
                 <Text style={styles.nexttext}>Back</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.nextButtonSelected}
-            onPress={() => navigation.navigate("SignupContact", {role: "parent", child: code, level: ""})}>
-                <Text style={styles.nexttext}>Next</Text>
-            </TouchableHighlight>
-        </View>
+            </View>
+        }
+      />
+      </View>
+            
+        
     );
 }
 
@@ -62,7 +76,7 @@ const styles = StyleSheet.create({
     titletext: {
         width: 400,
         height: 44,
-        top: 200,
+        top: 50,
         fontFamily: "Montserrat",
         fontStyle: "normal",
         fontWeight: "bold",
@@ -120,7 +134,7 @@ const styles = StyleSheet.create({
         width: 121,
         height: 40,
         left: 100,
-        top: 500,
+        top: 0,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -130,7 +144,7 @@ const styles = StyleSheet.create({
         width: 121,
         height: 40,
         left: -100,
-        top: 500,
+        top: 0,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -155,7 +169,25 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    },
+    }, centerText: {
+        flex: 1,
+        fontSize: 18,
+        padding: 32,
+        color: '#777'
+      },
+      textBold: {
+        fontWeight: '500',
+        color: '#000'
+      },
+      buttonText: {
+        fontSize: 21,
+        color: 'rgb(0,122,255)'
+      },
+      buttonTouchable: {
+        padding: 16
+      },
 })
+
+AppRegistry.registerComponent('default', () => ScanScreen);
 
 export default SignupParent;

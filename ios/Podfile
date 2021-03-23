@@ -5,6 +5,7 @@ platform :ios, '10.0'
 
 $FirebaseSDKVersion = '7.8.0'
 
+
 target 'ProfessorDriver' do
   config = use_native_modules!
 
@@ -13,6 +14,10 @@ target 'ProfessorDriver' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+
+
 
   target 'ProfessorDriverTests' do
     inherit! :complete

@@ -23,17 +23,19 @@ const SignupContact = ({ navigation, route }) => {
         }
 
         auth().createUserWithEmailAndPassword(email, password)
-        .then(firestore().collection('users').doc(email).set({
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            role: route.params.role,
-            level: route.params.level,
-            child: route.params.child,
-        })).then(() => {
+        .then((userCred) => {
+                firestore().collection('users').doc(userCred.user.uid)
+                .set({
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    role: route.params.role,
+                    level: route.params.level,
+                    child: route.params.child,
+                });
+            }).then(() => {
             console.log('User account created & signed in!');
-            auth().currentUser.email;
-        
+            console.log(auth().currentUser.uid);
             console.log(firstName);
             console.log(lastName);
             console.log(password);

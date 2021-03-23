@@ -1,24 +1,54 @@
-import React, {Component} from "react";
+import React, {Component, useEffect} from "react";
 import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
 
-import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
-import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 
-const Home = ({ navigation }) => {
+const SignupScanConfirm = ({ navigation, route }) => {
+    let [childUser, setChildUser] = React.useState(null);
 
-
+    useEffect( () => {
+    firestore().collection('users').doc(route.params.child).get().then((child) => {setChildUser(child);}).catch((error) => {navigation.goBack();});
+    });
     return (
-        <View style={styles.background}>
-            <View>
-                <Text style={styles.titletext}>Welcome!</Text>
+        !childUser ? (<View></View>) : (childUser._data ? 
+        (<View style={styles.background}>
+            <View style={styles.logoContainer}>
+                <Image style={styles.logo} source={require("../assets/icon.png")}/>
             </View>
-            <QRCode
-            value={auth().currentUser.uid}
-            logo={require("../assets/icon.png")}
-            />
-        </View>
+            
+            <View>
+                <Text style={styles.titletext}>Is this your student?</Text>
+                <Text style={styles.titletext}>{childUser._data.firstName + " " + childUser._data.lastName}</Text>
+                <Text style={styles.titletext}>{childUser._data.email}</Text>
+            </View>
+            
+            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
+            style={styles.backButtonSelected}>
+                <Text style={styles.nexttext}>No, scan again</Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => {
+                navigation.navigate("SignupContact", {role: "parent", level: "", child: route.params.child})
+            }}
+            style={styles.nextButtonSelected}>
+                <Text style={styles.nexttext}>Yes, continue</Text>
+            </TouchableHighlight>
+        </View>) : <View style={styles.background}>
+            <View style={styles.logoContainer}>
+                <Image style={styles.logo} source={require("../assets/icon.png")}/>
+            </View>
+            
+            <View>
+                <Text style={styles.titletext}>Whoops, something went wrong with the scan.</Text>
+            </View>
+            
+            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
+            style={styles.backButtonSelected}>
+                <Text style={styles.nexttext}>Retry</Text>
+            </TouchableHighlight>
+        </View>)
+
     );
 }
 
@@ -31,7 +61,7 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: "center",
         position: "absolute",
-        top: 270
+        top: 100
     },
     name: {
         fontFamily: "Montserrat",
@@ -57,14 +87,14 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     titletext: {
-        width: 400,
+        width: 287,
         height: 44,
-        top: 200,
+        top: 300,
         fontFamily: "Montserrat",
         fontStyle: "normal",
         fontWeight: "bold",
-        fontSize: 24,
-        lineHeight: 50,
+        fontSize: 28,
+        lineHeight: 36,
         textAlign: "center",
     },
     loginButton: {
@@ -79,7 +109,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     buttonUnselected: {
-        top: 475,
+        top: 300,
         width: 261,
         height: 40,
         marginTop: 25,
@@ -91,7 +121,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     buttonSelected: {
-        top: 475,
+        top: 300,
         width: 261,
         height: 40,
         marginTop: 25,
@@ -117,7 +147,7 @@ const styles = StyleSheet.create({
         width: 121,
         height: 40,
         left: 100,
-        top: 500,
+        top: 400,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -127,7 +157,7 @@ const styles = StyleSheet.create({
         width: 121,
         height: 40,
         left: -100,
-        top: 500,
+        top: 400,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -136,23 +166,13 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        left: 207,
-        top: 697,
+        left: 100,
+        top: 400,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
     }, 
-    backButtonUnselected: {
-        width: 121,
-        height: 40,
-        left: 207,
-        top: 697,
-        backgroundColor: '#C4D9B3',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
 })
 
-export default Home;
+export default SignupScanConfirm;

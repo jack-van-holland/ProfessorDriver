@@ -44,7 +44,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
-  SignupParent, SignupGoals, Home, Login} from './app/screens';
+  SignupParent, SignupGoals, Home, Login, SignupScanConfirm} from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
@@ -125,6 +125,8 @@ class App extends React.Component {
           <Stack.Screen name="SignupGoals" component={SignupGoals} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="SignupScanConfirm" component={SignupScanConfirm} />
+
 
         </Stack.Navigator>
       </NavigationContainer>
