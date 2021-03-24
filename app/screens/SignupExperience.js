@@ -37,16 +37,23 @@ const SignupExperience = ({ navigation }) => {
                 <Text style={styles.text}>Advanced Driver (More than 12 months of experience)</Text>
             </TouchableHighlight>
 
-            <TouchableHighlight onPress={() => navigation.goBack()}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Back</Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={() => {
-                navigation.navigate("SignupContact", {role: "driver", level: exp, child : ""})
-            }}
-            style={exp ? styles.nextButtonSelected : styles.nextButtonUnselected}>
-                <Text style={styles.nexttext}>Next</Text>
-            </TouchableHighlight>
+            <View style={{flexDirection: "row"}}>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={() => navigation.goBack()}
+                    style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Back</Text>
+                    </TouchableHighlight>
+                </View>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={() => {
+                        navigation.navigate("SignupContact", {role: "driver", level: exp, child : ""})
+                    }}
+                    style={exp ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                    disabled={exp ? false : true}>
+                        <Text style={styles.nexttext}>Next</Text>
+                    </TouchableHighlight>
+                </View>
+            </View>
         </View>
     );
 }
@@ -145,7 +152,6 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
-        left: 100,
         top: 400,
         backgroundColor: '#87B258',
         borderRadius: 10,
@@ -155,7 +161,6 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        left: -100,
         top: 400,
         backgroundColor: '#87B258',
         borderRadius: 10,
@@ -165,7 +170,6 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        left: 100,
         top: 400,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,

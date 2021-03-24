@@ -27,16 +27,22 @@ const SignupGoals = ({ navigation }) => {
             </View>
             </TouchableHighlight>
 
-            <TouchableHighlight onPress={() => navigation.goBack()}>
-            <View style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Back</Text>
+            <View style={{flexDirection: "row"}}>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={() => navigation.goBack()}>
+                    <View style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Back</Text>
+                    </View>
+                    </TouchableHighlight>
+                </View>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={() => navigation.navigate("SignupContact")}>
+                    <View style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}>
+                        <Text style={styles.nexttext}>Next</Text>
+                    </View>
+                    </TouchableHighlight>
+                </View>
             </View>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={() => navigation.navigate("SignupContact")}>
-            <View style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}>
-                <Text style={styles.nexttext}>Next</Text>
-            </View>
-            </TouchableHighlight>
         </View>
     );
 }
@@ -145,8 +151,7 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        left: 50,
-        top: 500,
+        top: 600,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -155,8 +160,7 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        left: 207,
-        top: 697,
+        top: 600,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
@@ -165,8 +169,7 @@ const styles = StyleSheet.create({
     backButtonUnselected: {
         width: 121,
         height: 40,
-        left: 207,
-        top: 697,
+        top: 600,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
