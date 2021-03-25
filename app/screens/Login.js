@@ -34,15 +34,21 @@ const Login = ({ navigation }) => {
                 autoCapitalize = {false} autoCompleteType="password"></TextInput>
             </View>
 
-            <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Back</Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={submit}
-            disabled={email && password ? false : true}
-            style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
-            >
-                <Text style={styles.nexttext}>Sign In</Text>
-            </TouchableHighlight>
+            <View style={{flexDirection: "row"}}>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Back</Text>
+                    </TouchableHighlight>
+                </View>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={submit}
+                    disabled={email && password ? false : true}
+                    style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                    >
+                        <Text style={styles.nexttext}>Sign In</Text>
+                    </TouchableHighlight>
+                </View>
+            </View>
         </View>
     );
 }
@@ -155,7 +161,6 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
-        left: 100,
         top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
@@ -165,7 +170,6 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        left: -100,
         top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
@@ -175,7 +179,6 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        left: 100,
         top: 350,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
