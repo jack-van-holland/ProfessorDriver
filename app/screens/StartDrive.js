@@ -1,9 +1,38 @@
-import React, {Component} from "react";
+import React, { useState, useEffect } from 'react';
 import {StyleSheet, View, Image, Text, Button, TouchableHighlight} from "react-native";
 
 import colors from "../config/colors";
 
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+
 const StartDrive = ({ navigation }) => {
+
+
+// read report from db
+    const [user, setUser] = useState();
+    const {uid} = auth().currentUser;
+
+    const getUser = async () => {
+        try {
+        const documentSnapshot = await firestore()
+            .collection('users')
+            .doc(uid)
+            .get();
+
+        const userData = documentSnapshot.data();
+        setUser(userData);
+        } catch {
+        //do whatever
+        }
+    };
+
+    // Get user on mount
+    useEffect(() => {
+        getUser();
+    }, []);
+
+
     return (
         <View style={styles.background}>
             <View style={{flex: 7, padding: 20}}>
@@ -11,6 +40,7 @@ const StartDrive = ({ navigation }) => {
                 <View style={[styles.container, {flex: 9}]}>
                     <Text style={styles.title}>Before You Drive</Text>
                     <Text style={styles.note}>“Here is a quick reminder of your reflection from last time”</Text>
+                    <Text> {user.email} </Text>
                 </View>
                 <View style={{flex: 1}} />
                 <View style={[styles.container, {flex: 4}]}>
@@ -19,8 +49,10 @@ const StartDrive = ({ navigation }) => {
                 <View style={{flex: .5}} />
             </View>
             
-            <View style={{flex: 1, backgroundColor: "white"}}>
-
+            <View style={[styles.startContainer, {flex: 1}]}>
+                <View style={styles.startButton}>
+                    <Text style={styles.startText}>Start Driving</Text>
+                </View>
             </View>
 
         </View>
@@ -39,6 +71,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         //justifyContent: "center"
     },
+    startContainer: {
+        backgroundColor: "white", 
+        alignItems: "center", 
+        justifyContent: "center"
+    }, 
     title: {
         fontFamily: "Montserrat",
         color: "black",
@@ -52,17 +89,20 @@ const styles = StyleSheet.create({
         fontSize: 18,
         paddingTop: 5
     },
-    logoContainer: {
-        alignItems: "center",
-        position: "absolute",
-        top: 270
+    startButton: {
+        backgroundColor: "#FD917E",
+        borderRadius: 8,
+        width: 160,
+        height: 64, 
+        alignItems: "center", 
+        justifyContent: "center"
     },
-    name: {
+    startText: {
         fontFamily: "Montserrat",
+        color: "white",
         fontWeight: "bold",
-        fontSize: 33, 
-        lineHeight: 100,
-        letterSpacing: 0.015
+        fontSize: 20,
+        //paddingTop: 10
     },
     logo: {
         width: 150,
