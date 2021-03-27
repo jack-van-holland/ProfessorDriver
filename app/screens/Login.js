@@ -10,7 +10,7 @@ const Login = ({ navigation }) => {
         console.log("beginning login");
         auth().signInWithEmailAndPassword(email, password).then(() => {
             console.log("logged in");
-            navigation.navigate("Home");
+            navigation.navigate("Drive");
         }).catch((error) => {console.log("fail"); console.error(error);});
         
     };
