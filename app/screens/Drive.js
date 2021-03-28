@@ -133,7 +133,7 @@ class Drive extends Component {
                     console.log(this.state.data);
                     const size = sizeof(this.state.data);
                     console.log(sizeof(this.state.data));
-                    const max = 3000000;
+                    const max = 1000000;
                     if (size > max) {
                         const num = Math.ceil(size / max);
                         const section = Math.floor(this.state.data.length / num);
