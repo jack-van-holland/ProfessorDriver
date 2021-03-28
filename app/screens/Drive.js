@@ -8,6 +8,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 import axios from 'axios';
+import sizeof from 'object-sizeof'; 
 
 
 import {
@@ -129,12 +130,30 @@ class Drive extends Component {
                 </View>
                 <Button title="stopDrive" style={styles.nextButtonSelected} onPress={() => {
                     this.subscription.unsubscribe();
+                    console.log(this.state.data);
+                    const size = sizeof(this.state.data);
+                    console.log(sizeof(this.state.data));
+                    const max = 3000000;
+                    if (size > max) {
+                        const num = Math.ceil(size / max);
+                        const section = Math.floor(this.state.data.length / num);
+                        for (let i = 0; i < num; i++) {
+                            const doc = firestore().collection('users').doc(auth().currentUser.uid).collection('drives').doc(String(this.state.startTime) + "." + String(i + 1));
+                            
+                            doc.set({
+                            data: this.state.data.slice(i * section, (i + 1) * section), 
+                            apiRequests: this.state.apiRequests
+                            });
+                        }
+                    }
+                    else { 
                     const doc = firestore().collection('users').doc(auth().currentUser.uid).collection('drives').doc(String(this.state.startTime));
-                doc.set({
+                
+                    doc.set({
                     data: this.state.data, 
                     apiRequests: this.state.apiRequests
-                });
-                    console.log(this.state.data);
+                });}
+                    
                 }}> 
                 Stop
                 </Button>
