@@ -38,8 +38,6 @@ class Drive extends Component {
                           + "&zoom=17&format=json";
                           axios.get(nomUrl).then( (nomResponse) => {
                             const road = nomResponse.data.osm_id;
-                            console.log(nomUrl + ": ")
-                            console.log(nomResponse);
                             const osmUrl = "https://openstreetmap.org/api/0.6/way/" + road + "/full.json";
                             axios.get(osmUrl).then((osmResponse) => {
                                 const roadTags = osmResponse.data.elements.find((element) => element.type === "way").tags;
@@ -49,12 +47,12 @@ class Drive extends Component {
                                 this.setState({lastRoad: {lat: lat, lon:lon, roadType:roadType, roadSpeed:roadSpeed}})
                             }).catch((error) => {
                                 console.log(error + ": " + osmUrl);
-                                this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
+                                //this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
                              });
 
                           }).catch((error) => {
                               console.log(error + ": " + nomUrl);
-                              this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
+                              //this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
                             }); 
     }
     checkPosition = (lat1, lon1, lat2, lon2) =>  {
@@ -68,67 +66,62 @@ class Drive extends Component {
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
         var d = 6371 * c; 
         console.log(d);
-        return d * 1000 > 100;
+        return d * 1000 > 30;
       }
-      
-    componentDidMount() {
-        this.setState({startTime: new Date().getTime()});
-        Geolocation.requestAuthorization("always").then((result) => {
-            if(result === "granted") {
-
-                setUpdateIntervalForType(SensorTypes.accelerometer, 250);
-                setUpdateIntervalForType(SensorTypes.gyroscope, 250);
-                const mySensors = combineLatest(accelerometer, gyroscope);
-                this.subscription = mySensors.subscribe( ([accel, gyro]) => {
-                
-                    //console.log("started");
-                    Geolocation.getCurrentPosition(
-                        (position) => {
-                            if (this.checkPosition(position.coords.latitude, 
-                                position.coords.longitude, this.state.lastRoad.lat, 
-                                this.state.lastRoad.lon)) {
-                                    this.learnRoad(position.coords.latitude, position.coords.longitude);
-                            }
-                          this.setState(state => {
-                              const data = state.data.concat({loc: {accuracy: position.coords.accuracy, 
-                            latitude: position.coords.latitude, longitude: position.coords.longitude, 
-                            heading: position.coords.heading, speed: position.coords.speed, 
-                            time: position.timestamp, roadType: this.state.lastRoad.roadType, 
-                            roadSpeed: this.state.lastRoad.roadSpeed}, 
-                                acc: {x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp},
-                                gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}});
-                               
-                              return {
-                                data,
-                              };
-                            });
-                          
-                          //console.log(position);
-                          //console.log(accel.x, accel.y, accel.z, accel.timestamp);
-                        },
-                        (error) => {
-                          // See error code charts below.
-                          console.log(error.code, error.message);
-                        },
-                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
-                    ); });
-                
-        }}
-          );
-        
-    }
-
-    componentWillUnmount() {
-        this.subscription.unsubscribe();
-    }
 
     render() {
         return (
             <View style={styles.background}>
-                <View>
-                    <Text style={styles.titletext}>Start Driving</Text>
-                </View>
-                <Button title="stopDrive" style={styles.nextButtonSelected} onPress={() => {
+                <Text>Welcome</Text>
+                <Text>Welcome</Text>
+                <Text>Welcome</Text>
+                <Text>Welcome</Text>
+                <Button title="Start Drive" style={styles.nextButtonSelected} disabled={this.state.startTime? true : false} onPress={() => {
+                    this.setState({startTime: new Date().getTime()});
+                    Geolocation.requestAuthorization("always").then((result) => {
+                        if(result === "granted") {
+            
+                            setUpdateIntervalForType(SensorTypes.accelerometer, 250);
+                            setUpdateIntervalForType(SensorTypes.gyroscope, 250);
+                            const mySensors = combineLatest(accelerometer, gyroscope);
+                            this.subscription = mySensors.subscribe( ([accel, gyro]) => {
+                            
+                                //console.log("started");
+                                Geolocation.getCurrentPosition(
+                                    (position) => {
+                                        if (this.checkPosition(position.coords.latitude, 
+                                            position.coords.longitude, this.state.lastRoad.lat, 
+                                            this.state.lastRoad.lon)) {
+                                                this.learnRoad(position.coords.latitude, position.coords.longitude);
+                                        }
+                                      this.setState(state => {
+                                          const data = state.data.concat({loc: {accuracy: position.coords.accuracy, 
+                                        latitude: position.coords.latitude, longitude: position.coords.longitude, 
+                                        heading: position.coords.heading, speed: position.coords.speed, 
+                                        time: position.timestamp, roadType: this.state.lastRoad.roadType, 
+                                        roadSpeed: this.state.lastRoad.roadSpeed}, 
+                                            acc: {x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp},
+                                            gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}});
+                                           
+                                          return {
+                                            data,
+                                          };
+                                        });
+                                      
+                                      //console.log(position);
+                                      //console.log(accel.x, accel.y, accel.z, accel.timestamp);
+                                    },
+                                    (error) => {
+                                      // See error code charts below.
+                                      console.log(error.code, error.message);
+                                    },
+                                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0}
+                                ); });
+                            
+                    }}
+                      );
+                }}></Button>
+                <Button title="Stop Drive" style={styles.nextButtonSelected} disabled={this.state.startTime? false : true} onPress={() => {
                     this.subscription.unsubscribe();
                     console.log(this.state.data);
                     const size = sizeof(this.state.data);
@@ -153,9 +146,10 @@ class Drive extends Component {
                     data: this.state.data, 
                     apiRequests: this.state.apiRequests
                 });}
+                this.setState({startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: []});
+
                     
                 }}> 
-                Stop
                 </Button>
             </View>
         );
