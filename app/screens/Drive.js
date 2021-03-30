@@ -1,11 +1,13 @@
 import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button} from "react-native";
+import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState} from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
 import Geolocation from 'react-native-geolocation-service';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import KeepAwake from 'react-native-keep-awake';
+
 
 import axios from 'axios';
 import sizeof from 'object-sizeof'; 
@@ -27,8 +29,22 @@ import {
 class Drive extends Component {
     constructor(props) {
         super(props);
-        this.state = {startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: []};
+        this.state = {startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: [], appState: "active"};
     }
+
+    componentDidMount() {
+        AppState.addEventListener("change", this._handleAppStateChange);
+      }
+    
+      componentWillUnmount() {
+        AppState.removeEventListener("change", this._handleAppStateChange);
+      }
+    
+      _handleAppStateChange = nextAppState => {
+          console.log(nextAppState);
+        this.setState({ appState: nextAppState });
+      };
+
     learnRoad = (lat, lon) => {
         this.setState((prevState, props) => ({
             apiRequests: prevState.apiRequests + 1
@@ -77,6 +93,7 @@ class Drive extends Component {
                 <Text>Welcome</Text>
                 <Text>Welcome</Text>
                 <Button title="Start Drive" style={styles.nextButtonSelected} disabled={this.state.startTime? true : false} onPress={() => {
+                    KeepAwake.activate();
                     this.setState({startTime: new Date().getTime()});
                     Geolocation.requestAuthorization("always").then((result) => {
                         if(result === "granted") {
@@ -101,7 +118,7 @@ class Drive extends Component {
                                         time: position.timestamp, roadType: this.state.lastRoad.roadType, 
                                         roadSpeed: this.state.lastRoad.roadSpeed}, 
                                             acc: {x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp},
-                                            gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}});
+                                            gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}, phone: {using: this.state.appState}});
                                            
                                           return {
                                             data,
@@ -147,8 +164,7 @@ class Drive extends Component {
                     apiRequests: this.state.apiRequests
                 });}
                 this.setState({startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: []});
-
-                    
+                KeepAwake.deactivate();
                 }}> 
                 </Button>
             </View>
