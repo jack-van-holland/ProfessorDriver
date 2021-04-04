@@ -22,12 +22,6 @@ import {
   Platform
 } from 'react-native';
 
-import {
-  accelerometer,
-  gyroscope,
-  setUpdateIntervalForType,
-  SensorTypes
-} from "react-native-sensors";
 
 import {
   Header,
@@ -44,7 +38,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
-  SignupParent, SignupGoals, Home, Login, SignupScanConfirm} from './app/screens';
+  SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, Query} from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
@@ -55,65 +49,15 @@ const Stack = createStackNavigator();
 
 class App extends React.Component {
 
-  state = {
-    accel: 0,
-    xhistory: [],
-    yhistory: [],
-    zhistory: [],
-    pressed: false,
-    calibrating: false,
-    ready: false,
-    xbase: 0,
-    ybase: 0,
-    zbase: 0,
-    time: 0,
-  }
   
-  onPress = () => {
-    this.setState({calibrating:true})
-    //wait a minute to exclude button press acceleration
-    setTimeout(() => {
-      //listen to the acceleromter
-      accelerometer.subscribe(({x, y, z, time}) => {
-
-        //scale based on platform
-        x = Platform.OS === 'ios' ? x : x / 9.8;
-        y = Platform.OS === 'ios' ? y : y / 9.8;
-        z = Platform.OS === 'ios' ? z : z / 9.8;
-        
-        //scale from calibration
-        x = x - this.state.xbase;
-        y = y - this.state.ybase;
-        z = z - this.state.zbase;
   
-        //calculate total accel
-        let curr = Math.sqrt(x * x + y * y + z * z);
-
-        //record this
-        this.setState(prevState => ({
-          accel: curr,
-          xhistory: [...prevState.xhistory, x],
-          yhistory: [...prevState.yhistory, y],
-          zhistory: [...prevState.zhistory, z],
-        }))
-      });
-      //spend 5 seconds calibrating
-      setTimeout(() => {
-        this.setState(prevState => ({
-          //find the averages of each axis
-          xbase: prevState.xhistory.reduce((a,b) => a + b) / prevState.xhistory.length,
-          ybase: prevState.yhistory.reduce((a,b) => a + b) / prevState.yhistory.length,
-          zbase: prevState.zhistory.reduce((a,b) => a + b) / prevState.zhistory.length,
-          ready: true,
-        }))
-      }, 5000);
-    }, 1000);
-  }
   render() {
     return (
       <NavigationContainer>
         <Stack.Navigator 
+          //initialRouteName={auth().currentUser ? "Home" : "WelcomeScreen"}
           initialRouteName="WelcomeScreen"
+
           screenOptions={{
             headerShown: false,
           }}>
@@ -126,6 +70,8 @@ class App extends React.Component {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="SignupScanConfirm" component={SignupScanConfirm} />
+          <Stack.Screen name="Drive" component={Drive} />
+          <Stack.Screen name="Query" component={Query} />
 
 
         </Stack.Navigator>

@@ -10,13 +10,13 @@ const Login = ({ navigation }) => {
         console.log("beginning login");
         auth().signInWithEmailAndPassword(email, password).then(() => {
             console.log("logged in");
-            navigation.navigate("Home");
+            navigation.navigate("Query");
         }).catch((error) => {console.log("fail"); console.error(error);});
         
     };
 
-    let [email, setEmail] = React.useState("");
-    let [password, setPassword] = React.useState("");
+    let [email, setEmail] = React.useState("testdrive@jhu.edu");
+    let [password, setPassword] = React.useState("jackjack3");
 
     return (
         <View style={styles.background}>
@@ -28,7 +28,7 @@ const Login = ({ navigation }) => {
                 <Text style={styles.titletext}>Sign In</Text>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
                 placeholder = "Email" autoCapitalize = {false} keyboardType="email-address"
-                autoCompleteType="email" placeholderTextColor="#C4D9B3"></TextInput>
+                autoCompleteType="email" placeholderTextColor="#C4D9B3" t></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
                 onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
                 autoCapitalize = {false} autoCompleteType="password"></TextInput>

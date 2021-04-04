@@ -1,5 +1,5 @@
 {
-  "name": "ProfessorDriver",
+  "name": "ProfessorDriverApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,11 +11,16 @@
   },
   "dependencies": {
     "@react-native-firebase/firestore": "^11.1.0",
+    "@turf/turf": "^6.3.0",
+    "axios": "^0.21.1",
+    "object-sizeof": "^1.6.1",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-bootstrap-styles": "^4.5.0-r",
     "react-native-camera": "^3.43.0",
     "react-native-chart-kit": "^6.11.0",
+    "react-native-geolocation-service": "^5.2.0",
+    "react-native-keep-awake": "^4.0.0",
     "react-native-permissions": "^3.0.1",
     "react-native-qrcode-scanner": "^1.5.3",
     "react-native-qrcode-svg": "^6.1.1",
