@@ -43,7 +43,7 @@ const SignupContact = ({ navigation, route }) => {
             console.log(route.params.role);
             console.log(route.params.level);
             console.log(route.params.child);
-            navigation.navigate("DriveScreen");
+            navigation.navigate("StartDrive");
         })
     .catch(error => {
             if (error.code === 'auth/email-already-in-use') {
@@ -68,19 +68,19 @@ const SignupContact = ({ navigation, route }) => {
                 <Text style={styles.titletext}>Almost done...</Text>
                 <TextInput style={styles.input} value={firstName} onChangeText={setFirstName}
                 placeholder = "First Name" placeholderTextColor="#C4D9B3"
-                autoCompleteType="name" ></TextInput>
+                autoCompleteType="name" autoCapitalize = "words" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={lastName} onChangeText={setLastName}
-                placeholder = "Last Name" placeholderTextColor="#C4D9B3"
-                autoCompleteType="name" ></TextInput>
+                placeholder = "Last Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
+                autoCompleteType="name" autoCapitalize = "words"></TextInput>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
-                placeholder = "Email" autoCapitalize = {false} keyboardType="email-address"
-                autoCompleteType="email" placeholderTextColor="#C4D9B3"></TextInput>
+                placeholder = "Email" autoCapitalize = "none" keyboardType="email-address"
+                autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
                 onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
-                autoCapitalize = {false} autoCompleteType="password"></TextInput>
+                autoCompleteType="password" autoCapitalize = "none" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={confirmPassword} secureTextEntry={true}
                 onChangeText={setConfirmPassword} placeholder = "Confirm Password"
-                autoCapitalize = {false} placeholderTextColor="#C4D9B3"></TextInput>
+                autoCapitalize = "none" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
             </View>
 
             <View style={{flexDirection: "row"}}>

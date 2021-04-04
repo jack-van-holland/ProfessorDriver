@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,} from "react-native";
+import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,KeyboardAvoidingView,} from "react-native";
 import auth from '@react-native-firebase/auth';
 
 import colors from "../config/colors";
@@ -27,11 +27,11 @@ const Login = ({ navigation }) => {
             <View>
                 <Text style={styles.titletext}>Sign In</Text>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
-                placeholder = "Email" autoCapitalize = {false} keyboardType="email-address"
-                autoCompleteType="email" placeholderTextColor="#C4D9B3" t></TextInput>
+                placeholder = "Email" autoCapitalize = "none" keyboardType="email-address"
+                autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
                 onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
-                autoCapitalize = {false} autoCompleteType="password"></TextInput>
+                autoCapitalize = "none" autoCompleteType="password" autoCorrect={false}></TextInput>
             </View>
 
             <View style={{flexDirection: "row"}}>

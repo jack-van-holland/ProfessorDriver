@@ -84,7 +84,9 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat",
         color: colors.PDgreen,
         fontWeight: "bold",
-        fontSize: 18
+        fontSize: 18,
+        paddingLeft:10,
+        paddingRight:10
     },
     nexttext: {
         fontFamily: "Montserrat",
@@ -123,8 +125,6 @@ const styles = StyleSheet.create({
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center"
     },
     buttonSelected: {
         top: 300,
@@ -135,8 +135,7 @@ const styles = StyleSheet.create({
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",        
+    
     },
     registerButton: {
         width: 261,
