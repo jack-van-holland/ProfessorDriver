@@ -140,31 +140,8 @@ class Drive extends Component {
                 }}></Button>
                 <Button title="Stop Drive" style={styles.nextButtonSelected} disabled={this.state.startTime? false : true} onPress={() => {
                     this.subscription.unsubscribe();
-                    console.log(this.state.data);
-                    const size = sizeof(this.state.data);
-                    console.log(sizeof(this.state.data));
-                    const max = 1000000;
-                    if (size > max) {
-                        const num = Math.ceil(size / max);
-                        const section = Math.floor(this.state.data.length / num);
-                        for (let i = 0; i < num; i++) {
-                            const doc = firestore().collection('users').doc(auth().currentUser.uid).collection('drives').doc(String(this.state.startTime) + "." + String(i + 1));
-                            
-                            doc.set({
-                            data: this.state.data.slice(i * section, (i + 1) * section), 
-                            apiRequests: this.state.apiRequests
-                            });
-                        }
-                    }
-                    else { 
-                    const doc = firestore().collection('users').doc(auth().currentUser.uid).collection('drives').doc(String(this.state.startTime));
-                
-                    doc.set({
-                    data: this.state.data, 
-                    apiRequests: this.state.apiRequests
-                });}
-                this.setState({startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: []});
-                KeepAwake.deactivate();
+                    KeepAwake.deactivate();
+                    this.props.navigation.navigate("Reflection", {data: this.state.data, apiRequests: this.state.apiRequests, startTime: this.state.startTime})
                 }}> 
                 </Button>
             </View>

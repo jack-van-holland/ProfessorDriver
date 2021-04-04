@@ -43,7 +43,7 @@ const SignupContact = ({ navigation, route }) => {
             console.log(route.params.role);
             console.log(route.params.level);
             console.log(route.params.child);
-            navigation.navigate("Home");
+            navigation.navigate("DriveScreen");
         })
     .catch(error => {
             if (error.code === 'auth/email-already-in-use') {

@@ -10,13 +10,13 @@ const Login = ({ navigation }) => {
         console.log("beginning login");
         auth().signInWithEmailAndPassword(email, password).then(() => {
             console.log("logged in");
-            navigation.navigate("Query");
+            navigation.navigate("StartDrive");
         }).catch((error) => {console.log("fail"); console.error(error);});
         
     };
 
-    let [email, setEmail] = React.useState("testdrive@jhu.edu");
-    let [password, setPassword] = React.useState("jackjack3");
+    let [email, setEmail] = React.useState("");
+    let [password, setPassword] = React.useState("");
 
     return (
         <View style={styles.background}>

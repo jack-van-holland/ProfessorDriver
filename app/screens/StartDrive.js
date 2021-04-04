@@ -10,7 +10,7 @@ const StartDrive = ({ navigation }) => {
 
 
 // read report from db
-    const [user, setUser] = useState();
+    const [user, setUser] = useState("");
     const {uid} = auth().currentUser;
 
     const getUser = async () => {
@@ -40,7 +40,7 @@ const StartDrive = ({ navigation }) => {
                 <View style={[styles.container, {flex: 9}]}>
                     <Text style={styles.title}>Before You Drive</Text>
                     <Text style={styles.note}>“Here is a quick reminder of your reflection from last time”</Text>
-                    <Text> {user.email} </Text>
+                    <Text> {user ? user.email: ""} </Text>
                 </View>
                 <View style={{flex: 1}} />
                 <View style={[styles.container, {flex: 4}]}>
@@ -50,9 +50,9 @@ const StartDrive = ({ navigation }) => {
             </View>
             
             <View style={[styles.startContainer, {flex: 1}]}>
-                <View style={styles.startButton}>
+                <TouchableHighlight onPress={() => {navigation.navigate("Drive")}} style={styles.startButton}>
                     <Text style={styles.startText}>Start Driving</Text>
-                </View>
+                </TouchableHighlight>
             </View>
 
         </View>
