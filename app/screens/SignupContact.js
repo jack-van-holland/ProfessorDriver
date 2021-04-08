@@ -43,7 +43,7 @@ const SignupContact = ({ navigation, route }) => {
             console.log(route.params.role);
             console.log(route.params.level);
             console.log(route.params.child);
-            navigation.navigate("StartDrive");
+            navigation.navigate("Home");
         })
     .catch(error => {
             if (error.code === 'auth/email-already-in-use') {
@@ -61,7 +61,7 @@ const SignupContact = ({ navigation, route }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/icon.png")}/>
+                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
             </View>
 
             <View>

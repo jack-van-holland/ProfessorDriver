@@ -1,54 +1,23 @@
 import React, {Component} from "react";
 import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
 
+import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
+import auth from '@react-native-firebase/auth';
 
-const SignupRole = ({ navigation }) => {
-    const [driver, setDriver] = React.useState(false);
-    const [parent, setParent] = React.useState(false);
+
+const Account = ({ navigation }) => {
 
 
     return (
         <View style={styles.background}>
-            <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
-            </View>
-
             <View>
-                <Text style={styles.titletext}>I am a...</Text>
+                <Text style={styles.titletext}>Welcome!</Text>
             </View>
-            
-            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            style={driver ? styles.buttonSelected :styles.buttonUnselected}
-            onPress={() => {setParent(false); setDriver(true);}}>
-                <Text style={styles.text}>learning driver</Text>
-            </TouchableHighlight>
-            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            style={parent ? styles.buttonSelected :styles.buttonUnselected}
-            onPress={() => {setParent(true); setDriver(false);}}>
-                <Text style={styles.text}>parent or coach</Text>
-            </TouchableHighlight>
-
-            <View style={{flexDirection: "row"}}>
-
-            <View style={{flex: 1, alignItems: "center"}}>
-                <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-                style={styles.backButtonSelected}
-                onPress={() => navigation.goBack()}>
-                    <Text style={styles.nexttext}>Back</Text>
-                </TouchableHighlight>
-            </View>
-
-            <View style={{flex: 1, alignItems: "center"}}>
-                <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-                style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}
-                onPress={driver ? () => navigation.navigate("SignupExperience") : () => navigation.navigate("SignupParent")} 
-                disabled={parent || driver ? false : true}>
-                    <Text style={styles.nexttext}>Next</Text>
-                </TouchableHighlight>
-            </View>
-            
-            </View>
+            <QRCode
+            value={auth().currentUser.uid}
+            logo={require("../assets/images/icon.png")}
+            />
         </View>
     );
 }
@@ -88,14 +57,14 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     titletext: {
-        width: 287,
+        width: 400,
         height: 44,
-        top: 475,
+        top: 200,
         fontFamily: "Montserrat",
         fontStyle: "normal",
         fontWeight: "bold",
-        fontSize: 36,
-        lineHeight: 36,
+        fontSize: 24,
+        lineHeight: 50,
         textAlign: "center",
     },
     loginButton: {
@@ -126,7 +95,7 @@ const styles = StyleSheet.create({
         width: 261,
         height: 40,
         marginTop: 25,
-        backgroundColor: "rgba(135, 178, 88, 0.4)",
+        backgroundColor: "rgba(135, 178, 88, 0.2)",
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
@@ -147,7 +116,8 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
-        top: 550,
+        left: 100,
+        top: 500,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -156,7 +126,8 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        top: 550,
+        left: -100,
+        top: 500,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -165,12 +136,23 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        top: 550,
+        left: 207,
+        top: 697,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
     }, 
+    backButtonUnselected: {
+        width: 121,
+        height: 40,
+        left: 207,
+        top: 697,
+        backgroundColor: '#C4D9B3',
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+    },
 })
 
-export default SignupRole;
+export default Account;

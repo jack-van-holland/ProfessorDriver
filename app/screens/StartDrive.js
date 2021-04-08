@@ -51,7 +51,7 @@ const StartDrive = ({ navigation }) => {
             
             <View style={[styles.startContainer, {flex: 1}]}>
                 <TouchableHighlight onPress={() => {navigation.navigate("Drive")}} style={styles.startButton}>
-                    <Text style={styles.startText}>Start Driving</Text>
+                    <Text style={styles.startText}>OK, ready to drive!</Text>
                 </TouchableHighlight>
             </View>
 

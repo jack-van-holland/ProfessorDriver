@@ -15,7 +15,7 @@ const SignupScanConfirm = ({ navigation, route }) => {
         !childUser ? (<View></View>) : (childUser._data ? 
         (<View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/icon.png")}/>
+                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
             </View>
             
             <View>

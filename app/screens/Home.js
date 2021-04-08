@@ -1,158 +1,146 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import React from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  processColor
+} from 'react-native';
+import update from 'immutability-helper';
+import { Dimensions } from "react-native";
+const screenWidth = Dimensions.get("window").width;
 
-import QRCode from 'react-native-qrcode-svg';
-import colors from "../config/colors";
-import auth from '@react-native-firebase/auth';
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+  } from "react-native-chart-kit";
+import {RadarChart} from 'react-native-charts-wrapper';
 
 
-const Home = ({ navigation }) => {
+class Home extends React.Component {
 
+  constructor() {
+    super();
 
-    return (
-        <View style={styles.background}>
-            <View>
-                <Text style={styles.titletext}>Welcome!</Text>
-            </View>
-            <QRCode
-            value={auth().currentUser.uid}
-            logo={require("../assets/icon.png")}
-            />
-        </View>
+    this.state = {
+      data: {},
+      legend: {
+        enabled: true,
+        textSize: 14,
+        form: 'CIRCLE',
+        wordWrapEnabled: true
+      }
+    };
+  }
+
+  componentDidMount() {
+    this.setState(
+      update(this.state, {
+        data: {
+          $set: {
+            dataSets: [{
+              values: [1, 1, 1, 1, 1],
+              label: 'DS 1',
+              config: {
+                color: processColor('#FF8C9D'),
+                drawFilled: true,
+                drawValues: false,
+                fillColor: processColor('#FF8C9D'),
+                fillAlpha: 100,
+                lineWidth: 2
+              }
+            }, {
+              values: [1, 2, 3, 4, 5],
+              label: 'DS 2',
+              config: {
+                color: processColor('#C0FF8C'),
+
+                drawFilled: true,
+                drawValues: false,
+                fillColor: processColor('#C0FF8C'),
+                fillAlpha: 150,
+                lineWidth: 1.5
+              }
+            }, {
+              values: [6, 10, 2, 5, 4],
+              label: 'DS 3',
+              config: {
+                color: processColor('#8CEAFF'),
+                drawValues: false,
+                drawFilled: true,
+                fillColor: processColor('#8CEAFF')
+              }
+            }],
+          }
+        },
+        xAxis: {
+            
+          $set: {
+            fontFamily: "Montserrat",
+            valueFormatter: ['Acceleration', 'Phone Use', 'Turning', 'Speed', 'Braking']
+          }
+        }
+      })
     );
-}
+  }
 
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: "#F3F3F5",
-        alignItems: "center",
-    },
-    logoContainer: {
-        alignItems: "center",
-        position: "absolute",
-        top: 270
-    },
-    name: {
-        fontFamily: "Montserrat",
-        fontWeight: "bold",
-        fontSize: 33, 
-        lineHeight: 100,
-        letterSpacing: 0.015
-    },
-    logo: {
-        width: 150,
-        height: 123
-    },
-    text: {
-        fontFamily: "Montserrat",
-        color: colors.PDgreen,
-        fontWeight: "bold",
-        fontSize: 18
-    },
-    nexttext: {
-        fontFamily: "Montserrat",
-        color: "#F3F3F5",
-        fontWeight: "bold",
-        fontSize: 18
-    },
-    titletext: {
-        width: 400,
-        height: 44,
-        top: 200,
-        fontFamily: "Montserrat",
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: 24,
-        lineHeight: 50,
-        textAlign: "center",
-    },
-    loginButton: {
-        width: 261,
-        height: 40,
-        top: 506,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    buttonUnselected: {
-        top: 475,
-        width: 261,
-        height: 40,
-        marginTop: 25,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    buttonSelected: {
-        top: 475,
-        width: 261,
-        height: 40,
-        marginTop: 25,
-        backgroundColor: "rgba(135, 178, 88, 0.2)",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",        
-    },
-    registerButton: {
-        width: 261,
-        height: 40,
-        top: 520,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    nextButtonSelected: {
-        width: 121,
-        height: 40,
-        left: 100,
-        top: 500,
-        backgroundColor: '#87B258',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    backButtonSelected: {
-        width: 121,
-        height: 40,
-        left: -100,
-        top: 500,
-        backgroundColor: '#87B258',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    nextButtonUnselected: {
-        width: 121,
-        height: 40,
-        left: 207,
-        top: 697,
-        backgroundColor: '#C4D9B3',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    }, 
-    backButtonUnselected: {
-        width: 121,
-        height: 40,
-        left: 207,
-        top: 697,
-        backgroundColor: '#C4D9B3',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-})
+  handleSelect(event) {
+    let entry = event.nativeEvent
+    if (entry == null) {
+      this.setState({...this.state, selectedEntry: null})
+    } else {
+      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
+    }
+
+    console.log(event.nativeEvent)
+  }
+  render() {
+    let data = [{
+      "speed": 74,
+      "balance": 29,
+      "explosives": 40,
+      "energy": 40,
+      "flexibility": 30,
+      "agility": 25,
+      "endurance": 44
+    }]
+  
+    let options = {
+      width: 290,
+      height: 290,
+      margin: {
+        top: 20,
+        left: 20,
+        right: 30,
+        bottom: 20
+      },
+      r: 150,
+      max: 100,
+      fill: "#2980B9",
+      stroke: "#2980B9",
+      animate: {
+        type: 'oneByOne',
+        duration: 200
+      },
+      label: {
+        fontFamily: 'Arial',
+        fontSize: 14,
+        fontWeight: true,
+        fill: '#34495E'
+      }
+    }
+  
+    return (
+      <View>
+        <Radar data={data} options={options} />
+      </View>
+    )
+  }
+  
+}
 
 export default Home;

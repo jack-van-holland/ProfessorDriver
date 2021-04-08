@@ -8,7 +8,7 @@ const WelcomeScreen = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/icon.png")}/>
+                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
                 <Text style={styles.name}>Professor Driver</Text>
             </View>
             <TouchableHighlight onPress={() => navigation.navigate('Login')}

@@ -10,7 +10,7 @@ const Login = ({ navigation }) => {
         console.log("beginning login");
         auth().signInWithEmailAndPassword(email, password).then(() => {
             console.log("logged in");
-            navigation.navigate("StartDrive");
+            navigation.navigate("Home");
         }).catch((error) => {console.log("fail"); console.error(error);});
         
     };
@@ -21,7 +21,7 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/icon.png")}/>
+                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
             </View>
 
             <View>

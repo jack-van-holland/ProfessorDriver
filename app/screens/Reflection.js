@@ -1,12 +1,42 @@
 import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,} from "react-native";
 
 import colors from "../config/colors";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import sizeof from 'object-sizeof'; 
 
-const SignupRole = ({ navigation }) => {
-    const [driver, setDriver] = React.useState(false);
-    const [parent, setParent] = React.useState(false);
 
+
+
+
+const Reflection = ({ navigation, route }) => {
+
+    submit = () => {
+        const size = sizeof(route.params.data);
+        const max = 1000000;
+                    if (size > max) {
+                        const num = Math.ceil(size / max);
+                        const section = Math.floor(route.params.data.length / num);
+                        for (let i = 0; i < num; i++) {
+                            const doc = firestore().collection('users').doc(auth().currentUser.uid).collection('drives').doc(String(route.params.startTime) + "." + String(i + 1));
+                            
+                            doc.set({
+                            data: route.params.data.slice(i * section, (i + 1) * section), 
+                            apiRequests: route.params.apiRequests
+                            });
+                        }
+                    }
+                    else { 
+                    const doc = firestore().collection('users').doc(auth().currentUser.uid).collection('drives').doc(String(route.params.startTime));
+
+                    doc.set({
+                    data: route.params.data, 
+                    apiRequests: route.params.apiRequests
+                });
+            }
+            navigation.navigate("StartDrive");
+        };
 
     return (
         <View style={styles.background}>
@@ -14,40 +44,13 @@ const SignupRole = ({ navigation }) => {
                 <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
             </View>
 
-            <View>
-                <Text style={styles.titletext}>I am a...</Text>
-            </View>
-            
-            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            style={driver ? styles.buttonSelected :styles.buttonUnselected}
-            onPress={() => {setParent(false); setDriver(true);}}>
-                <Text style={styles.text}>learning driver</Text>
-            </TouchableHighlight>
-            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            style={parent ? styles.buttonSelected :styles.buttonUnselected}
-            onPress={() => {setParent(true); setDriver(false);}}>
-                <Text style={styles.text}>parent or coach</Text>
-            </TouchableHighlight>
-
             <View style={{flexDirection: "row"}}>
-
-            <View style={{flex: 1, alignItems: "center"}}>
-                <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-                style={styles.backButtonSelected}
-                onPress={() => navigation.goBack()}>
-                    <Text style={styles.nexttext}>Back</Text>
-                </TouchableHighlight>
-            </View>
-
-            <View style={{flex: 1, alignItems: "center"}}>
-                <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-                style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}
-                onPress={driver ? () => navigation.navigate("SignupExperience") : () => navigation.navigate("SignupParent")} 
-                disabled={parent || driver ? false : true}>
-                    <Text style={styles.nexttext}>Next</Text>
-                </TouchableHighlight>
-            </View>
-            
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableHighlight onPress={submit}
+                    style={ styles.nextButtonSelected}>
+                        <Text style={styles.nexttext}>Submit Drive</Text>
+                    </TouchableHighlight>
+                </View>
             </View>
         </View>
     );
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: "center",
         position: "absolute",
-        top: 270
+        top: 100
     },
     name: {
         fontFamily: "Montserrat",
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
     titletext: {
         width: 287,
         height: 44,
-        top: 475,
+        top: 300,
         fontFamily: "Montserrat",
         fontStyle: "normal",
         fontWeight: "bold",
@@ -126,13 +129,27 @@ const styles = StyleSheet.create({
         width: 261,
         height: 40,
         marginTop: 25,
-        backgroundColor: "rgba(135, 178, 88, 0.4)",
+        backgroundColor: "rgba(135, 178, 88, 0.2)",
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",        
     },
+    input: {
+        fontFamily: "Montserrat",
+        top: 300,
+        fontWeight: "bold",
+        fontSize: 20, 
+        lineHeight: 20,
+        letterSpacing: 0.015,
+        height: 40,
+        color: "#76AD87",
+        backgroundColor: "#ECECEC",
+        margin: 12,
+        borderWidth: 0,
+        paddingHorizontal: 20,
+      },
     registerButton: {
         width: 261,
         height: 40,
@@ -147,7 +164,7 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
-        top: 550,
+        top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -156,7 +173,7 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        top: 550,
+        top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -165,7 +182,7 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        top: 550,
+        top: 350,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
@@ -173,4 +190,4 @@ const styles = StyleSheet.create({
     }, 
 })
 
-export default SignupRole;
+export default Reflection;
