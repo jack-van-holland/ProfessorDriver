@@ -1,37 +1,86 @@
 import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,KeyboardAvoidingView,} from "react-native";
+import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,} from "react-native";
+
+import colors from "../../config/colors";
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
-import colors from "../config/colors";
 
-const Login = ({ navigation }) => {
-    
-    submit = () => {
-        console.log("beginning login");
-        auth().signInWithEmailAndPassword(email, password).then(() => {
-            console.log("logged in");
-            navigation.navigate("Home");
-        }).catch((error) => {console.log("fail"); console.error(error);});
-        
-    };
 
+
+
+const SignupContact = ({ navigation, route }) => {
+
+    let [firstName, setFirstName] = React.useState("");
+    let [lastName, setLastName] = React.useState("");
     let [email, setEmail] = React.useState("");
     let [password, setPassword] = React.useState("");
+    let [confirmPassword, setConfirmPassword] = React.useState("");
+
+    submit = () => {
+        if (password !== confirmPassword) {
+            return;
+        }
+
+        auth().createUserWithEmailAndPassword(email, password)
+        .then((userCred) => {
+                firestore().collection('users').doc(userCred.user.uid)
+                .set({
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    role: route.params.role,
+                    level: route.params.level,
+                    child: route.params.child,
+                });
+            }).then(() => {
+            console.log('User account created & signed in!');
+            console.log(auth().currentUser.uid);
+            console.log(firstName);
+            console.log(lastName);
+            console.log(password);
+            console.log(email);
+            console.log(route.params.role);
+            console.log(route.params.level);
+            console.log(route.params.child);
+            navigation.navigate("Home");
+        })
+    .catch(error => {
+            if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+            }
+
+            if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+            }
+        
+            console.error(error);
+        });
+    };
 
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
             </View>
 
             <View>
-                <Text style={styles.titletext}>Sign In</Text>
+                <Text style={styles.titletext}>Almost done...</Text>
+                <TextInput style={styles.input} value={firstName} onChangeText={setFirstName}
+                placeholder = "First Name" placeholderTextColor="#C4D9B3"
+                autoCompleteType="name" autoCapitalize = "words" autoCorrect={false}></TextInput>
+                <TextInput style={styles.input} value={lastName} onChangeText={setLastName}
+                placeholder = "Last Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
+                autoCompleteType="name" autoCapitalize = "words"></TextInput>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
                 placeholder = "Email" autoCapitalize = "none" keyboardType="email-address"
                 autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
                 onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
-                autoCapitalize = "none" autoCompleteType="password" autoCorrect={false}></TextInput>
+                autoCompleteType="password" autoCapitalize = "none" autoCorrect={false}></TextInput>
+                <TextInput style={styles.input} value={confirmPassword} secureTextEntry={true}
+                onChangeText={setConfirmPassword} placeholder = "Confirm Password"
+                autoCapitalize = "none" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
             </View>
 
             <View style={{flexDirection: "row"}}>
@@ -42,10 +91,10 @@ const Login = ({ navigation }) => {
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
                     <TouchableHighlight onPress={submit}
-                    disabled={email && password ? false : true}
-                    style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                    disabled={firstName && lastName && email && password && confirmPassword ? false : true}
+                    style={firstName && lastName && email && password && confirmPassword ? styles.nextButtonSelected : styles.nextButtonUnselected}
                     >
-                        <Text style={styles.nexttext}>Sign In</Text>
+                        <Text style={styles.nexttext}>Submit</Text>
                     </TouchableHighlight>
                 </View>
             </View>
@@ -187,4 +236,4 @@ const styles = StyleSheet.create({
     }, 
 })
 
-export default Login;
+export default SignupContact;

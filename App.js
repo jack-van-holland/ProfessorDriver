@@ -75,6 +75,8 @@ class App extends React.Component {
           <Stack.Screen name="Drive" component={Drive} />
           <Stack.Screen name="Query" component={Query}/>
           <Stack.Screen name="Reflection" component={Reflection}/>
+          <Stack.Screen name="ParentHome" component={ParentHome}/>
+
 
            
 

@@ -1,14 +1,28 @@
-import React, {Component} from "react";
+import React, {Component, useEffect} from "react";
 import {StyleSheet, View, Image, Text, Button, TouchableHighlight} from "react-native";
 
-import colors from "../config/colors";
+import colors from "../../config/colors";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
 
 //function WelcomeScreen(props) 
 const WelcomeScreen = ({ navigation }) => {
+    useEffect(() => {
+        if (auth().currentUser) {
+            firestore().collection('users').doc(auth().currentUser.uid).get().then((userInfo) => {
+                if (userInfo.role = "parent") {
+                    navigation.navigate("ParentHome");
+                } else {
+                    navigation.navigate("Home");
+                }
+            })
+        }
+    });
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
                 <Text style={styles.name}>Professor Driver</Text>
             </View>
             <TouchableHighlight onPress={() => navigation.navigate('Login')}

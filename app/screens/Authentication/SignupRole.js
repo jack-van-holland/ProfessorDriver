@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
 
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
 const SignupRole = ({ navigation }) => {
     const [driver, setDriver] = React.useState(false);
@@ -11,7 +11,7 @@ const SignupRole = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
             </View>
 
             <View>

@@ -2,7 +2,7 @@ import React, {Component, useEffect} from "react";
 import {StyleSheet, View, Image, Text, TextInput, 
     TouchableHighlight, AppRegistry} from "react-native";
 
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
 
 import QRCodeScanner from 'react-native-qrcode-scanner';

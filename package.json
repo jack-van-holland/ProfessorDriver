@@ -15,6 +15,7 @@
     "axios": "^0.21.1",
     "immutability-helper": "^3.1.1",
     "object-sizeof": "^1.6.1",
+    "path": "^0.12.7",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-bootstrap-styles": "^4.5.0-r",

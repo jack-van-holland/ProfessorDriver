@@ -1,60 +1,54 @@
-import React, {Component} from "react";
+import React, {Component, useEffect} from "react";
 import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
 
-import colors from "../config/colors";
+import colors from "./../../config/colors";
+import firestore from '@react-native-firebase/firestore';
 
-const SignupExperience = ({ navigation }) => {
-    let [exp, setExp] = React.useState("");
 
+const SignupScanConfirm = ({ navigation, route }) => {
+    let [childUser, setChildUser] = React.useState(null);
+
+    useEffect( () => {
+    firestore().collection('users').doc(route.params.child).get().then((child) => {setChildUser(child);}).catch((error) => {navigation.goBack();});
+    });
     return (
-        <View style={styles.background}>
+        !childUser ? (<View></View>) : (childUser._data ? 
+        (<View style={styles.background}>
+            <View style={styles.logoContainer}>
+                <Image style={styles.blah} source={require('./../../assets/images/history.png')}/>
+            </View>
+            
+            <View>
+                <Text style={styles.titletext}>Is this your student?</Text>
+                <Text style={styles.titletext}>{childUser._data.firstName + " " + childUser._data.lastName}</Text>
+                <Text style={styles.titletext}>{childUser._data.email}</Text>
+            </View>
+            
+            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
+            style={styles.backButtonSelected}>
+                <Text style={styles.nexttext}>No, scan again</Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => {
+                navigation.navigate("SignupContact", {role: "parent", level: "", child: route.params.child})
+            }}
+            style={styles.nextButtonSelected}>
+                <Text style={styles.nexttext}>Yes, continue</Text>
+            </TouchableHighlight>
+        </View>) : <View style={styles.background}>
             <View style={styles.logoContainer}>
                 <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
             </View>
-
+            
             <View>
-                <Text style={styles.titletext}>My driving level is...</Text>
+                <Text style={styles.titletext}>Whoops, something went wrong with the scan.</Text>
             </View>
             
-            <TouchableHighlight onPress={() => {setExp("novice");}}
-            style={exp === "novice" ? styles.buttonSelected :styles.buttonUnselected}
-            underlayColor="rgba(135, 178, 88, 0.2)">
-                <Text style={styles.text}>Novice (less than a month of experience)</Text>
+            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
+            style={styles.backButtonSelected}>
+                <Text style={styles.nexttext}>Retry</Text>
             </TouchableHighlight>
-            <TouchableHighlight onPress={() => {setExp("beginning")}}
-            style={exp === "beginning" ? styles.buttonSelected : styles.buttonUnselected}
-            underlayColor="rgba(135, 178, 88, 0.2)">
-                <Text style={styles.text}>Beginning (1-6 months of experience)</Text>
-            </TouchableHighlight>
-            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {setExp("intermediate")}}
-            style={exp === "intermediate" ? styles.buttonSelected : styles.buttonUnselected}>
-                <Text style={styles.text}>Intermediate (6-12 months of experience)</Text>
-            </TouchableHighlight>
-            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {setExp("advanced")}}
-            style={exp === "advanced" ? styles.buttonSelected : styles.buttonUnselected}>
-                <Text style={styles.text}>Advanced Driver (More than 12 months of experience)</Text>
-            </TouchableHighlight>
+        </View>)
 
-            <View style={{flexDirection: "row"}}>
-                <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={() => navigation.goBack()}
-                    style={styles.backButtonSelected}>
-                        <Text style={styles.nexttext}>Back</Text>
-                    </TouchableHighlight>
-                </View>
-                <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={() => {
-                        navigation.navigate("SignupContact", {role: "driver", level: exp, child : ""})
-                    }}
-                    style={exp ? styles.nextButtonSelected : styles.nextButtonUnselected}
-                    disabled={exp ? false : true}>
-                        <Text style={styles.nexttext}>Next</Text>
-                    </TouchableHighlight>
-                </View>
-            </View>
-        </View>
     );
 }
 
@@ -84,9 +78,7 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat",
         color: colors.PDgreen,
         fontWeight: "bold",
-        fontSize: 18,
-        paddingLeft:10,
-        paddingRight:10
+        fontSize: 18
     },
     nexttext: {
         fontFamily: "Montserrat",
@@ -125,6 +117,8 @@ const styles = StyleSheet.create({
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center"
     },
     buttonSelected: {
         top: 300,
@@ -135,7 +129,8 @@ const styles = StyleSheet.create({
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
-    
+        alignItems: "center",
+        justifyContent: "center",        
     },
     registerButton: {
         width: 261,
@@ -151,6 +146,7 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
+        left: 100,
         top: 400,
         backgroundColor: '#87B258',
         borderRadius: 10,
@@ -160,6 +156,7 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
+        left: -100,
         top: 400,
         backgroundColor: '#87B258',
         borderRadius: 10,
@@ -169,6 +166,7 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
+        left: 100,
         top: 400,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
@@ -177,4 +175,4 @@ const styles = StyleSheet.create({
     }, 
 })
 
-export default SignupExperience;
+export default SignupScanConfirm;

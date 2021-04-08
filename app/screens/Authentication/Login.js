@@ -1,45 +1,51 @@
 import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,KeyboardAvoidingView,} from "react-native";
+import auth from '@react-native-firebase/auth';
 
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
-const SignupGoals = ({ navigation }) => {
+const Login = ({ navigation }) => {
+    
+    submit = () => {
+        console.log("beginning login");
+        auth().signInWithEmailAndPassword(email, password).then(() => {
+            console.log("logged in");
+            navigation.navigate("Home");
+        }).catch((error) => {console.log("fail"); console.error(error);});
+        
+    };
 
+    let [email, setEmail] = React.useState("");
+    let [password, setPassword] = React.useState("");
 
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
             </View>
 
             <View>
-                <Text style={styles.titletext}>I am a...</Text>
+                <Text style={styles.titletext}>Sign In</Text>
+                <TextInput style={styles.input} value={email} onChangeText={setEmail}
+                placeholder = "Email" autoCapitalize = "none" keyboardType="email-address"
+                autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
+                <TextInput style={styles.input} value={password} secureTextEntry={true}
+                onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
+                autoCapitalize = "none" autoCompleteType="password" autoCorrect={false}></TextInput>
             </View>
-            
-            <TouchableHighlight onPress={() => {setParent(false); setDriver(true);}}>
-            <View style={driver ? styles.buttonSelected :styles.buttonUnselected}>
-                <Text style={styles.text}>learning driver</Text>
-            </View>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={() => {setParent(true); setDriver(false);}}>
-            <View style={parent ? styles.buttonSelected :styles.buttonUnselected}>
-                <Text style={styles.text}>parent or coach</Text>
-            </View>
-            </TouchableHighlight>
 
             <View style={{flexDirection: "row"}}>
                 <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={() => navigation.goBack()}>
-                    <View style={styles.backButtonSelected}>
+                    <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
                         <Text style={styles.nexttext}>Back</Text>
-                    </View>
                     </TouchableHighlight>
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={() => navigation.navigate("SignupContact")}>
-                    <View style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}>
-                        <Text style={styles.nexttext}>Next</Text>
-                    </View>
+                    <TouchableHighlight onPress={submit}
+                    disabled={email && password ? false : true}
+                    style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                    >
+                        <Text style={styles.nexttext}>Sign In</Text>
                     </TouchableHighlight>
                 </View>
             </View>
@@ -56,7 +62,7 @@ const styles = StyleSheet.create({
     logoContainer: {
         alignItems: "center",
         position: "absolute",
-        top: 270
+        top: 100
     },
     name: {
         fontFamily: "Montserrat",
@@ -84,7 +90,7 @@ const styles = StyleSheet.create({
     titletext: {
         width: 287,
         height: 44,
-        top: 475,
+        top: 300,
         fontFamily: "Montserrat",
         fontStyle: "normal",
         fontWeight: "bold",
@@ -127,6 +133,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",        
     },
+    input: {
+        fontFamily: "Montserrat",
+        top: 300,
+        fontWeight: "bold",
+        fontSize: 20, 
+        lineHeight: 20,
+        letterSpacing: 0.015,
+        height: 40,
+        color: "#76AD87",
+        backgroundColor: "#ECECEC",
+        margin: 12,
+        borderWidth: 0,
+        paddingHorizontal: 20,
+      },
     registerButton: {
         width: 261,
         height: 40,
@@ -141,8 +161,7 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
-        left: 100,
-        top: 500,
+        top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -151,7 +170,7 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        top: 600,
+        top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -160,21 +179,12 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        top: 600,
+        top: 350,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
     }, 
-    backButtonUnselected: {
-        width: 121,
-        height: 40,
-        top: 600,
-        backgroundColor: '#C4D9B3',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
 })
 
-export default SignupGoals;
+export default Login;

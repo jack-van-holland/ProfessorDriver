@@ -21,9 +21,8 @@ import {
   } from "react-native-chart-kit";
 import {RadarChart} from 'react-native-charts-wrapper';
 
-const userPerformance = [1, 2, 3, 4, 5];
 
-class Home extends React.Component {
+class ParentHome extends React.Component {
 
   constructor() {
     super();
@@ -46,7 +45,7 @@ class Home extends React.Component {
           $set: {
             dataSets: [{
               values: [1, 1, 1, 1, 1],
-              label: 'Perfor',
+              label: 'DS 1',
               config: {
                 color: processColor('#FF8C9D'),
                 drawFilled: true,
@@ -232,4 +231,4 @@ text: {
   }
 });
 
-export default Home;
+export default ParentHome;
