@@ -8,19 +8,24 @@ import firestore from '@react-native-firebase/firestore';
 
 //function WelcomeScreen(props) 
 const WelcomeScreen = ({ navigation }) => {
+    const [loaded, setLoaded] = React.useState(false);
     useEffect(() => {
-        if (auth().currentUser) {
+        auth().onAuthStateChanged((user) => {
             firestore().collection('users').doc(auth().currentUser.uid).get().then((userInfo) => {
-                if (userInfo.role = "parent") {
-                    navigation.navigate("ParentHome");
+                if (userInfo) {
+                    if (userInfo.role === "parent") {
+                        navigation.navigate("ParentHome");
+                    } else {
+                        navigation.navigate("Home");
+                    }
                 } else {
-                    navigation.navigate("Home");
+                    setLoaded(true);
                 }
             })
-        }
+        });
     });
     return (
-        <View style={styles.background}>
+        loaded ? <View style={styles.background}>
             <View style={styles.logoContainer}>
                 <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
                 <Text style={styles.name}>Professor Driver</Text>
@@ -35,7 +40,7 @@ const WelcomeScreen = ({ navigation }) => {
             underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Sign Up</Text>
             </TouchableHighlight>
-        </View>
+        </View>  : <View></View>
     );
 }
 

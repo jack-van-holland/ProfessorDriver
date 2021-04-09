@@ -10,14 +10,40 @@ const Account = ({ navigation }) => {
 
 
     return (
-        <View style={styles.background}>
-            <View>
-                <Text style={styles.titletext}>Welcome!</Text>
-            </View>
+        <View style={[styles.container, {flex:1, justifyContent:"space-between", alignItems:"center", alignContent: "center"}]}>
+            <View style={{paddingTop:100, flex:1, justifyContent:"space-evenly"}}>
+                <Text style={styles.title}>Account</Text>
+            
             <QRCode
             value={auth().currentUser.uid}
             logo={require("../assets/images/icon.png")}
+            style={styles.title}
             />
+            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
+            style={styles.backButtonSelected}>
+                <Text style={styles.nexttext}>Hello there hi hi hi</Text>
+            </TouchableHighlight>
+            </View>
+            <View style={{flex: 0, flexDirection:"row", paddingBottom: 15, backgroundColor: "#C4D9B3"}}>
+                <TouchableHighlight onPress={() => {this.props.navigation.navigate("Reports Main")}} style={styles.startButton}>
+                    <View>
+                    <Image style={styles.image} source={require("../assets/images/history.png")}></Image>
+                    <Text style={styles.startText}>Reports</Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+                  <View>
+                  <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
+                  <Text style={styles.startText}>Drive</Text>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
+                  <Text style={styles.startText}>Account</Text>
+                </View>
+                </TouchableHighlight>
+            </View>
         </View>
     );
 }
@@ -27,6 +53,30 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#F3F3F5",
         alignItems: "center",
+    },
+    backButtonSelected: {
+        backgroundColor: '#87B258',
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1
+    },
+    nexttext: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
+        fontSize: 18
+    },
+    title: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontWeight: "bold",
+        fontSize: 38,
+        paddingTop: 10,
+        justifyContent: "center",
+        textAlign: "center",
+        alignItems: "center",
+        flex: 1,
     },
     logoContainer: {
         alignItems: "center",
@@ -40,10 +90,22 @@ const styles = StyleSheet.create({
         lineHeight: 100,
         letterSpacing: 0.015
     },
+    image: {
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: 'contain'
+      },
     logo: {
         width: 150,
         height: 123
     },
+    container: {
+        backgroundColor: "white",
+        borderRadius: 19,
+        alignItems: "center",
+        //justifyContent: "center"
+  },
     text: {
         fontFamily: "Montserrat",
         color: colors.PDgreen,
@@ -55,17 +117,6 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 18
-    },
-    titletext: {
-        width: 400,
-        height: 44,
-        top: 200,
-        fontFamily: "Montserrat",
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: 24,
-        lineHeight: 50,
-        textAlign: "center",
     },
     loginButton: {
         width: 261,
@@ -152,6 +203,26 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
+    },
+    startButton: {
+        backgroundColor: "#C4D9B3",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+    
+        flex: 1,
+        borderWidth: 1,
+        height: 64, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    startText: {
+        fontFamily: "Montserrat",
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        //paddingTop: 10
     },
 })
 

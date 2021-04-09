@@ -15,7 +15,7 @@ const SignupScanConfirm = ({ navigation, route }) => {
         !childUser ? (<View></View>) : (childUser._data ? 
         (<View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.blah} source={require('./../../assets/images/history.png')}/>
+                <Image style={styles.logo} source={require('./../../assets/images/icon.png')}/>
             </View>
             
             <View>
@@ -36,7 +36,7 @@ const SignupScanConfirm = ({ navigation, route }) => {
             </TouchableHighlight>
         </View>) : <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
             </View>
             
             <View>
