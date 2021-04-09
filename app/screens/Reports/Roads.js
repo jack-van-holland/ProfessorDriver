@@ -113,35 +113,35 @@ class Roads extends React.Component {
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
-                 onPress={() => {this.props.navigation.navigate("Roads")}} style={styles.topStartButtonSelected}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButtonSelected}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/road.png")}></Image>
                   <Text style={styles.topStartText}>Roads</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                onPress={() => {this.props.navigation.navigate("Progress")}} style={styles.topStartButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Progress'}],});}} style={styles.topStartButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/progress.png")}></Image>
                   <Text style={styles.topStartText}>Progress</Text>
                 </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                onPress={() => {this.props.navigation.navigate("ReportsMain")}} style={styles.topStartButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.topStartButton}>
                     <View>
                     <Image style={styles.image} source={require("../../assets/images/learning.png")}></Image>
                     <Text style={styles.topStartText}>Tips</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {this.props.navigation.navigate("Safety")}} style={styles.topStartButton}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButton}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
                   <Text style={styles.topStartText}>Safety</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("Skills")}} style={styles.topStartButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
                   <Text style={styles.topStartText}>Skills</Text>
@@ -198,21 +198,21 @@ class Roads extends React.Component {
         
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {navigation.navigate("ReportsMain")}} style={styles.startButtonSelected}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
                     <View>
                     <Image style={styles.image} source={require("../../assets/images/history.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'EndDrive'}],});}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("Account")}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>

@@ -35,21 +35,21 @@ const Account = ({ navigation }) => {
             </View>
             <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {navigation.navigate("ReportsMain")}} style={styles.startButton}>
+                 onPress={() => {navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/history.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButton}>
+                onPress={() => {navigation.reset({index: 0,routes: [{name: 'EndDrive'}],});}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("Account")}} style={styles.startButtonSelected}>
+                onPress={() => {navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButtonSelected}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>
