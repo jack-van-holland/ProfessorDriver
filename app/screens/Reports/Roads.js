@@ -31,6 +31,7 @@ class Roads extends React.Component {
 
     this.state = {
         data: {
+          label: 'Pie dataset',
           dataSets: [{
             values: [{value: 45, label: 'Residential'},
               {value: 21, label: 'Highway'},
@@ -38,7 +39,7 @@ class Roads extends React.Component {
               {value: 9, label: 'Interstate'},
               {value: 15, label: 'City'}],
             config: {
-              colors: [processColor('#C0FF8C'), processColor('#FFF78C'), processColor('#FFD08C'), processColor('#8CEAFF'), processColor('#FF8C9D')],
+              colors: [processColor('#699249'), processColor('#75a351'), processColor('#8fb86f'), processColor('#a9c891'), processColor('#c4d9b3'),],
               valueTextSize: 0,
               valueTextColor: 0,
               //sliceSpace: 5,
@@ -48,7 +49,7 @@ class Roads extends React.Component {
               //valueFormatter: "#.#'%'",
               //valueLineColor: processColor('green'),
               //valueLinePart1Length: 0.5
-            }
+            }, label: "Roads"
           }],
         },
       };
@@ -108,23 +109,23 @@ class Roads extends React.Component {
 
         
           <PieChart
+            
             style={styles.chart}
             data={this.state.data}
             legend={{enabled:false}}
             highlightPerTapEnabled={false}
             extraOffsets={{left: 5, right: 5,}}
-
             entryLabelColor={processColor('black')}
             entryLabelTextSize={20}
-            entryLabelFontFamily={'Montserrat'}
-            fontFamily={"Montserrat"}
+            entryLabelFontFamily={'Arial'}
+           
             drawEntryLabels={true}
             
             rotationEnabled={false}
             //rotationAngle={45}
             usePercentValues={false}
             
-            //styledCenterText={{text:'Your Experience on these Road Types', color: processColor('pink'), fontFamily: 'Montserrat', size: 20}}
+            //styledCenterText={{text:'Your Experience on these Road Types', color: processColor('pink'), fontFamily: 'Arial-Medium', size: 20}}
             centerTextRadiusPercent={100}
             holeRadius={40}
             holeColor={processColor('#f0f0f0')}
