@@ -38,7 +38,7 @@ class Safety extends React.Component {
     console.log("mounted");
     console.log(this.state.userLevel);
     this.setState({
-        safetyData: {week: [7.2, 8.5, 6.3, 9.6, 7.3], overall: [3.7, 5.2, 6.4, 2.7, 3.8], average: [6.6, 7.3, 3.5, 8.1, 4.0]}
+        safetyData: {week: [7.2, 8.5, 6.3, 9.6, 7.3], overall: [6.7, 5.2, 6.4, 6.5, 3.8], average: [6.6, 7.3, 3.5, 8.1, 4.0]}
   }, () => {
     this.setState( (pastState) => { return {
         data: {
@@ -227,7 +227,7 @@ class Safety extends React.Component {
             chartDescription={{text: ''}}
             legend={{enabled:false}}
             rotationEnabled = {false}
-            yAxis={{drawLabels:false, /*axisMinimum:0, axisMaximum:8*/}}
+            yAxis={{drawLabels:false, axisMinimum:0, /*axisMaximum:8*/}}
             drawWeb={true}
             highlightPerTapEnabled={false}
             
