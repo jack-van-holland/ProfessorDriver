@@ -38,7 +38,7 @@ class Safety extends React.Component {
     console.log("mounted");
     console.log(this.state.userLevel);
     this.setState({
-        safetyData: {week: [7, 8, 6, 9, 7], overall: [3, 5, 6, 2, 3], average: [6, 7, 3, 8, 4]}
+        safetyData: {week: [7.2, 8.5, 6.3, 9.6, 7.3], overall: [3.7, 5.2, 6.4, 2.7, 3.8], average: [6.6, 7.3, 3.5, 8.1, 4.0]}
   }, () => {
     this.setState( (pastState) => { return {
         data: {

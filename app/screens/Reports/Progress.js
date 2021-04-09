@@ -7,6 +7,7 @@ import {
   processColor,
   Image,
   TouchableHighlight,
+  ScrollView
 } from 'react-native';
 import update from 'immutability-helper';
 import { Dimensions } from "react-native";
@@ -29,111 +30,142 @@ class Progress extends React.Component {
   constructor() {
     super();
     this.state = {
-        data: {},
-        legend: {
-          enabled: true,
-          textColor: processColor('red'),
-          textSize: 12,
-          form: 'SQUARE',
-          formSize: 14,
-          xEntrySpace: 10,
-          yEntrySpace: 5,
-          formToTextSpace: 5,
-          wordWrapEnabled: true,
-          maxSizePercent: 0.5,
-          custom: {
-            colors: [processColor('red'), processColor('red')],
-            labels: ['REFER', 'USER',]
-          }
-        },
-        marker: {
-          enabled: true,
-          markerColor: processColor('#F0C0FF8C'),
-          textColor: processColor('white'),
-          markerFontSize: 14,
-        },
+        skill: "accel",
+        accelData: [Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,],
+            brakeData: [Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,],
+                accelData: [Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,],
+            turnData: [Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,
+                Math.random() * 10,],
+                speedData: [Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,
+                    Math.random() * 10,],
+                    phoneData: [Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,
+                        Math.random() * 10,],
+  }
   
-        selectedEntry: "",
-        yAxis: {left:{axisMaximum:12000}, right: {enabled: false}}
-      }
-  }
+  this.updateData = () => {
+    this.setState((pastState) => {
+        if (pastState.skill === "accel") {
+            return {data: {
+                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
+                datasets: [
+                  {
+                    data: pastState.accelData
+                  }
+                ]
+              }};
+        } else if (pastState.skill === "brake") {
+            return {data: {
+                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
+                datasets: [
+                  {
+                    data: pastState.brakeData
+                  }
+                ]
+              }};
+        } else if (pastState.skill === "turn") {
+            return {data: {
+                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
+                datasets: [
+                  {
+                    data: pastState.turnData
+                  }
+                ]
+              }};
+        } else if (pastState.skill === "speed") {
+            return {data: {
+                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
+                datasets: [
+                  {
+                    data: pastState.speedData
+                  }
+                ]
+              }};
+        } else {
+            return {data: {
+                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
+                datasets: [
+                  {
+                    data: pastState.phoneData
+                  }
+                ]
+              }};
+        } 
+    });
 
-  componentDidMount() {
-    console.log("mounted");
-    console.log(this.state.userLevel);
-    this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
+}
+}
+componentDidMount() {
+    this.updateData();
+}
     
     
-    
-    this.setState(
-      update(this.state, {
-        data: {
-          $set: {
-            dataSets: [{
-              values: [1, 1, 1, 1, 1],
-              label: 'DS 1',
-              config: {
-                color: processColor('#FF8C9D'),
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#FF8C9D'),
-                fillAlpha: 100,
-                lineWidth: 2
-              }
-            }, {
-              values: [1, 2, 3, 4, 5],
-              label: 'DS 2',
-              config: {
-                color: processColor('#C0FF8C'),
-
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#C0FF8C'),
-                fillAlpha: 150,
-                lineWidth: 1.5
-              }
-            }, {
-              values: [6, 10, 2, 5, 4],
-              label: 'DS 3',
-              config: {
-                color: processColor('#8CEAFF'),
-                drawValues: false,
-                drawFilled: true,
-                fillColor: processColor('#8CEAFF')
-              }
-            }],
-          }
-        },
-        xAxis: {
-            
-          $set: {
-            fontFamily: "Montserrat",
-            valueFormatter: ['Acceleration', 'Phone Use', 'Turning', 'Speed', 'Braking']
-          }
-        }
-      })
-    );
-  }
-
-  handleSelect(event) {
-    let entry = event.nativeEvent
-    if (entry == null) {
-      this.setState({...this.state, selectedEntry: null})
-    } else {
-      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
-    }
-
-    console.log(event.nativeEvent)
-  }
-
   render() {
     
     return (
-      this.state.userLevel ?
-      <View style={{flex: 1}}>
-
+      this.state.data ?
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
@@ -172,53 +204,69 @@ class Progress extends React.Component {
                 </View>
                 </TouchableHighlight>
   </View>
-          <Text style={[styles.title, {marginTop:50}]}>Welcome!</Text>
+          <Text style={[styles.title, {marginTop:50}]}>View your progress over time for each safety habit</Text>
           
-          <View style={{backgroundColor:'#C4D9B3', borderRadius: 16, height : 300}}>
-          <Text style={styles.title}>Level {this.state.userLevel.level}</Text>
-
-          <ProgressChart
-          data={[this.state.userLevel.points / 3000]}
-          width={Dimensions.get('window').width - 16}
-          height={250}
-          radius={100}
-          hideLegend={true}
-          chartConfig={{
-            backgroundGradientFrom: '#C4D9B3',
-            backgroundGradientTo: '#C4D9B3',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            
-          //  height:"50px",
-          }}
-        />
-        {this.state.userLevel.level !== 10 ? 
-        <Text style={styles.title}>You need {3000 - this.state.userLevel.points} more points
-         to move to Level {this.state.userLevel.level + 1}</Text> : null}
-
-  </View>
-</View>
 
         
-          <RadarChart
-            style={styles.chart}
-            data={this.state.data}
-            xAxis={this.state.xAxis}
-            chartDescription={{text: ''}}
-            legend={{enabled:false}}
-            rotationEnabled = {false}
-            yAxis={{drawLabels:false, axisMinimum:0, axisMaximum:8}}
-            drawWeb={true}
-            highlightPerTapEnabled={false}
-            
-          />
+
+  <ScrollView
+horizontal={true}
+contentOffset={{ x: 900 - Dimensions.get("window").width, y: 0 }} // i needed the scrolling to start from the end not the start
+showsHorizontalScrollIndicator={false}
+style={{flex:1}} // to hide scroll bar
+>
+  <LineChart
+    data={this.state.data}
+    width={900}
+    height={250}
+    yAxisInterval={1} // optional, defaults to 1
+    chartConfig={{
+    backgroundGradientFrom: '#E1F6D0',
+    backgroundGradientTo: '#E1F6D0',
+      decimalPlaces: 2, // optional, defaults to 2dp
+      color: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
+      style: {
+        borderRadius: 16
+      },
+      
+    }}
+    bezier
+    style={{
+      marginVertical: 8,
+      borderRadius: 16
+    }}
+  />
+  </ScrollView>
+  <View style={{flex: 0, flexDirection:"row"}}>
+            <TouchableHighlight onPress={() => {this.setState({skill: "accel"}, () => {this.updateData();});}}
+            style={this.state.skill === "accel" ? styles.buttonSelected :styles.buttonUnselected}
+            underlayColor="rgba(135, 178, 88, 0.2)">
+                <Text style={styles.text}>Gentle Acceleration</Text>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => {this.setState({skill: "brake"}, () => {this.updateData();});}}
+            style={this.state.skill === "brake" ? styles.buttonSelected : styles.buttonUnselected}
+            underlayColor="rgba(135, 178, 88, 0.2)">
+                <Text style={styles.text}>Gentle Braking</Text>
+            </TouchableHighlight>
+            </View>
+            <View style={{flex: 0, flexDirection:"row"}}>
+            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
+            onPress={() => {this.setState({skill: "turn"}, () => {this.updateData();});}}
+            style={this.state.skill === "turn" ? styles.buttonSelected : styles.buttonUnselected}>
+                <Text style={styles.text}>Slowing for Turns</Text>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
+            onPress={() => {this.setState({skill: "speed"}, () => {this.updateData();});}}
+            style={this.state.skill === "speed" ? styles.buttonSelected : styles.buttonUnselected}>
+                <Text style={styles.text}>Proper Speed</Text>
+            </TouchableHighlight>
+            </View>
+            <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
+            onPress={() => {this.setState({skill: "phone"}, () => {this.updateData();});}}
+            style={this.state.skill === "phone" ? styles.buttonSelected : styles.buttonUnselected}>
+                <Text style={styles.text}>Avoiding Phone Use</Text>
+            </TouchableHighlight>
         
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
@@ -418,6 +466,23 @@ text: {
         height: 90, 
         alignItems: "center", 
         justifyContent: "center"
+    },
+    buttonUnselected: {
+        padding: 5,
+        margin: 10,
+        backgroundColor: "#F3F3F5",
+        borderColor: "#87B258",
+        borderWidth: 1.5,
+        borderRadius: 10,
+    },
+    buttonSelected: {
+        padding: 5,
+        margin: 10,
+        backgroundColor: "rgba(50, 178, 80, 0.2)",
+        borderColor: "#87B258",
+        borderWidth: 1.5,
+        borderRadius: 10,
+    
     },
 });
 

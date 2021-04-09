@@ -109,12 +109,10 @@ class Roads extends React.Component {
         
           <PieChart
             style={styles.chart}
-            //chartBackgroundColor={processColor('pink')}
             data={this.state.data}
-            
             legend={{enabled:false}}
             highlightPerTapEnabled={false}
-            extraOffsets={{left: 5, top: 5, right: 5, bottom: 5}}
+            extraOffsets={{left: 5, right: 5,}}
 
             entryLabelColor={processColor('black')}
             entryLabelTextSize={20}
