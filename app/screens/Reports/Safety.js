@@ -24,7 +24,7 @@ import {
 import {RadarChart} from 'react-native-charts-wrapper';
 
 
-class Skills extends React.Component {
+class Safety extends React.Component {
 
   constructor() {
     super();
@@ -133,15 +133,15 @@ class Skills extends React.Component {
                     <Text style={styles.topStartText}>Tips</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                 onPress={() => {this.props.navigation.navigate("Safety")}} style={styles.topStartButton}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
+                 onPress={() => {this.props.navigation.navigate("Safety")}} style={styles.topStartButtonSelected}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
                   <Text style={styles.topStartText}>Safety</Text>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
-                onPress={() => {this.props.navigation.navigate("Skills")}} style={styles.topStartButtonSelected}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Skills")}} style={styles.topStartButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
                   <Text style={styles.topStartText}>Skills</Text>
@@ -389,4 +389,4 @@ text: {
     },
 });
 
-export default Skills;
+export default Safety;

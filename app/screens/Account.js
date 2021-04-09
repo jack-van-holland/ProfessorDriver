@@ -49,7 +49,7 @@ const Account = ({ navigation }) => {
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButtonSelected}>
+                onPress={() => {navigation.navigate("Account")}} style={styles.startButtonSelected}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>

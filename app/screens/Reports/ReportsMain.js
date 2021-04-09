@@ -112,25 +112,39 @@ class ReportsMain extends React.Component {
 
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("ReportsMain")}} style={styles.startButton}>
-                    <View>
-                    <Image style={styles.image} source={require("../../assets/images/history.png")}></Image>
-                    <Text style={styles.startText}>Reports</Text>
-                    </View>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+        <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {this.props.navigation.navigate("Roads")}} style={styles.topStartButton}>
                   <View>
-                  <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
-                  <Text style={styles.startText}>Drive</Text>
+                  <Image style={styles.image} source={require("../../assets/images/road.png")}></Image>
+                  <Text style={styles.topStartText}>Roads</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("Account")}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.navigate("Progress")}} style={styles.topStartButton}>
                 <View>
-                  <Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
-                  <Text style={styles.startText}>Account</Text>
+                  <Image style={styles.image} source={require("../../assets/images/progress.png")}></Image>
+                  <Text style={styles.topStartText}>Progress</Text>
+                </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
+                onPress={() => {this.props.navigation.navigate("ReportsMain")}} style={styles.topStartButtonSelected}>
+                    <View>
+                    <Image style={styles.image} source={require("../../assets/images/learning.png")}></Image>
+                    <Text style={styles.topStartText}>Tips</Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {this.props.navigation.navigate("Safety")}} style={styles.topStartButton}>
+                  <View>
+                  <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
+                  <Text style={styles.topStartText}>Safety</Text>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Skills")}} style={styles.topStartButton}>
+                <View>
+                  <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
+                  <Text style={styles.topStartText}>Skills</Text>
                 </View>
                 </TouchableHighlight>
   </View>
@@ -182,8 +196,32 @@ class ReportsMain extends React.Component {
             
           />
         
+        <View style={{flex: 0, flexDirection:"row"}}>
+                <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {navigation.navigate("ReportsMain")}} style={styles.startButtonSelected}>
+                    <View>
+                    <Image style={styles.image} source={require("../../assets/images/history.png")}></Image>
+                    <Text style={styles.startText}>Reports</Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButton}>
+                  <View>
+                  <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
+                  <Text style={styles.startText}>Drive</Text>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.navigate("Account")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
+                  <Text style={styles.startText}>Account</Text>
+                </View>
+                </TouchableHighlight>
+                </View>
 
       </View>
+
     :
       <View style={styles.background}>
             <View style={styles.logoContainer}>
@@ -280,13 +318,20 @@ text: {
     fontSize: 20,
     //paddingTop: 10
   },
+  topStartText: {
+    fontFamily: "Montserrat",
+    color: "white",
+    //fontWeight: "bold",
+    fontSize: 20,
+    //paddingTop: 10
+  },
   container: {
           backgroundColor: "white",
           borderRadius: 19,
           alignItems: "center",
           //justifyContent: "center"
     },
-    startButton: {
+    topStartButton: {
         backgroundColor: "#C4D9B3",
         borderRightColor: "#F3F3F5",
         borderLeftColor: "#F3F3F5",
@@ -297,6 +342,48 @@ text: {
         flex: 1,
         borderWidth: 1,
         height: 150, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    topStartButtonSelected: {
+        backgroundColor: "rgba(95, 128, 59,255)",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"rgba(95, 128, 59, 255)",
+        paddingBottom: 15,
+        paddingTop:50,
+        flex: 1,
+        borderWidth: 1,
+        height: 150, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    startButton: {
+        backgroundColor: "#C4D9B3",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+        paddingBottom: 15,
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    startButtonSelected: {
+        backgroundColor: "rgba(95, 128, 59,255)",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"rgba(95, 128, 59, 255)",
+        paddingBottom: 15,    
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90, 
         alignItems: "center", 
         justifyContent: "center"
     },
