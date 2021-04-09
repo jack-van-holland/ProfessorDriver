@@ -40,7 +40,7 @@ import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
   SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, 
   Query, StartDrive, Reflection, ParentHome, Account, 
-  ReportsMain, Safety, Skills, Roads, Progress,
+  ReportsMain, Safety, Skills, Roads, Progress, EndDrive,
 } from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
@@ -82,6 +82,8 @@ class App extends React.Component {
           <Stack.Screen name="Progress" component={Progress}/>
           <Stack.Screen name="Roads" component={Roads}/>
           <Stack.Screen name="Safety" component={Safety}/>
+          <Stack.Screen name="EndDrive" component={EndDrive}/>
+
 
 
 

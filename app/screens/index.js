@@ -18,6 +18,8 @@ export { default as Safety} from './Reports/Safety'
 export { default as Progress} from './Reports/Progress'
 export { default as Skills} from './Reports/Skills'
 export { default as Roads} from './Reports/Roads'
+export { default as EndDrive} from './EndDrive'
+
 
 
 
