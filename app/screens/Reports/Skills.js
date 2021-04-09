@@ -7,6 +7,8 @@ import {
   processColor,
   Image,
   TouchableHighlight,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import update from 'immutability-helper';
 import { Dimensions } from "react-native";
@@ -30,7 +32,22 @@ class Skills extends React.Component {
     super();
 
     this.state = {
-      userPerformance: {}, performanceChart: {},
+      skillsData: {
+        labels: ["Lane Centering", "Mirrors", "Speed Control", "Signals"],
+        datasets: [
+          {
+            data: [20, 45, 28, 80,]
+          }
+        ]
+      }, 
+      challengesData: {
+        labels: ["Parking", "Distractions", "Merging", "Left Turns"],
+        datasets: [
+          {
+            data: [89, 69, 12, 48,]
+          }
+        ]
+      }, 
     };
   }
 
@@ -41,73 +58,14 @@ class Skills extends React.Component {
       userLevel: {points: 2132, level: 6,}
   }, () => {console.log(this.state.userLevel);});
     
-    
-    
-    this.setState(
-      update(this.state, {
-        data: {
-          $set: {
-            dataSets: [{
-              values: [1, 1, 1, 1, 1],
-              label: 'DS 1',
-              config: {
-                color: processColor('#FF8C9D'),
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#FF8C9D'),
-                fillAlpha: 100,
-                lineWidth: 2
-              }
-            }, {
-              values: [1, 2, 3, 4, 5],
-              label: 'DS 2',
-              config: {
-                color: processColor('#C0FF8C'),
 
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#C0FF8C'),
-                fillAlpha: 150,
-                lineWidth: 1.5
-              }
-            }, {
-              values: [6, 10, 2, 5, 4],
-              label: 'DS 3',
-              config: {
-                color: processColor('#8CEAFF'),
-                drawValues: false,
-                drawFilled: true,
-                fillColor: processColor('#8CEAFF')
-              }
-            }],
-          }
-        },
-        xAxis: {
-            
-          $set: {
-            fontFamily: "Montserrat",
-            valueFormatter: ['Acceleration', 'Phone Use', 'Turning', 'Speed', 'Braking']
-          }
-        }
-      })
-    );
   }
 
-  handleSelect(event) {
-    let entry = event.nativeEvent
-    if (entry == null) {
-      this.setState({...this.state, selectedEntry: null})
-    } else {
-      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
-    }
-
-    console.log(event.nativeEvent)
-  }
 
   render() {
     
     return (
-      this.state.userLevel ?
+      this.state.skillsData ?
       <View style={{flex: 1}}>
 
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
@@ -148,53 +106,74 @@ class Skills extends React.Component {
                 </View>
                 </TouchableHighlight>
   </View>
-          <Text style={[styles.title, {marginTop:50}]}>Welcome!</Text>
+          <Text style={[styles.title, ]}>Your Strengths</Text>
           
-          <View style={{backgroundColor:'#C4D9B3', borderRadius: 16, height : 300}}>
-          <Text style={styles.title}>Level {this.state.userLevel.level}</Text>
 
-          <ProgressChart
-          data={[this.state.userLevel.points / 3000]}
-          width={Dimensions.get('window').width - 16}
-          height={250}
-          radius={100}
-          hideLegend={true}
-          chartConfig={{
-            backgroundGradientFrom: '#C4D9B3',
-            backgroundGradientTo: '#C4D9B3',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            
-          //  height:"50px",
-          }}
-        />
-        {this.state.userLevel.level !== 10 ? 
-        <Text style={styles.title}>You need {3000 - this.state.userLevel.points} more points
-         to move to Level {this.state.userLevel.level + 1}</Text> : null}
+          <BarChart
+  style={styles.chart}
+  data={this.state.skillsData}
+  width={screenWidth - 50}
+  height={220}
+  yAxisLabel={{}}
+  
+  chartConfig={{
+    backgroundGradientFrom: '#E1F6D0',
+    backgroundGradientTo: '#E1F6D0',
+    decimalPlaces: 2,
+    color: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
+    style: {
+      borderRadius: 16,
+    },
+  }}
+  style={{
+    marginVertical: 8,
+    borderRadius: 16,
+    flex:0,
+    marginLeft: 25,
+    paddingRight:25,
 
-  </View>
+    
+  //  height:"50px",
+  }}
+  withHorizontalLabels={false}
+
+  //verticalLabelRotation={30}
+/>
+<Text style={[styles.title, ]}>Your Challenges</Text>
+
+<BarChart
+  style={styles.chart}
+  data={this.state.challengesData}
+  width={screenWidth - 50}
+  height={220}
+  
+  chartConfig={{
+    backgroundGradientFrom: '#FFCCCB',
+    backgroundGradientTo: '#FFCCCB',
+    decimalPlaces: 2,
+    color: (opacity = 1) => `rgba(187, 113, 111, ${opacity})`,
+    style: {
+      borderRadius: 16,
+    },
+  }}
+  withHorizontalLabels={false}
+  style={{
+    marginVertical: 8,
+    borderRadius: 16,
+    flex:0,
+    marginLeft: 25,
+    paddingRight:25,
+    paddingBottom: 15 
+    
+  //  height:"50px",
+  }}
+  //verticalLabelRotation={30}
+/>
 </View>
 
+
         
-          <RadarChart
-            style={styles.chart}
-            data={this.state.data}
-            xAxis={this.state.xAxis}
-            chartDescription={{text: ''}}
-            legend={{enabled:false}}
-            rotationEnabled = {false}
-            yAxis={{drawLabels:false, axisMinimum:0, axisMaximum:8}}
-            drawWeb={true}
-            highlightPerTapEnabled={false}
-            
-          />
+          
         
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
