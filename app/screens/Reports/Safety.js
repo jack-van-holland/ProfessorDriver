@@ -12,7 +12,7 @@ import update from 'immutability-helper';
 import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 import colors from "../../config/colors";
-
+import {CheckBox} from "react-native-elements";
 import {
     LineChart,
     BarChart,
@@ -30,7 +30,7 @@ class Safety extends React.Component {
     super();
 
     this.state = {
-      userPerformance: {}, performanceChart: {},
+      userPerformance: {}, performanceChart: {}, allChecked: false, timeChecked: false,
     };
   }
 
@@ -38,17 +38,12 @@ class Safety extends React.Component {
     console.log("mounted");
     console.log(this.state.userLevel);
     this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
-    
-    
-    
-    this.setState(
-      update(this.state, {
+        safetyData: {week: [7, 8, 6, 9, 7], overall: [3, 5, 6, 2, 3], average: [6, 7, 3, 8, 4]}
+  }, () => {
+    this.setState( (pastState) => { return {
         data: {
-          $set: {
             dataSets: [{
-              values: [1, 1, 1, 1, 1],
+              values: pastState.safetyData.week,
               label: 'DS 1',
               config: {
                 color: processColor('#FF8C9D'),
@@ -59,39 +54,110 @@ class Safety extends React.Component {
                 lineWidth: 2
               }
             }, {
-              values: [1, 2, 3, 4, 5],
-              label: 'DS 2',
-              config: {
-                color: processColor('#C0FF8C'),
-
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#C0FF8C'),
-                fillAlpha: 150,
-                lineWidth: 1.5
-              }
-            }, {
-              values: [6, 10, 2, 5, 4],
-              label: 'DS 3',
-              config: {
-                color: processColor('#8CEAFF'),
-                drawValues: false,
-                drawFilled: true,
-                fillColor: processColor('#8CEAFF')
-              }
-            }],
-          }
+                values: pastState.safetyData.average,
+                label: 'DS 2',
+                config: {
+                  color: 0,
+  
+                  drawFilled: true,
+                  drawValues: false,
+                  fillColor: 0,
+                  fillAlpha: 255,
+                  lineWidth: 0
+                }
+              }, {
+                values: pastState.safetyData.overall,
+                label: 'DS 3',
+                config: {
+                  color: 0,
+                  drawValues: false,
+                  drawFilled: true,
+                  fillColor: 0
+                }
+              }],
         },
         xAxis: {
-            
-          $set: {
             fontFamily: "Montserrat",
-            valueFormatter: ['Acceleration', 'Phone Use', 'Turning', 'Speed', 'Braking']
-          }
+            valueFormatter: ['     Gentle\nAcceleration', '  Avoiding\nPhone Use', ' Slowing\nfor Turns', 'Proper\nSpeed', ' Gentle\nBraking'],
         }
-      })
-    );
-  }
+    }
+}
+    , () => {console.log(this.state.data);});
+  });
+    
+    this.updateRadar = () => {
+        console.log("hi");
+        this.setState((pastState) => {
+            const datasets = [];
+            datasets.push({values: pastState.safetyData.week,
+                label: 'DS 1',
+                config: {
+                  color: processColor('#FF8C9D'),
+                  drawFilled: true,
+                  drawValues: false,
+                  fillColor: processColor('#FF8C9D'),
+                  fillAlpha: 100,
+                  lineWidth: 2
+                }});
+            if (pastState.allChecked) {
+                datasets.push({
+                    values: pastState.safetyData.average,
+                    label: 'DS 2',
+                    config: {
+                      color: processColor('#C0FF8C'),
+      
+                      drawFilled: true,
+                      drawValues: false,
+                      fillColor: processColor('#C0FF8C'),
+                      fillAlpha: 150,
+                      lineWidth: 1.5
+                    }
+                  });
+            } else {
+                datasets.push({
+                    values: pastState.safetyData.average,
+                    label: 'DS 2',
+                    config: {
+                      color: 0,
+      
+                      drawFilled: true,
+                      drawValues: false,
+                      fillColor: 0,
+                      fillAlpha: 255,
+                      lineWidth: 0
+                    }
+                  });
+            }
+            if (pastState.timeChecked) {
+                datasets.push( {
+                    values: pastState.safetyData.overall,
+                    label: 'DS 3',
+                    config: {
+                      color: processColor('#8CEAFF'),
+                      drawValues: false,
+                      drawFilled: true,
+                      fillColor: processColor('#8CEAFF')
+                    }
+                  });
+            } else {
+                datasets.push( {
+                    values: pastState.safetyData.overall,
+                    label: 'DS 3',
+                    config: {
+                      color: 0,
+                      drawValues: false,
+                      drawFilled: true,
+                      fillColor: 0
+                    }
+                  });
+            }
+            return {
+                data: {dataSets: datasets}
+            };
+        }, () => {console.log(this.state.data)});
+    };
+    
+}
 
   handleSelect(event) {
     let entry = event.nativeEvent
@@ -107,10 +173,10 @@ class Safety extends React.Component {
   render() {
     
     return (
-      this.state.userLevel ?
+      this.state.safetyData ?
       <View style={{flex: 1}}>
 
-        <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
+        <View style={[styles.container, {flex: .75, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
@@ -148,38 +214,9 @@ class Safety extends React.Component {
                 </View>
                 </TouchableHighlight>
   </View>
-          <Text style={[styles.title, {marginTop:50}]}>Welcome!</Text>
+          <Text style={[styles.text, {marginTop:25}]}>These are the most dangerous habits while driving. Here's how you performed this week:</Text>
           
-          <View style={{backgroundColor:'#C4D9B3', borderRadius: 16, height : 300}}>
-          <Text style={styles.title}>Level {this.state.userLevel.level}</Text>
 
-          <ProgressChart
-          data={[this.state.userLevel.points / 3000]}
-          width={Dimensions.get('window').width - 16}
-          height={250}
-          radius={100}
-          hideLegend={true}
-          chartConfig={{
-            backgroundGradientFrom: '#C4D9B3',
-            backgroundGradientTo: '#C4D9B3',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            
-          //  height:"50px",
-          }}
-        />
-        {this.state.userLevel.level !== 10 ? 
-        <Text style={styles.title}>You need {3000 - this.state.userLevel.points} more points
-         to move to Level {this.state.userLevel.level + 1}</Text> : null}
-
-  </View>
 </View>
 
         
@@ -190,12 +227,19 @@ class Safety extends React.Component {
             chartDescription={{text: ''}}
             legend={{enabled:false}}
             rotationEnabled = {false}
-            yAxis={{drawLabels:false, axisMinimum:0, axisMaximum:8}}
+            yAxis={{drawLabels:false, /*axisMinimum:0, axisMaximum:8*/}}
             drawWeb={true}
             highlightPerTapEnabled={false}
             
           />
-        
+        <Text style={styles.title}>Compare with...</Text>
+        <View style={{flex:1.5}}>
+        <CheckBox fontFamily='Montserrat' center title='Your Overall Performance Over Time' onPress={() => {this.setState((pastState) => {return {timeChecked: !pastState.timeChecked}}, () => {this.updateRadar();});}}
+  checked={this.state.timeChecked}></CheckBox>
+  <CheckBox fontFamily='Montserrat' center title='Average Learning Drivers' onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
+  checked={this.state.allChecked}></CheckBox>
+  </View>
+
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
@@ -294,9 +338,9 @@ logo: {
 },
 text: {
     fontFamily: "Montserrat",
-    color: colors.PDgreen,
-    fontWeight: "bold",
-    fontSize: 18
+    fontSize: 16,
+    textAlign:"center",
+    zIndex: 2,
 },
   chart: {
     flex: 4,
@@ -304,6 +348,7 @@ text: {
     height:100,
     //backgroundColor: '#C4D9B3',
     borderRadius:16,
+    zIndex:1,
   },
   image: {
     flex: 1,

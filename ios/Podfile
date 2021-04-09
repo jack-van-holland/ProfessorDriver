@@ -20,6 +20,8 @@ target 'ProfessorDriver' do
 
 
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'ProfessorDriverTests' do
     inherit! :complete
     # Pods for testing
