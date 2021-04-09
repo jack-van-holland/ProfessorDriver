@@ -108,8 +108,6 @@ class ReportsMain extends React.Component {
     
     return (
       this.state.userLevel ?
-      <View style={{flex: 1}}>
-
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
@@ -148,54 +146,23 @@ class ReportsMain extends React.Component {
                 </View>
                 </TouchableHighlight>
   </View>
-          <Text style={[styles.title, {marginTop:50}]}>Welcome!</Text>
-          
-          <View style={{backgroundColor:'#C4D9B3', borderRadius: 16, height : 300}}>
-          <Text style={styles.title}>Level {this.state.userLevel.level}</Text>
+          <Text style={[styles.title, {marginTop:10}]}>Your Top 3 Tips from this week to improve your driving!</Text>
+          <View style={{flex: 1, justifyContent:"flex-start", marginTop:25}}>
+          <Text style={[styles.title, ]}>Safety Habits</Text>
+          <Text style={[styles.subtitle, ]}>You struggle most with: proper speed.</Text>
+          <Text style={[styles.text,]}>Our recommendation: take a moment to center yourself before driving. Life can get busy and chaotic, but speeding generally on saves a couple minutes of time and contributes to a third of collisions. Before a drive, take a moment to make the decision not to speed.</Text>
+          </View>
+          <View style={{flex: 1, justifyContent:"flex-start", marginTop:25}}>
+          <Text style={[styles.title]}>Skills</Text>
+          <Text style={[styles.subtitle]}>You struggle most with: left turns.</Text>
+          <Text style={[styles.text]}>Our recommendation: remember that the choice of when to turn is yours. Do not let drivers behind you pressure you into turning unsafely.</Text>
+          </View>
+          <View style={{flex: 1, justifyContent:"flex-start"}}>
+          <Text style={[styles.title]}>Road Types</Text>
+          <Text style={[styles.subtitle]}>Practice more on highway roads. </Text>
+          <Text style={[styles.text,{marginBottom:25}]}>This is at your skill level and will help you gain valuable experience.</Text>
+          </View>
 
-          <ProgressChart
-          data={[this.state.userLevel.points / 3000]}
-          width={Dimensions.get('window').width - 16}
-          height={250}
-          radius={100}
-          hideLegend={true}
-          chartConfig={{
-            backgroundGradientFrom: '#C4D9B3',
-            backgroundGradientTo: '#C4D9B3',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            
-          //  height:"50px",
-          }}
-        />
-        {this.state.userLevel.level !== 10 ? 
-        <Text style={styles.title}>You need {3000 - this.state.userLevel.points} more points
-         to move to Level {this.state.userLevel.level + 1}</Text> : null}
-
-  </View>
-</View>
-
-        
-          <RadarChart
-            style={styles.chart}
-            data={this.state.data}
-            xAxis={this.state.xAxis}
-            chartDescription={{text: ''}}
-            legend={{enabled:false}}
-            rotationEnabled = {false}
-            yAxis={{drawLabels:false, axisMinimum:0, axisMaximum:8}}
-            drawWeb={true}
-            highlightPerTapEnabled={false}
-            
-          />
-        
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
@@ -251,12 +218,9 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat",
     color: "black",
     fontWeight: "bold",
-    fontSize: 22,
+    fontSize: 30,
     paddingTop: 10,
-    justifyContent: "center",
     textAlign: "center",
-    alignItems: "center"
-
 },background: {
   flex: 1,
   backgroundColor: "#F3F3F5",
@@ -299,11 +263,19 @@ logo: {
     width: 150,
     height: 123
 },
-text: {
+subtitle: {
     fontFamily: "Montserrat",
     color: colors.PDgreen,
     fontWeight: "bold",
+    textAlign:"center",
+    marginHorizontal: 20,
     fontSize: 18
+},
+text: {
+    fontFamily: "Montserrat",
+    textAlign: "center",
+    marginHorizontal: 20,
+    fontSize: 16
 },
   chart: {
     flex: 4,
