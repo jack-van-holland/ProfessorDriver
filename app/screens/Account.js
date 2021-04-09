@@ -34,6 +34,13 @@ const Account = ({ navigation }) => {
             </TouchableHighlight>
             </View>
             <View style={{flex: 0, flexDirection:"row"}}>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+                    <View>
+                    <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
+                    <Text style={styles.startText}>Home</Text>
+                    </View>
+                </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButton}>
                     <View>

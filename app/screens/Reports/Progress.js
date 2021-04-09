@@ -28,10 +28,34 @@ class Progress extends React.Component {
 
   constructor() {
     super();
-
     this.state = {
-      userPerformance: {}, performanceChart: {},
-    };
+        data: {},
+        legend: {
+          enabled: true,
+          textColor: processColor('red'),
+          textSize: 12,
+          form: 'SQUARE',
+          formSize: 14,
+          xEntrySpace: 10,
+          yEntrySpace: 5,
+          formToTextSpace: 5,
+          wordWrapEnabled: true,
+          maxSizePercent: 0.5,
+          custom: {
+            colors: [processColor('red'), processColor('red')],
+            labels: ['REFER', 'USER',]
+          }
+        },
+        marker: {
+          enabled: true,
+          markerColor: processColor('#F0C0FF8C'),
+          textColor: processColor('white'),
+          markerFontSize: 14,
+        },
+  
+        selectedEntry: "",
+        yAxis: {left:{axisMaximum:12000}, right: {enabled: false}}
+      }
   }
 
   componentDidMount() {
@@ -197,6 +221,13 @@ class Progress extends React.Component {
           />
         
         <View style={{flex: 0, flexDirection:"row"}}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+                  <View>
+                  <Image style={styles.image} source={require("../../assets/images/home.png")}></Image>
+                  <Text style={styles.startText}>Home</Text>
+                  </View>
+                </TouchableHighlight>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
                     <View>
@@ -240,7 +271,8 @@ const styles = StyleSheet.create({
         borderRadius: 19,
         alignItems: "center",
         //justifyContent: "center"
-    },title: {
+    },
+    title: {
     fontFamily: "Montserrat",
     color: "black",
     fontWeight: "bold",
