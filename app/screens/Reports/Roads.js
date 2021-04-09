@@ -117,7 +117,7 @@ class Roads extends React.Component {
             extraOffsets={{left: 5, right: 5,}}
             entryLabelColor={processColor('black')}
             entryLabelTextSize={20}
-            entryLabelFontFamily={'Arial'}
+            entryLabelFontFamily={'Montserrat-Black'}
            
             drawEntryLabels={true}
             
@@ -146,7 +146,7 @@ class Roads extends React.Component {
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
                     <View>
-                    <Image style={styles.image} source={require("../../assets/images/history.png")}></Image>
+                    <Image style={styles.image} source={require("../../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
@@ -156,6 +156,13 @@ class Roads extends React.Component {
                   <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../../assets/images/diary.png")}></Image>
+                  <Text style={styles.startText}>Log</Text>
+                </View>
                 </TouchableHighlight>
                 <TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>

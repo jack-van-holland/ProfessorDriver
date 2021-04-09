@@ -279,7 +279,7 @@ style={{flex:1}} // to hide scroll bar
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
                     <View>
-                    <Image style={styles.image} source={require("../../assets/images/history.png")}></Image>
+                    <Image style={styles.image} source={require("../../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
@@ -289,6 +289,13 @@ style={{flex:1}} // to hide scroll bar
                   <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../../assets/images/diary.png")}></Image>
+                  <Text style={styles.startText}>Log</Text>
+                </View>
                 </TouchableHighlight>
                 <TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>
