@@ -13,4 +13,6 @@ export { default as Query} from './Query'
 export { default as Reflection} from './Reflection'
 export { default as ParentHome} from './ParentHome'
 export { default as Account} from './Account'
+export { default as ReportsMain} from './Reports/ReportsMain'
+
 

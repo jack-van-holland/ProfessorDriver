@@ -36,12 +36,14 @@ const Login = ({ navigation }) => {
 
             <View style={{flexDirection: "row"}}>
                 <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                    onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
                         <Text style={styles.nexttext}>Back</Text>
                     </TouchableHighlight>
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={submit}
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, 1)"
+                    onPress={submit}
                     disabled={email && password ? false : true}
                     style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
                     >

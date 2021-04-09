@@ -143,20 +143,23 @@ class Home extends React.Component {
         <Text style={[styles.text, {flex:0}]}>You need {3000 - this.state.userLevel.points} more points to level up! </Text> : null}
 
   </View>
-  <View style={{flex: 0, flexDirection:"row", paddingBottom: 15, backgroundColor: "#C4D9B3"}}>
-                <TouchableHighlight onPress={() => {this.props.navigation.navigate("Reports Main")}} style={styles.startButton}>
+  <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("ReportsMain")}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/history.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight onPress={() => {this.props.navigation.navigate("Account")}} style={styles.startButton}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Account")}} style={styles.startButton}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>
@@ -258,10 +261,11 @@ startButton: {
     borderLeftColor: "#F3F3F5",
     borderTopColor:"#F3F3F5",
     borderBottomColor:"#C4D9B3",
-
+    paddingBottom: 15,
+    paddingTop:15,
     flex: 1,
     borderWidth: 1,
-    height: 64, 
+    height: 90, 
     alignItems: "center", 
     justifyContent: "center"
 },

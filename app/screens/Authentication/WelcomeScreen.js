@@ -11,17 +11,18 @@ const WelcomeScreen = ({ navigation }) => {
     const [loaded, setLoaded] = React.useState(false);
     useEffect(() => {
         auth().onAuthStateChanged((user) => {
-            firestore().collection('users').doc(auth().currentUser.uid).get().then((userInfo) => {
-                if (userInfo) {
-                    if (userInfo.role === "parent") {
-                        navigation.navigate("ParentHome");
-                    } else {
-                        navigation.navigate("Home");
-                    }
+            console.log("user")
+            console.log(user);
+            if (user) {
+                firestore().collection('users').doc(auth().currentUser.uid).get().then((userInfo) => {
+                if (userInfo.role === "parent") {
+                    navigation.navigate("ParentHome");
                 } else {
+                    navigation.navigate("Home");
+                }});
+            } else {
                     setLoaded(true);
-                }
-            })
+            }
         });
     });
     return (

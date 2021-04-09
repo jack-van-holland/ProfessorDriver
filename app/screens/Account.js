@@ -13,31 +13,43 @@ const Account = ({ navigation }) => {
         <View style={[styles.container, {flex:1, justifyContent:"space-between", alignItems:"center", alignContent: "center"}]}>
             <View style={{paddingTop:100, flex:1, justifyContent:"space-evenly"}}>
                 <Text style={styles.title}>Account</Text>
+            </View>
             
+            <View style={{justifyContent:"center"}}>
             <QRCode
             value={auth().currentUser.uid}
             logo={require("../assets/images/icon.png")}
-            style={styles.title}
             />
-            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
+            </View>
+            <View style={{flex:1}}>
+            <Text style={styles.text}> If you are learning with parent or coach, 
+                show them this code when they are creating an account. 
+                This will give them access to view your driving performance.  </Text>
+            </View>
+            <View style={{flex:1}}>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => 
+            {auth().signOut().then(() => {navigation.reset({index: 0,routes: [{name: 'WelcomeScreen'}],});}); }}
             style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Hello there hi hi hi</Text>
+                <Text style={styles.nexttext}>Logout</Text>
             </TouchableHighlight>
             </View>
-            <View style={{flex: 0, flexDirection:"row", paddingBottom: 15, backgroundColor: "#C4D9B3"}}>
-                <TouchableHighlight onPress={() => {this.props.navigation.navigate("Reports Main")}} style={styles.startButton}>
+            <View style={{flex: 0, flexDirection:"row"}}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {navigation.navigate("ReportsMain")}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/history.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+                <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButtonSelected}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>
@@ -55,17 +67,18 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     backButtonSelected: {
-        backgroundColor: '#87B258',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1
+        backgroundColor: "#C4D9B3",
+        borderRadius:15,
+        flex: 0,
+        paddingVertical: 20,
+        paddingHorizontal: 50,
+        justifyContent: "center"
     },
     nexttext: {
         fontFamily: "Montserrat",
         color: "#F3F3F5",
         fontWeight: "bold",
-        fontSize: 18
+        fontSize: 28
     },
     title: {
         fontFamily: "Montserrat",
@@ -106,18 +119,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         //justifyContent: "center"
   },
-    text: {
-        fontFamily: "Montserrat",
-        color: colors.PDgreen,
-        fontWeight: "bold",
-        fontSize: 18
-    },
-    nexttext: {
-        fontFamily: "Montserrat",
-        color: "#F3F3F5",
-        fontWeight: "bold",
-        fontSize: 18
-    },
+  text: {
+    fontFamily: "Montserrat",
+    color: "black",
+    fontSize: 22,
+    paddingTop: 10,
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
+    paddingHorizontal:25,
+  
+  },
     loginButton: {
         width: 261,
         height: 40,
@@ -174,16 +186,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    backButtonSelected: {
-        width: 121,
-        height: 40,
-        left: -100,
-        top: 500,
-        backgroundColor: '#87B258',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
     nextButtonUnselected: {
         width: 121,
         height: 40,
@@ -210,10 +212,25 @@ const styles = StyleSheet.create({
         borderLeftColor: "#F3F3F5",
         borderTopColor:"#F3F3F5",
         borderBottomColor:"#C4D9B3",
-    
+        paddingBottom: 15,
+        paddingTop:15,
         flex: 1,
         borderWidth: 1,
-        height: 64, 
+        height: 90, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    startButtonSelected: {
+        backgroundColor: "rgba(95, 128, 59,255)",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"rgba(95, 128, 59, 255)",
+        paddingBottom: 15,    
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90, 
         alignItems: "center", 
         justifyContent: "center"
     },

@@ -5,12 +5,13 @@ import {
   Text,
   View,
   processColor,
-  Image
+  Image,
+  TouchableHighlight,
 } from 'react-native';
 import update from 'immutability-helper';
 import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
 import {
     LineChart,
@@ -23,7 +24,7 @@ import {
 import {RadarChart} from 'react-native-charts-wrapper';
 
 
-class Home extends React.Component {
+class ReportsMain extends React.Component {
 
   constructor() {
     super();
@@ -110,6 +111,29 @@ class Home extends React.Component {
       <View style={{flex: 1}}>
 
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
+        <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("ReportsMain")}} style={styles.startButton}>
+                    <View>
+                    <Image style={styles.image} source={require("../../assets/images/history.png")}></Image>
+                    <Text style={styles.startText}>Reports</Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {this.props.navigation.navigate("EndDrive")}} style={styles.startButton}>
+                  <View>
+                  <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
+                  <Text style={styles.startText}>Drive</Text>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Account")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
+                  <Text style={styles.startText}>Account</Text>
+                </View>
+                </TouchableHighlight>
+  </View>
           <Text style={[styles.title, {marginTop:50}]}>Welcome!</Text>
           
           <View style={{backgroundColor:'#C4D9B3', borderRadius: 16, height : 300}}>
@@ -163,7 +187,7 @@ class Home extends React.Component {
     :
       <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
                 <Text style={styles.name}>Professor Driver</Text>
             </View>
       </View>
@@ -242,7 +266,40 @@ text: {
     height:100,
     //backgroundColor: '#C4D9B3',
     borderRadius:16,
-  }
+  },
+  image: {
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: 'contain'
+  },
+  startText: {
+    fontFamily: "Montserrat",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
+    //paddingTop: 10
+  },
+  container: {
+          backgroundColor: "white",
+          borderRadius: 19,
+          alignItems: "center",
+          //justifyContent: "center"
+    },
+    startButton: {
+        backgroundColor: "#C4D9B3",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+        paddingBottom: 15,
+        paddingTop:50,
+        flex: 1,
+        borderWidth: 1,
+        height: 150, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
 });
 
-export default Home;
+export default ReportsMain;

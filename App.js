@@ -39,7 +39,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
   SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, 
-  Query, StartDrive, Reflection, ParentHome, Account} from './app/screens';
+  Query, StartDrive, Reflection, ParentHome, Account, ReportsMain} from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
@@ -75,6 +75,8 @@ class App extends React.Component {
           <Stack.Screen name="Reflection" component={Reflection}/>
           <Stack.Screen name="ParentHome" component={ParentHome}/>
           <Stack.Screen name="Account" component={Account}/>
+          <Stack.Screen name="ReportsMain" component={ReportsMain}/>
+
 
 
 
