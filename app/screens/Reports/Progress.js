@@ -113,19 +113,19 @@ class Progress extends React.Component {
     this.setState((pastState) => {
         let dataChosen = [];
         if (pastState.accel) {
-            dataChosen.push({data: pastState.accelData,});
+            dataChosen.push({data: pastState.accelData,color: (opacity = 1) => `rgba(0, 102, 51, ${opacity})`,});
         }
         if (pastState.brake) {
-          dataChosen.push({data: pastState.brakeData,});
+          dataChosen.push({data: pastState.brakeData,color: (opacity = 1) => `rgba(255, 51, 51, ${opacity})`,});
         }
         if (pastState.turn) {
-          dataChosen.push({data: pastState.turnData,});
+          dataChosen.push({data: pastState.turnData,color: (opacity = 1) => `rgba(102, 0, 102, ${opacity})`});
         }
         if (pastState.speed) {
-          dataChosen.push({data: pastState.speedData,});
+          dataChosen.push({data: pastState.speedData,color: (opacity = 1) => `rgba(255, 215, 0, ${opacity})`,});
         }
         if (pastState.phone) {
-          dataChosen.push({data: pastState.phoneData,});
+          dataChosen.push({data: pastState.phoneData,color: (opacity = 1) => `rgba(0, 153, 204, ${opacity})`});
         }
         return {data: {
           labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
@@ -199,11 +199,11 @@ style={{flex:1}} // to hide scroll bar
     height={250}
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{
-    backgroundGradientFrom: '#E1F6D0',
-    backgroundGradientTo: '#E1F6D0',
+    backgroundGradientFrom: '#E6E6E6',
+    backgroundGradientTo: '#E6E6E6',
       decimalPlaces: 2, // optional, defaults to 2dp
       color: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
-      labelColor: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(100, 100, 100, ${opacity})`,
       style: {
         borderRadius: 16
       },
@@ -220,16 +220,16 @@ style={{flex:1}} // to hide scroll bar
             <TouchableHighlight onPress={() => {this.setState((pastState) => {
               if (!(pastState.accel && !pastState.brake && !pastState.turn && !pastState.speed && !pastState.phone)){
               return {accel: !pastState.accel};} else {return null;}}, () => {this.updateData();});}}
-            style={this.state.accel ? styles.buttonSelected :styles.buttonUnselected}
+            style={this.state.accel ? styles.greenButtonSelected :styles.greenButtonUnselected}
             underlayColor="rgba(135, 178, 88, 0.2)">
-                <Text style={styles.text}>Gentle Acceleration</Text>
+                <Text style={styles.greenText}>Gentle Acceleration</Text>
             </TouchableHighlight>
             <TouchableHighlight onPress={() => {this.setState((pastState) => {
               if (!(!pastState.accel && pastState.brake && !pastState.turn && !pastState.speed && !pastState.phone)){
               return {brake: !pastState.brake};} else {return null;}}, () => {this.updateData();});}}
-            style={this.state.brake ? styles.buttonSelected : styles.buttonUnselected}
+            style={this.state.brake ? styles.redButtonSelected : styles.redButtonUnselected}
             underlayColor="rgba(135, 178, 88, 0.2)">
-                <Text style={styles.text}>Gentle Braking</Text>
+                <Text style={styles.redText}>Gentle Braking</Text>
             </TouchableHighlight>
             </View>
             <View style={{flex: 0, flexDirection:"row"}}>
@@ -237,23 +237,23 @@ style={{flex:1}} // to hide scroll bar
             onPress={() => {this.setState((pastState) => {
               if (!(!pastState.accel && !pastState.brake && pastState.turn && !pastState.speed && !pastState.phone)){
               return {turn: !pastState.turn};} else {return null;}}, () => {this.updateData();});}}
-            style={this.state.turn ? styles.buttonSelected : styles.buttonUnselected}>
-                <Text style={styles.text}>Slowing for Turns</Text>
+            style={this.state.turn ? styles.purpleButtonSelected : styles.purpleButtonUnselected}>
+                <Text style={styles.purpleText}>Slowing for Turns</Text>
             </TouchableHighlight>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
             onPress={() => {this.setState((pastState) => {
               if (!(!pastState.accel && !pastState.brake && !pastState.turn && pastState.speed && !pastState.phone)){
               return {speed: !pastState.speed};} else {return null;}}, () => {this.updateData();});}}
-            style={this.state.speed ? styles.buttonSelected : styles.buttonUnselected}>
-                <Text style={styles.text}>Proper Speed</Text>
+            style={this.state.speed ? styles.yellowButtonSelected : styles.yellowButtonUnselected}>
+                <Text style={styles.yellowText}>Proper Speed</Text>
             </TouchableHighlight>
             </View>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
             onPress={() => {this.setState((pastState) => {
               if (!(!pastState.accel && !pastState.brake && !pastState.turn && !pastState.speed && pastState.phone)){
               return {phone: !pastState.phone};} else {return null;}}, () => {this.updateData();});}}
-            style={this.state.phone ? styles.buttonSelected : styles.buttonUnselected}>
-                <Text style={styles.text}>Avoiding Phone Use</Text>
+            style={this.state.phone ? styles.blueButtonSelected : styles.blueButtonUnselected}>
+                <Text style={styles.blueText}>Avoiding Phone Use</Text>
             </TouchableHighlight>
         
         <View style={{flex: 0, flexDirection:"row"}}>
@@ -463,22 +463,124 @@ text: {
         justifyContent: "center"
     },
     buttonUnselected: {
+      padding: 5,
+      margin: 10,
+      backgroundColor: "#F3F3F5",
+      borderColor: "rgba(0, 102, 51, 1)",
+      borderWidth: 1.5,
+      borderRadius: 10,
+  },
+  buttonSelected: {
+      padding: 5,
+      margin: 10,
+      backgroundColor: "rgba(204, 255, 204, 0.2)",
+      borderColor: "rgba(0, 102, 51, 1)",
+      borderWidth: 1.5,
+      borderRadius: 10,
+  },
+    greenButtonUnselected: {
         padding: 5,
         margin: 10,
         backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
+        borderColor: "rgba(0, 102, 51, 1)",
         borderWidth: 1.5,
         borderRadius: 10,
     },
-    buttonSelected: {
+    greenButtonSelected: {
         padding: 5,
         margin: 10,
-        backgroundColor: "rgba(50, 178, 80, 0.2)",
-        borderColor: "#87B258",
+        backgroundColor: "rgba(204, 255, 204, .5)",
+        borderColor: "rgba(0, 102, 51, 1)",
         borderWidth: 1.5,
         borderRadius: 10,
-    
-    },
+    },greenText: {
+      fontFamily: "Montserrat",
+      color: "rgba(0, 102, 51, 1)",
+      fontWeight: "bold",
+      fontSize: 18
+  },
+    redButtonUnselected: {
+      padding: 5,
+      margin: 10,
+      backgroundColor: "#F3F3F5",
+      borderColor: "rgba(255, 51, 51, 1)",
+      borderWidth: 1.5,
+      borderRadius: 10,
+  },
+  redButtonSelected: {
+      padding: 5,
+      margin: 10,
+      backgroundColor: "rgba(255, 204, 204, 0.5)",
+      borderColor: "rgba(255, 51, 51, 1)",
+      borderWidth: 1.5,
+      borderRadius: 10,
+  },
+  redText: {
+    fontFamily: "Montserrat",
+    color: "rgba(255, 51, 51, 1)",
+    fontWeight: "bold",
+    fontSize: 18
+},purpleButtonUnselected: {
+  padding: 5,
+  margin: 10,
+  backgroundColor: "#F3F3F5",
+  borderColor: "rgba(102, 0, 102, 1)",
+  borderWidth: 1.5,
+  borderRadius: 10,
+},
+purpleButtonSelected: {
+  padding: 5,
+  margin: 10,
+  backgroundColor: "rgba(255, 204, 255, .5)",
+  borderColor: "rgba(102, 0, 102, 1)",
+  borderWidth: 1.5,
+  borderRadius: 10,
+},purpleText: {
+fontFamily: "Montserrat",
+color: "rgba(102, 0, 102, 1)",
+fontWeight: "bold",
+fontSize: 18
+},yellowButtonUnselected: {
+  padding: 5,
+  margin: 10,
+  backgroundColor: "#F3F3F5",
+  borderColor: "rgba(255, 215, 0, 1)",
+  borderWidth: 1.5,
+  borderRadius: 10,
+},
+yellowButtonSelected: {
+  padding: 5,
+  margin: 10,
+  backgroundColor: "rgba(255, 255, 153, .5)",
+  borderColor: "rgba(255, 215, 0, 1)",
+  borderWidth: 1.5,
+  borderRadius: 10,
+},yellowText: {
+fontFamily: "Montserrat",
+color: "rgba(255, 215, 0, 1)",
+fontWeight: "bold",
+fontSize: 18
+},blueButtonUnselected: {
+  padding: 5,
+  margin: 10,
+  backgroundColor: "#F3F3F5",
+  borderColor: "rgba(0, 153, 204, 1)",
+  borderWidth: 1.5,
+  borderRadius: 10,
+},
+blueButtonSelected: {
+  padding: 5,
+  margin: 10,
+  backgroundColor: "rgba(153, 204, 204, .5)",
+  borderColor: "rgba(0, 153, 204, 1)",
+  borderWidth: 1.5,
+  borderRadius: 10,
+},blueText: {
+fontFamily: "Montserrat",
+color: "rgba(0, 153, 204, 1)",
+fontWeight: "bold",
+fontSize: 18
+},
 });
 
 export default Progress;
