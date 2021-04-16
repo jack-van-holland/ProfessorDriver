@@ -49,7 +49,7 @@ const Account = ({ navigation }) => {
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.reset({index: 0,routes: [{name: 'EndDrive'}],});}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.navigate("Checklist");}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
