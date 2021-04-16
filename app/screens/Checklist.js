@@ -79,7 +79,7 @@ class Checklist extends React.Component {
                                 && this.state.radio && this.state.headlights && this.state.temperature
                                 && this.state.wipers) ? styles.nextButtonSelected : styles.nextButtonUnselected}
                         >
-                            <Text style={styles.nexttext}>Start</Text>
+                            <Text style={styles.nexttext}>Ready!</Text>
                         </TouchableHighlight>
                     </View>
                 </View>

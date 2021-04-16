@@ -30,7 +30,11 @@ class Progress extends React.Component {
   constructor() {
     super();
     this.state = {
-        skill: "accel",
+        accel: true,
+        brake: false,
+        turn: false,
+        speed: false,
+        phone: false,
         accelData: [Math.random() * 10,
             Math.random() * 10,
             Math.random() * 10,
@@ -107,54 +111,28 @@ class Progress extends React.Component {
   
   this.updateData = () => {
     this.setState((pastState) => {
-        if (pastState.skill === "accel") {
-            return {data: {
-                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
-                datasets: [
-                  {
-                    data: pastState.accelData
-                  }
-                ]
-              }};
-        } else if (pastState.skill === "brake") {
-            return {data: {
-                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
-                datasets: [
-                  {
-                    data: pastState.brakeData
-                  }
-                ]
-              }};
-        } else if (pastState.skill === "turn") {
-            return {data: {
-                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
-                datasets: [
-                  {
-                    data: pastState.turnData
-                  }
-                ]
-              }};
-        } else if (pastState.skill === "speed") {
-            return {data: {
-                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
-                datasets: [
-                  {
-                    data: pastState.speedData
-                  }
-                ]
-              }};
-        } else {
-            return {data: {
-                labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
-                datasets: [
-                  {
-                    data: pastState.phoneData
-                  }
-                ]
-              }};
-        } 
+        let dataChosen = [];
+        if (pastState.accel) {
+            dataChosen.push({data: pastState.accelData,});
+        }
+        if (pastState.brake) {
+          dataChosen.push({data: pastState.brakeData,});
+        }
+        if (pastState.turn) {
+          dataChosen.push({data: pastState.turnData,});
+        }
+        if (pastState.speed) {
+          dataChosen.push({data: pastState.speedData,});
+        }
+        if (pastState.phone) {
+          dataChosen.push({data: pastState.phoneData,});
+        }
+        return {data: {
+          labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
+          datasets: dataChosen,
+        }}; 
+      
     });
-
 }
 }
 componentDidMount() {
@@ -239,32 +217,42 @@ style={{flex:1}} // to hide scroll bar
   />
   </ScrollView>
   <View style={{flex: 0, flexDirection:"row"}}>
-            <TouchableHighlight onPress={() => {this.setState({skill: "accel"}, () => {this.updateData();});}}
-            style={this.state.skill === "accel" ? styles.buttonSelected :styles.buttonUnselected}
+            <TouchableHighlight onPress={() => {this.setState((pastState) => {
+              if (!(pastState.accel && !pastState.brake && !pastState.turn && !pastState.speed && !pastState.phone)){
+              return {accel: !pastState.accel};} else {return null;}}, () => {this.updateData();});}}
+            style={this.state.accel ? styles.buttonSelected :styles.buttonUnselected}
             underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Gentle Acceleration</Text>
             </TouchableHighlight>
-            <TouchableHighlight onPress={() => {this.setState({skill: "brake"}, () => {this.updateData();});}}
-            style={this.state.skill === "brake" ? styles.buttonSelected : styles.buttonUnselected}
+            <TouchableHighlight onPress={() => {this.setState((pastState) => {
+              if (!(!pastState.accel && pastState.brake && !pastState.turn && !pastState.speed && !pastState.phone)){
+              return {brake: !pastState.brake};} else {return null;}}, () => {this.updateData();});}}
+            style={this.state.brake ? styles.buttonSelected : styles.buttonUnselected}
             underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Gentle Braking</Text>
             </TouchableHighlight>
             </View>
             <View style={{flex: 0, flexDirection:"row"}}>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {this.setState({skill: "turn"}, () => {this.updateData();});}}
-            style={this.state.skill === "turn" ? styles.buttonSelected : styles.buttonUnselected}>
+            onPress={() => {this.setState((pastState) => {
+              if (!(!pastState.accel && !pastState.brake && pastState.turn && !pastState.speed && !pastState.phone)){
+              return {turn: !pastState.turn};} else {return null;}}, () => {this.updateData();});}}
+            style={this.state.turn ? styles.buttonSelected : styles.buttonUnselected}>
                 <Text style={styles.text}>Slowing for Turns</Text>
             </TouchableHighlight>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {this.setState({skill: "speed"}, () => {this.updateData();});}}
-            style={this.state.skill === "speed" ? styles.buttonSelected : styles.buttonUnselected}>
+            onPress={() => {this.setState((pastState) => {
+              if (!(!pastState.accel && !pastState.brake && !pastState.turn && pastState.speed && !pastState.phone)){
+              return {speed: !pastState.speed};} else {return null;}}, () => {this.updateData();});}}
+            style={this.state.speed ? styles.buttonSelected : styles.buttonUnselected}>
                 <Text style={styles.text}>Proper Speed</Text>
             </TouchableHighlight>
             </View>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {this.setState({skill: "phone"}, () => {this.updateData();});}}
-            style={this.state.skill === "phone" ? styles.buttonSelected : styles.buttonUnselected}>
+            onPress={() => {this.setState((pastState) => {
+              if (!(!pastState.accel && !pastState.brake && !pastState.turn && !pastState.speed && pastState.phone)){
+              return {phone: !pastState.phone};} else {return null;}}, () => {this.updateData();});}}
+            style={this.state.phone ? styles.buttonSelected : styles.buttonUnselected}>
                 <Text style={styles.text}>Avoiding Phone Use</Text>
             </TouchableHighlight>
         
