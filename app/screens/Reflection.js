@@ -1,13 +1,49 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,} from "react-native";
+import React, {useState, Component} from "react";
+import {
+    StyleSheet, 
+    View, 
+    Image, 
+    CheckBox,  
+    Text, 
+    TextInput, 
+    Button, 
+    TouchableHighlight, 
+    SafeAreaView, 
+    Alert} from "react-native";
 
 import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import sizeof from 'object-sizeof'; 
 
+const Task = (props) => {
+    const [isSelected, setSelection] = useState(false);
+    return (
+        <View style={styles.checkboxContainer}> 
+          <CheckBox
+            value={isSelected}
+            onValueChange={setSelection}
+            style={styles.checkbox}
+          />
+          <Text style={styles.text}>{props.item}</Text>
+        </View>
+    );
+  }
 
-
+  const TextInputBox = () => {
+    const [text, onChangeText] = React.useState(null);
+  
+    return (
+      <SafeAreaView>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeText}
+          value={text}
+          placeholder="Write any notes here ..."
+        />
+      </SafeAreaView>
+    );
+  };
 
 
 const Reflection = ({ navigation, route }) => {
@@ -24,6 +60,7 @@ const Reflection = ({ navigation, route }) => {
                             doc.set({
                             data: route.params.data.slice(i * section, (i + 1) * section), 
                             apiRequests: route.params.apiRequests
+                            // reflection 
                             });
                         }
                     }
@@ -33,23 +70,146 @@ const Reflection = ({ navigation, route }) => {
                     doc.set({
                     data: route.params.data, 
                     apiRequests: route.params.apiRequests
+                    // reflection 
                 });
             }
             navigation.navigate("StartDrive");
         };
 
     return (
-        <View style={styles.background}>
-            <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+        <View style={[styles.container, {flexDirection: "column"}]}>
+            <View style={{ flex: 1}}>
+                <Text style = {styles.heading}> 
+                How was the drive? 
+                </Text>
+                <Text style={styles.quotes}> 
+                “Your responce won’t be shared with your parents!!!”
+                </Text>
+
+                <View style={{flex: 0, flexDirection:"row"}}>
+                    <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                    onPress={() => Alert.alert('Right button pressed')} style={styles.moodButton}>
+                        <View>
+                        <Image style={styles.image} source={require("../assets/images/HappyFace.png")}></Image>
+                        <Text style={styles.startText}>Good</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                    onPress={() => Alert.alert('Right button pressed')} style={styles.moodButton}>
+                        <View>
+                        <Image style={styles.image} source={require("../assets/images/NeutralFace.png")}></Image>
+                        <Text style={styles.startText}>Neutral</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                    onPress={() => Alert.alert('Right button pressed')} style={styles.moodButton}>
+                        <View>
+                        <Image style={styles.image} source={require("../assets/images/SadFace.png")}></Image>
+                        <Text style={styles.startText}>Bad</Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
+            </View> 
+            
+
+
+            <View style={{ flex: 1}}>
+                <Text style={styles.heading}> What did you do well? </Text>
+                    <View style={{flex: 0, flexDirection:"column"}}>
+                        <View style={{flex: 0, flexDirection:"row"}}>
+                            <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                                <View>
+                                <Text style={styles.startText}>Turn Signal</Text>
+                                </View>
+                            </TouchableHighlight>
+
+                            <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                                <View>
+                                <Text style={styles.startText}>Use Mirrors</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                                <View>
+                                <Text style={styles.startText}>Stay in Lane</Text>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                        <View style={{flex: 0, flexDirection:"row"}}>
+                            <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                                <View>
+                                <Text style={styles.startText}>Speed Control</Text>
+                                </View>
+                            </TouchableHighlight>
+
+                            <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                                <View>
+                                <Text style={styles.startText}>Others</Text>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                                <View>
+                                <Text style={styles.startText}>None</Text>
+                                </View>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+
+                <TextInputBox />
             </View>
 
-            <View style={{flexDirection: "row"}}>
-                <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableHighlight onPress={submit}
-                    style={ styles.nextButtonSelected}>
-                        <Text style={styles.nexttext}>Submit Drive</Text>
-                    </TouchableHighlight>
+            <View style={{ flex: 1 }}>
+                <Text style={styles.heading}> What was challenging? </Text> 
+                <View style={{flex: 0, flexDirection:"column"}}>
+                    <View style={{flex: 0, flexDirection:"row"}}>
+                        <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            <View>
+                            <Text style={styles.startText}>Parking</Text>
+                            </View>
+                        </TouchableHighlight>
+
+                        <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            <View>
+                            <Text style={styles.startText}>Distractions</Text>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            <View>
+                            <Text style={styles.startText}>Left Turn</Text>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                    <View style={{flex: 0, flexDirection:"row"}}>
+                        <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            <View>
+                            <Text style={styles.startText}>Merging</Text>
+                            </View>
+                        </TouchableHighlight>
+
+                        <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            <View>
+                            <Text style={styles.startText}>Others</Text>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
+                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            <View>
+                            <Text style={styles.startText}>None</Text>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+
+                    <TextInputBox />
                 </View>
             </View>
         </View>
@@ -57,88 +217,77 @@ const Reflection = ({ navigation, route }) => {
 }
 
 const styles = StyleSheet.create({
-    background: {
+    container: {
         flex: 1,
-        backgroundColor: "#F3F3F5",
-        alignItems: "center",
+        marginTop: 25,
+        padding: 20,
     },
-    logoContainer: {
-        alignItems: "center",
-        position: "absolute",
-        top: 100
-    },
-    name: {
-        fontFamily: "Montserrat",
-        fontWeight: "bold",
-        fontSize: 33, 
-        lineHeight: 100,
-        letterSpacing: 0.015
+    image: {
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: 'contain'
     },
     logo: {
         width: 150,
         height: 123
     },
-    text: {
+    heading: {
         fontFamily: "Montserrat",
-        color: colors.PDgreen,
+        color: 'black',
         fontWeight: "bold",
-        fontSize: 18
+        fontSize: 24,
+        textAlign: 'center',
+        paddingVertical: 10,
     },
-    nexttext: {
+    quotes: {
         fontFamily: "Montserrat",
-        color: "#F3F3F5",
-        fontWeight: "bold",
-        fontSize: 18
+        color: 'black',
+        fontWeight: "normal",
+        fontStyle: "italic",
+        fontSize: 16,
+        padding: 5,
+        paddingHorizontal: 20,
+        paddingBottom:40,
+        textAlign: 'center',
     },
-    titletext: {
-        width: 287,
-        height: 44,
-        top: 300,
-        fontFamily: "Montserrat",
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: 36,
-        lineHeight: 36,
-        textAlign: "center",
-    },
-    loginButton: {
-        width: 261,
-        height: 40,
-        top: 506,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
+    moodButton: {
+        backgroundColor: "white",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+        paddingBottom: 15,
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90, 
+        alignItems: "center", 
         justifyContent: "center"
     },
-    buttonUnselected: {
-        top: 475,
-        width: 261,
-        height: 40,
-        marginTop: 25,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
+    startButton: {
+        backgroundColor: "white",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+        paddingBottom: 15,
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 50, 
+        alignItems: "center", 
         justifyContent: "center"
     },
-    buttonSelected: {
-        top: 475,
-        width: 261,
-        height: 40,
-        marginTop: 25,
-        backgroundColor: "rgba(135, 178, 88, 0.2)",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",        
-    },
+    startText: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontWeight: "normal",
+        fontSize: 16,
+        //paddingTop: 10
+      },
     input: {
         fontFamily: "Montserrat",
-        top: 300,
         fontWeight: "bold",
         fontSize: 20, 
         lineHeight: 20,
@@ -150,44 +299,6 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         paddingHorizontal: 20,
       },
-    registerButton: {
-        width: 261,
-        height: 40,
-        top: 520,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    nextButtonSelected: {
-        width: 121,
-        height: 40,
-        top: 350,
-        backgroundColor: '#87B258',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    backButtonSelected: {
-        width: 121,
-        height: 40,
-        top: 350,
-        backgroundColor: '#87B258',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    nextButtonUnselected: {
-        width: 121,
-        height: 40,
-        top: 350,
-        backgroundColor: '#C4D9B3',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    }, 
 })
 
 export default Reflection;
