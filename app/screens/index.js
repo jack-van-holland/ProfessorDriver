@@ -14,5 +14,23 @@ export { default as Reflection} from './Reflection'
 export { default as ParentHome} from './ParentHome'
 export { default as Account} from './Account'
 export { default as ReportsMain} from './Reports/ReportsMain'
+export { default as Safety} from './Reports/Safety'
+export { default as Progress} from './Reports/Progress'
+export { default as Skills} from './Reports/Skills'
+export { default as Roads} from './Reports/Roads'
+export { default as EndDrive} from './EndDrive'
+export { default as Log} from './Log'
+export { default as LogStats} from './LogStats'
+export { default as Checklist} from './Checklist'
+export { default as DriveScreen} from './DriveScreen'
+export { default as Accident} from './Accident'
+
+
+
+
+
+
+
+
 
 

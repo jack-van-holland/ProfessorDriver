@@ -1,6 +1,8 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
+source 'https://github.com/CocoaPods/Specs.git'
+
 platform :ios, '10.0'
 
 $FirebaseSDKVersion = '7.8.0'
@@ -19,6 +21,8 @@ target 'ProfessorDriver' do
   pod 'RNCharts', :path => '../node_modules/react-native-charts-wrapper'
 
 
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   target 'ProfessorDriverTests' do
     inherit! :complete

@@ -39,7 +39,10 @@ import { createStackNavigator } from '@react-navigation/stack'
 import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
   SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, 
-  Query, StartDrive, Reflection, ParentHome, Account, ReportsMain} from './app/screens';
+  Query, StartDrive, Reflection, ParentHome, Account, 
+  ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
+  Log, LogStats, Checklist, DriveScreen, Accident
+} from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
@@ -59,6 +62,7 @@ class App extends React.Component {
 
           screenOptions={{
             headerShown: false,
+            animationEnabled: false,
           }}>
           <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
           <Stack.Screen name="SignupRole" component={SignupRole} />
@@ -76,11 +80,24 @@ class App extends React.Component {
           <Stack.Screen name="ParentHome" component={ParentHome}/>
           <Stack.Screen name="Account" component={Account}/>
           <Stack.Screen name="ReportsMain" component={ReportsMain}/>
+          <Stack.Screen name="Skills" component={Skills}/>
+          <Stack.Screen name="Progress" component={Progress}/>
+          <Stack.Screen name="Roads" component={Roads}/>
+          <Stack.Screen name="Safety" component={Safety}/>
+          <Stack.Screen name="EndDrive" component={EndDrive}/>
+          <Stack.Screen name="Log" component={Log}/>
+          <Stack.Screen name="LogStats" component={LogStats}/>
+          <Stack.Screen name="Checklist" component={Checklist}/>
+          <Stack.Screen name="DriveScreen" component={DriveScreen}/>
+          <Stack.Screen name="Accident" component={Accident}/>
 
 
 
 
-           
+
+        
+
+
 
         </Stack.Navigator>
       </NavigationContainer>

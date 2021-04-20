@@ -34,22 +34,36 @@ const Account = ({ navigation }) => {
             </TouchableHighlight>
             </View>
             <View style={{flex: 0, flexDirection:"row"}}>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {navigation.navigate("ReportsMain")}} style={styles.startButton}>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
                     <View>
-                    <Image style={styles.image} source={require("../assets/images/history.png")}></Image>
+                    <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
+                    <Text style={styles.startText}>Home</Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                 onPress={() => {navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButton}>
+                    <View>
+                    <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButton}>
+                onPress={() => {navigation.navigate("Checklist");}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
                 </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.navigate("Log")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../assets/images/diary.png")}></Image>
+                  <Text style={styles.startText}>Log</Text>
+                </View>
+                </TouchableHighlight>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("EndDrive")}} style={styles.startButtonSelected}>
+                onPress={() => {navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButtonSelected}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>

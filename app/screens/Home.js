@@ -144,19 +144,33 @@ class Home extends React.Component {
 
   </View>
   <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
+                <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButtonSelected}>
+                <View>
+                  <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
+                  <Text style={styles.startText}>Home</Text>
+                </View>
+                </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.navigate("ReportsMain")}} style={styles.startButton}>
                     <View>
-                    <Image style={styles.image} source={require("../assets/images/history.png")}></Image>
+                    <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {this.props.navigation.navigate("Reflection")}} style={styles.startButton}>
+                 onPress={() => {this.props.navigation.navigate("Checklist")}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../assets/images/diary.png")}></Image>
+                  <Text style={styles.startText}>Log</Text>
+                </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.navigate("Account")}} style={styles.startButton}>
@@ -268,6 +282,19 @@ startButton: {
     height: 90, 
     alignItems: "center", 
     justifyContent: "center"
+},startButtonSelected: {
+  backgroundColor: "rgba(95, 128, 59,255)",
+  borderRightColor: "#F3F3F5",
+  borderLeftColor: "#F3F3F5",
+  borderTopColor:"#F3F3F5",
+  borderBottomColor:"rgba(95, 128, 59, 255)",
+  paddingBottom: 15,    
+  paddingTop:15,
+  flex: 1,
+  borderWidth: 1,
+  height: 90, 
+  alignItems: "center", 
+  justifyContent: "center"
 },
 logo: {
     width: 150,

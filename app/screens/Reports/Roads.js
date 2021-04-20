@@ -7,8 +7,6 @@ import {
   processColor,
   Image,
   TouchableHighlight,
-  ScrollView,
-  FlatList,
 } from 'react-native';
 import update from 'immutability-helper';
 import { Dimensions } from "react-native";
@@ -18,60 +16,57 @@ import colors from "../../config/colors";
 import {
     LineChart,
     BarChart,
-    PieChart,
+   
     ProgressChart,
     ContributionGraph,
     StackedBarChart
   } from "react-native-chart-kit";
-import {RadarChart} from 'react-native-charts-wrapper';
+import {PieChart, RadarChart} from 'react-native-charts-wrapper';
 
 
-class Skills extends React.Component {
+class Roads extends React.Component {
 
   constructor() {
     super();
 
     this.state = {
-      skillsData: {
-        labels: ["Lane Centering", "Mirrors", "Speed Control", "Signals"],
-        datasets: [
-          {
-            data: [20, 45, 28, 80,]
-          }
-        ]
-      }, 
-      challengesData: {
-        labels: ["Parking", "Distractions", "Merging", "Left Turns"],
-        datasets: [
-          {
-            data: [89, 69, 12, 48,]
-          }
-        ]
-      }, 
-    };
-  }
-
-  componentDidMount() {
-    console.log("mounted");
-    console.log(this.state.userLevel);
-    this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
+        data: {
+          label: 'Pie dataset',
+          dataSets: [{
+            values: [{value: 45, label: 'Residential'},
+              {value: 21, label: 'Highway'},
+              {value: 10, label: 'Rural'},
+              {value: 9, label: 'Interstate'},
+              {value: 15, label: 'City'}],
+            config: {
+              colors: [processColor('#699249'), processColor('#75a351'), processColor('#8fb86f'), processColor('#a9c891'), processColor('#c4d9b3'),],
+              valueTextSize: 0,
+              valueTextColor: 0,
+              //sliceSpace: 5,
+              //selectionShift: 13,
+              // xValuePosition: "OUTSIDE_SLICE",
+              // yValuePosition: "OUTSIDE_SLICE",
+              //valueFormatter: "#.#'%'",
+              //valueLineColor: processColor('green'),
+              //valueLinePart1Length: 0.5
+            }, label: "Roads"
+          }],
+        },
+      };
+    }
+  
     
-
-  }
-
 
   render() {
     
     return (
-      this.state.skillsData ?
+      this.state.data ?
       <View style={{flex: 1}}>
 
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
-        <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
+        <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButtonSelected}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/road.png")}></Image>
                   <Text style={styles.topStartText}>Roads</Text>
@@ -91,91 +86,54 @@ class Skills extends React.Component {
                     <Text style={styles.topStartText}>Tips</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButton}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
                   <Text style={styles.topStartText}>Safety</Text>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButtonSelected}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
                   <Text style={styles.topStartText}>Skills</Text>
                 </View>
                 </TouchableHighlight>
   </View>
-  <Text style={[styles.title, ]}>Based on your reflections, we've identified these skills:</Text>
-
-          <Text style={[styles.subtitle, ]}>Your Strengths</Text>
+          <Text style={[styles.text, {marginTop:25}]}>Here is your experience on each different road type. Frequently practicing in different environments will improve your skills as a driver.</Text>
           
-
-          <BarChart
-  style={styles.chart}
-  data={this.state.skillsData}
-  width={screenWidth - 50}
-  height={200}
-  yAxisLabel={{}}
-  
-  chartConfig={{
-    backgroundGradientFrom: '#E1F6D0',
-    backgroundGradientTo: '#E1F6D0',
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-  }}
-  style={{
-    marginVertical: 8,
-    borderRadius: 16,
-    flex:0,
-    marginLeft: 25,
-    paddingRight:25,
-
-    
-  //  height:"50px",
-  }}
-  withHorizontalLabels={false}
-
-  //verticalLabelRotation={30}
-/>
-<Text style={[styles.subtitle, ]}>Your Challenges</Text>
-
-<BarChart
-  style={styles.chart}
-  data={this.state.challengesData}
-  width={screenWidth - 50}
-  height={200}
-  
-  chartConfig={{
-    backgroundGradientFrom: '#FFCCCB',
-    backgroundGradientTo: '#FFCCCB',
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(187, 113, 111, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-  }}
-  withHorizontalLabels={false}
-  style={{
-    marginVertical: 8,
-    borderRadius: 16,
-    flex:0,
-    marginLeft: 25,
-    paddingRight:25,
-    paddingBottom: 15 
-    
-  //  height:"50px",
-  }}
-  //verticalLabelRotation={30}
-/>
-</View>
-
+    </View>
 
         
-          
+
+        
+          <PieChart
+            
+            style={styles.chart}
+            data={this.state.data}
+            legend={{enabled:false}}
+            highlightPerTapEnabled={false}
+            extraOffsets={{left: 5, right: 5,}}
+            entryLabelColor={processColor('black')}
+            entryLabelTextSize={20}
+            entryLabelFontFamily={'Montserrat-Black'}
+           
+            drawEntryLabels={true}
+            
+            rotationEnabled={false}
+            //rotationAngle={45}
+            usePercentValues={false}
+            
+            //styledCenterText={{text:'Your Experience on these Road Types', color: processColor('pink'), fontFamily: 'Arial-Medium', size: 20}}
+            centerTextRadiusPercent={100}
+            holeRadius={40}
+            holeColor={processColor('#f0f0f0')}
+            transparentCircleRadius={0}
+            //transparentCircleColor={processColor('#f0f0f088')}
+            
+          />
+
         
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
@@ -245,17 +203,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center"
 
-},
-subtitle: {
-    fontFamily: "Montserrat",
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 16,
-    paddingTop: 10,
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center"
-
 },background: {
   flex: 1,
   backgroundColor: "#F3F3F5",
@@ -300,8 +247,9 @@ logo: {
 },
 text: {
     fontFamily: "Montserrat",
-    color: colors.PDgreen,
-    fontWeight: "bold",
+    textAlign: "center",
+    paddingHorizontal: 25, 
+    paddingVertical:0,
     fontSize: 18
 },
   chart: {
@@ -395,4 +343,4 @@ text: {
     },
 });
 
-export default Skills;
+export default Roads;

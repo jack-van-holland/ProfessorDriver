@@ -7,14 +7,12 @@ import {
   processColor,
   Image,
   TouchableHighlight,
-  ScrollView,
-  FlatList,
 } from 'react-native';
 import update from 'immutability-helper';
 import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 import colors from "../../config/colors";
-
+import {CheckBox} from "react-native-elements";
 import {
     LineChart,
     BarChart,
@@ -26,28 +24,13 @@ import {
 import {RadarChart} from 'react-native-charts-wrapper';
 
 
-class Skills extends React.Component {
+class Safety extends React.Component {
 
   constructor() {
     super();
 
     this.state = {
-      skillsData: {
-        labels: ["Lane Centering", "Mirrors", "Speed Control", "Signals"],
-        datasets: [
-          {
-            data: [20, 45, 28, 80,]
-          }
-        ]
-      }, 
-      challengesData: {
-        labels: ["Parking", "Distractions", "Merging", "Left Turns"],
-        datasets: [
-          {
-            data: [89, 69, 12, 48,]
-          }
-        ]
-      }, 
+      userPerformance: {}, performanceChart: {}, allChecked: false, timeChecked: false,
     };
   }
 
@@ -55,20 +38,145 @@ class Skills extends React.Component {
     console.log("mounted");
     console.log(this.state.userLevel);
     this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
+        safetyData: {week: [7.2, 8.5, 6.3, 9.6, 7.3], overall: [6.7, 5.2, 6.4, 6.5, 3.8], average: [6.6, 7.3, 3.5, 8.1, 4.0]}
+  }, () => {
+    this.setState( (pastState) => { return {
+        data: {
+            dataSets: [{
+              values: pastState.safetyData.week,
+              label: 'DS 1',
+              config: {
+                color: processColor('#FF8C9D'),
+                drawFilled: true,
+                drawValues: false,
+                fillColor: processColor('#FF8C9D'),
+                fillAlpha: 100,
+                lineWidth: 2
+              }
+            }, {
+                values: pastState.safetyData.average,
+                label: 'DS 2',
+                config: {
+                  color: 0,
+  
+                  drawFilled: true,
+                  drawValues: false,
+                  fillColor: 0,
+                  fillAlpha: 255,
+                  lineWidth: 0
+                }
+              }, {
+                values: pastState.safetyData.overall,
+                label: 'DS 3',
+                config: {
+                  color: 0,
+                  drawValues: false,
+                  drawFilled: true,
+                  fillColor: 0
+                }
+              }],
+        },
+        xAxis: {
+            fontFamily: "Montserrat",
+            valueFormatter: ['     Gentle\nAcceleration', '  Avoiding\nPhone Use', ' Slowing\nfor Turns', 'Proper\nSpeed', ' Gentle\nBraking'],
+        }
+    }
+}
+    , () => {console.log(this.state.data);});
+  });
     
+    this.updateRadar = () => {
+        console.log("hi");
+        this.setState((pastState) => {
+            const datasets = [];
+            datasets.push({values: pastState.safetyData.week,
+                label: 'DS 1',
+                config: {
+                  color: processColor('#FF8C9D'),
+                  drawFilled: true,
+                  drawValues: false,
+                  fillColor: processColor('#FF8C9D'),
+                  fillAlpha: 100,
+                  lineWidth: 2
+                }});
+            if (pastState.allChecked) {
+                datasets.push({
+                    values: pastState.safetyData.average,
+                    label: 'DS 2',
+                    config: {
+                      color: processColor('#C0FF8C'),
+      
+                      drawFilled: true,
+                      drawValues: false,
+                      fillColor: processColor('#C0FF8C'),
+                      fillAlpha: 150,
+                      lineWidth: 1.5
+                    }
+                  });
+            } else {
+                datasets.push({
+                    values: pastState.safetyData.average,
+                    label: 'DS 2',
+                    config: {
+                      color: 0,
+      
+                      drawFilled: true,
+                      drawValues: false,
+                      fillColor: 0,
+                      fillAlpha: 255,
+                      lineWidth: 0
+                    }
+                  });
+            }
+            if (pastState.timeChecked) {
+                datasets.push( {
+                    values: pastState.safetyData.overall,
+                    label: 'DS 3',
+                    config: {
+                      color: processColor('#8CEAFF'),
+                      drawValues: false,
+                      drawFilled: true,
+                      fillColor: processColor('#8CEAFF')
+                    }
+                  });
+            } else {
+                datasets.push( {
+                    values: pastState.safetyData.overall,
+                    label: 'DS 3',
+                    config: {
+                      color: 0,
+                      drawValues: false,
+                      drawFilled: true,
+                      fillColor: 0
+                    }
+                  });
+            }
+            return {
+                data: {dataSets: datasets}
+            };
+        }, () => {console.log(this.state.data)});
+    };
+    
+}
 
+  handleSelect(event) {
+    let entry = event.nativeEvent
+    if (entry == null) {
+      this.setState({...this.state, selectedEntry: null})
+    } else {
+      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
+    }
+
+    console.log(event.nativeEvent)
   }
-
 
   render() {
     
     return (
-      this.state.skillsData ?
+      this.state.safetyData ?
       <View style={{flex: 1}}>
 
-        <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
+        <View style={[styles.container, {flex: .75, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
@@ -91,92 +199,47 @@ class Skills extends React.Component {
                     <Text style={styles.topStartText}>Tips</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButton}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButtonSelected}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
                   <Text style={styles.topStartText}>Safety</Text>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButtonSelected}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
                   <Text style={styles.topStartText}>Skills</Text>
                 </View>
                 </TouchableHighlight>
   </View>
-  <Text style={[styles.title, ]}>Based on your reflections, we've identified these skills:</Text>
-
-          <Text style={[styles.subtitle, ]}>Your Strengths</Text>
+          <Text style={[styles.text, {marginTop:25}]}>These are the most dangerous habits while driving. Here's how you performed this week:</Text>
           
 
-          <BarChart
-  style={styles.chart}
-  data={this.state.skillsData}
-  width={screenWidth - 50}
-  height={200}
-  yAxisLabel={{}}
-  
-  chartConfig={{
-    backgroundGradientFrom: '#E1F6D0',
-    backgroundGradientTo: '#E1F6D0',
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(95, 128, 59, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-  }}
-  style={{
-    marginVertical: 8,
-    borderRadius: 16,
-    flex:0,
-    marginLeft: 25,
-    paddingRight:25,
-
-    
-  //  height:"50px",
-  }}
-  withHorizontalLabels={false}
-
-  //verticalLabelRotation={30}
-/>
-<Text style={[styles.subtitle, ]}>Your Challenges</Text>
-
-<BarChart
-  style={styles.chart}
-  data={this.state.challengesData}
-  width={screenWidth - 50}
-  height={200}
-  
-  chartConfig={{
-    backgroundGradientFrom: '#FFCCCB',
-    backgroundGradientTo: '#FFCCCB',
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(187, 113, 111, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-  }}
-  withHorizontalLabels={false}
-  style={{
-    marginVertical: 8,
-    borderRadius: 16,
-    flex:0,
-    marginLeft: 25,
-    paddingRight:25,
-    paddingBottom: 15 
-    
-  //  height:"50px",
-  }}
-  //verticalLabelRotation={30}
-/>
 </View>
 
+        
+          <RadarChart
+            style={styles.chart}
+            data={this.state.data}
+            xAxis={this.state.xAxis}
+            chartDescription={{text: ''}}
+            legend={{enabled:false}}
+            rotationEnabled = {false}
+            yAxis={{drawLabels:false, axisMinimum:0, /*axisMaximum:8*/}}
+            drawWeb={true}
+            highlightPerTapEnabled={false}
+            
+          />
+        <Text style={styles.title}>Compare with...</Text>
+        <View style={{flex:1.5}}>
+        <CheckBox fontFamily='Montserrat' center title='Your Overall Performance Over Time' onPress={() => {this.setState((pastState) => {return {timeChecked: !pastState.timeChecked}}, () => {this.updateRadar();});}}
+  checked={this.state.timeChecked}></CheckBox>
+  <CheckBox fontFamily='Montserrat' center title='Average Level 6 Learning Drivers' onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
+  checked={this.state.allChecked}></CheckBox>
+  </View>
 
-        
-          
-        
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
@@ -245,17 +308,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center"
 
-},
-subtitle: {
-    fontFamily: "Montserrat",
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 16,
-    paddingTop: 10,
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center"
-
 },background: {
   flex: 1,
   backgroundColor: "#F3F3F5",
@@ -300,9 +352,9 @@ logo: {
 },
 text: {
     fontFamily: "Montserrat",
-    color: colors.PDgreen,
-    fontWeight: "bold",
-    fontSize: 18
+    fontSize: 16,
+    textAlign:"center",
+    zIndex: 2,
 },
   chart: {
     flex: 4,
@@ -310,6 +362,7 @@ text: {
     height:100,
     //backgroundColor: '#C4D9B3',
     borderRadius:16,
+    zIndex:1,
   },
   image: {
     flex: 1,
@@ -395,4 +448,4 @@ text: {
     },
 });
 
-export default Skills;
+export default Safety;
