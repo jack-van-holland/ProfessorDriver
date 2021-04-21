@@ -15,6 +15,7 @@ import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import sizeof from 'object-sizeof'; 
+import { Swipeable } from "react-native-gesture-handler";
 
 const Task = (props) => {
     const [isSelected, setSelection] = useState(false);
@@ -31,7 +32,7 @@ const Task = (props) => {
   }
 
   const TextInputBox = () => {
-    const [text, onChangeText] = React.useState(null);
+    const [text, onChangeText] = React.useState("");
   
     return (
       <SafeAreaView>
@@ -40,6 +41,7 @@ const Task = (props) => {
           onChangeText={onChangeText}
           value={text}
           placeholder="Write any notes here ..."
+          placeholderTextColor='#D3D3D3' 
         />
       </SafeAreaView>
     );
@@ -47,7 +49,23 @@ const Task = (props) => {
 
 
 const Reflection = ({ navigation, route }) => {
+    const [happy, setHappy] = useState(false);
+    const [neutral, setNeutral] = useState(false);
+    const [sad, setSad] = useState(false);
+    const [signal, setSignal] = useState(false);
+    const [mirrors, setMirrors] = useState(false);
+    const [lane, setLane] = useState(false);
+    const [speed, setSpeed] = useState(false);
+    const [goodOthers, setGoodOthers] = useState(false);
+    const [goodNone, setGoodNone] = useState(false);
+    const [parking, setParking] = useState(false);
+    const [distractions, setDistractions] = useState(false);
+    const [left, setLeft] = useState(false);
+    const [merging, setMerging] = useState(false);
+    const [badOther, setBadOther] = useState(false);
+    const [badNone, setBadNone] = useState(false);
 
+    
     submit = () => {
         const size = sizeof(route.params.data);
         const max = 1000000;
@@ -83,29 +101,29 @@ const Reflection = ({ navigation, route }) => {
                 How was the drive? 
                 </Text>
                 <Text style={styles.quotes}> 
-                “Your responce won’t be shared with your parents!!!”
+                Your responce won’t be shared with your parents!
                 </Text>
 
-                <View style={{flex: 0, flexDirection:"row"}}>
+                <View style={{flex: 1, flexDirection:"row"}}>
                     <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                    onPress={() => Alert.alert('Right button pressed')} style={styles.moodButton}>
-                        <View>
-                        <Image style={styles.image} source={require("../assets/images/HappyFace.png")}></Image>
-                        <Text style={styles.startText}>Good</Text>
+                    onPress={() => {if (!happy) {setHappy(true); setNeutral(false); setSad(false);}}} style={happy ? styles.moodButtonPressed : styles.moodButton}>
+                        <View style={{flex:1}}>
+                        <Image style={[styles.image, {tintColor:"green"}]} source={require("../assets/images/smile.png")}></Image>
+                        <Text style={styles.startText}> Happy </Text>
                         </View>
                     </TouchableHighlight>
                     <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                    onPress={() => Alert.alert('Right button pressed')} style={styles.moodButton}>
-                        <View>
-                        <Image style={styles.image} source={require("../assets/images/NeutralFace.png")}></Image>
+                    onPress={() => {if (!neutral) {setHappy(false); setNeutral(true); setSad(false);}}} style={neutral ? styles.moodButtonPressed : styles.moodButton}>
+                        <View style={{flex:1}}>
+                        <Image style={[styles.image, {tintColor:"gold"}]} source={require("../assets/images/neutral.png")}></Image>
                         <Text style={styles.startText}>Neutral</Text>
                         </View>
                     </TouchableHighlight>
-                    <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                    onPress={() => Alert.alert('Right button pressed')} style={styles.moodButton}>
+                    <TouchableHighlight style={{flex:1}} underlayColor="rgba(100, 128, 59, .5)"
+                    onPress={() => {if (!sad) {setHappy(false); setNeutral(false); setSad(true);}}} style={sad ? styles.moodButtonPressed : styles.moodButton}>
                         <View>
-                        <Image style={styles.image} source={require("../assets/images/SadFace.png")}></Image>
-                        <Text style={styles.startText}>Bad</Text>
+                        <Image style={[styles.image, {tintColor:"red"}]} source={require("../assets/images/frown.png")}></Image>
+                        <Text style={styles.startText}>   Sad   </Text>
                         </View>
                     </TouchableHighlight>
                 </View>
@@ -118,42 +136,42 @@ const Reflection = ({ navigation, route }) => {
                     <View style={{flex: 0, flexDirection:"column"}}>
                         <View style={{flex: 0, flexDirection:"row"}}>
                             <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setSignal(!signal);}} style={signal ? styles.startButtonSelected : styles.startButton}>
                                 <View>
                                 <Text style={styles.startText}>Turn Signal</Text>
                                 </View>
                             </TouchableHighlight>
 
                             <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
-                                <View>
+                            onPress={() => {setMirrors(!mirrors);}} style={mirrors ? styles.startButtonSelected : styles.startButton}>
+                            <View>
                                 <Text style={styles.startText}>Use Mirrors</Text>
                                 </View>
                             </TouchableHighlight>
                             <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
-                                <View>
+                            onPress={() => {setLane(!lane);}} style={lane ? styles.startButtonSelected : styles.startButton}>
+                            <View>
                                 <Text style={styles.startText}>Stay in Lane</Text>
                                 </View>
                             </TouchableHighlight>
                         </View>
                         <View style={{flex: 0, flexDirection:"row"}}>
                             <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
-                                <View>
+                            onPress={() => {setSpeed(!speed);}} style={speed ? styles.startButtonSelected : styles.startButton}>
+                            <View>
                                 <Text style={styles.startText}>Speed Control</Text>
                                 </View>
                             </TouchableHighlight>
 
                             <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
-                                <View>
+                            onPress={() => {setGoodOthers(!goodOthers);}} style={goodOthers ? styles.startButtonSelected : styles.startButton}>
+                            <View>
                                 <Text style={styles.startText}>Others</Text>
                                 </View>
                             </TouchableHighlight>
                             <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                            onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
-                                <View>
+                            onPress={() => {setGoodNone(!goodNone);}} style={goodNone ? styles.startButtonSelected : styles.startButton}>
+                            <View>
                                 <Text style={styles.startText}>None</Text>
                                 </View>
                             </TouchableHighlight>
@@ -168,20 +186,20 @@ const Reflection = ({ navigation, route }) => {
                 <View style={{flex: 0, flexDirection:"column"}}>
                     <View style={{flex: 0, flexDirection:"row"}}>
                         <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setParking(!parking);}} style={parking ? styles.startButtonSelected : styles.startButton}>
                             <View>
                             <Text style={styles.startText}>Parking</Text>
                             </View>
                         </TouchableHighlight>
 
                         <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setDistractions(!distractions);}} style={distractions ? styles.startButtonSelected : styles.startButton}>
                             <View>
                             <Text style={styles.startText}>Distractions</Text>
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setLeft(!left);}} style={left ? styles.startButtonSelected : styles.startButton}>
                             <View>
                             <Text style={styles.startText}>Left Turn</Text>
                             </View>
@@ -189,20 +207,20 @@ const Reflection = ({ navigation, route }) => {
                     </View>
                     <View style={{flex: 0, flexDirection:"row"}}>
                         <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setMerging(!merging);}} style={merging ? styles.startButtonSelected : styles.startButton}>
                             <View>
                             <Text style={styles.startText}>Merging</Text>
                             </View>
                         </TouchableHighlight>
 
                         <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setBadOther(!badOther);}} style={badOther ? styles.startButtonSelected : styles.startButton}>
                             <View>
                             <Text style={styles.startText}>Others</Text>
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                        onPress={() => Alert.alert('Right button pressed')} style={styles.startButton}>
+                            onPress={() => {setBadNone(!badNone);}} style={badNone ? styles.startButtonSelected : styles.startButton}>
                             <View>
                             <Text style={styles.startText}>None</Text>
                             </View>
@@ -212,6 +230,12 @@ const Reflection = ({ navigation, route }) => {
                     <TextInputBox />
                 </View>
             </View>
+            <TouchableHighlight onPress={() => {navigation.navigate("EndDrive"); }}
+                            disabled={(sad || happy || neutral) ? false : true}
+                            style={(sad || happy || neutral) ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                        >
+                            <Text style={styles.nexttext}>Submit</Text>
+            </TouchableHighlight>
         </View>
     );
 }
@@ -226,7 +250,8 @@ const styles = StyleSheet.create({
         flex: 1,
         width: null,
         height: null,
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        tintColor: "black",
     },
     logo: {
         width: 150,
@@ -265,8 +290,36 @@ const styles = StyleSheet.create({
         alignItems: "center", 
         justifyContent: "center"
     },
+    moodButtonPressed: {
+        backgroundColor: "rgba(135, 178, 88, 0.2)",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+        paddingBottom: 15,
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
     startButton: {
         backgroundColor: "white",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor:"#F3F3F5",
+        borderBottomColor:"#C4D9B3",
+        paddingBottom: 15,
+        paddingTop:15,
+        flex: 1,
+        borderWidth: 1,
+        height: 50, 
+        alignItems: "center", 
+        justifyContent: "center"
+    },
+    startButtonSelected: {
+        backgroundColor: "rgba(135, 178, 88, 0.2)",
         borderRightColor: "#F3F3F5",
         borderLeftColor: "#F3F3F5",
         borderTopColor:"#F3F3F5",
@@ -298,7 +351,26 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 0,
         paddingHorizontal: 20,
-      },
+      },nexttext: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
+        fontSize: 18
+    },
+    nextButtonUnselected: {
+        height: 40,
+        backgroundColor: '#C4D9B3',
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    nextButtonSelected: {
+        height: 40,
+        backgroundColor: '#87B258',
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center",
+    },
 })
 
 export default Reflection;

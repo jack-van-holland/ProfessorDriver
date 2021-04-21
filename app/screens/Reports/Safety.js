@@ -236,7 +236,7 @@ class Safety extends React.Component {
         <View style={{flex:1.5}}>
         <CheckBox fontFamily='Montserrat' center title='Your Overall Performance Over Time' onPress={() => {this.setState((pastState) => {return {timeChecked: !pastState.timeChecked}}, () => {this.updateRadar();});}}
   checked={this.state.timeChecked}></CheckBox>
-  <CheckBox fontFamily='Montserrat' center title='Average Level 6 Learning Drivers' onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
+  <CheckBox fontFamily='Montserrat' center title='Average Level 6 Drivers' onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
   checked={this.state.allChecked}></CheckBox>
   </View>
 

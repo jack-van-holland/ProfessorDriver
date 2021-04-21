@@ -48,7 +48,7 @@ class DriveScreen extends React.Component {
                 
                     
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.props.navigation.navigate("EndDrive"); }}
+                        <TouchableHighlight onPress={() => { this.props.navigation.navigate("Reflection"); }}
                             style={styles.backButtonSelected}
                         >
                             <Text style={styles.nexttext}>Finish Drive</Text>

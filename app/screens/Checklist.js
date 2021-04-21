@@ -30,7 +30,7 @@ class Checklist extends React.Component {
         super();
 
         this.state = {
-            mirrors: false, seatbelt: false, gas: false, maintenance: false, radio: false, headlights: false, temperature: false, wipers: false, snow: false,
+            mirrors: false, seat: false, seatbelt: false, gas: false, maintenance: false, radio: false, headlights: false, temperature: false, wipers: false, snow: false,
         };
     }
 
@@ -40,28 +40,30 @@ class Checklist extends React.Component {
             <View style={{ flex: 1 }}>
 
                 <Text style={[styles.title, { marginTop: 50 }]}>Before you go...</Text>
-                <View style={{flex:10, marginTop: 25}}>
+                <View style={{flex:10, marginTop: 20}}>
                 <Text style={[styles.subtitle,]}>Make sure that you:</Text>
-                <CheckBox fontFamily='Montserrat' center title='adjust the mirrors' onPress={() => { this.setState((pastState) => { return { mirrors: !pastState.mirrors } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Adjust the mirrors' onPress={() => { this.setState((pastState) => { return { mirrors: !pastState.mirrors } }); }}
                     checked={this.state.mirrors} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='clear the windows of any snow or frost' onPress={() => { this.setState((pastState) => { return { snow: !pastState.snow } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Modify the seat position' onPress={() => { this.setState((pastState) => { return { seat: !pastState.seat } }); }}
+                    checked={this.state.seat} style={{ flex: 1 }}></CheckBox>
+                <CheckBox fontFamily='Montserrat' center title='Clear the windows of any snow or frost' onPress={() => { this.setState((pastState) => { return { snow: !pastState.snow } }); }}
                     checked={this.state.snow} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='fasten your seatbelt' onPress={() => { this.setState((pastState) => { return { seatbelt: !pastState.seatbelt } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Fasten your seatbelt' onPress={() => { this.setState((pastState) => { return { seatbelt: !pastState.seatbelt } }); }}
                     checked={this.state.seatbelt} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='check your fuel level' onPress={() => { this.setState((pastState) => { return { gas: !pastState.gas } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Check your fuel level' onPress={() => { this.setState((pastState) => { return { gas: !pastState.gas } }); }}
                     checked={this.state.gas} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='check for any maintenance alerts' onPress={() => { this.setState((pastState) => { return { maintenance: !pastState.maintenance } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Check for any maintenance alerts' onPress={() => { this.setState((pastState) => { return { maintenance: !pastState.maintenance } }); }}
                     checked={this.state.maintenance} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='turn down the radio' onPress={() => { this.setState((pastState) => { return { radio: !pastState.radio } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Turn down the radio' onPress={() => { this.setState((pastState) => { return { radio: !pastState.radio } }); }}
                     checked={this.state.radio} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='turn on the headlights if necessary' onPress={() => { this.setState((pastState) => { return { headlights: !pastState.headlights } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Turn on the headlights if necessary' onPress={() => { this.setState((pastState) => { return { headlights: !pastState.headlights } }); }}
                     checked={this.state.headlights} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='adjust the heat or A/C if necessary' onPress={() => { this.setState((pastState) => { return { temperature: !pastState.temperature } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Adjust the heat or A/C if necessary' onPress={() => { this.setState((pastState) => { return { temperature: !pastState.temperature } }); }}
                     checked={this.state.temperature} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='turn on the wipers if necessary' onPress={() => { this.setState((pastState) => { return { wipers: !pastState.wipers } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Turn on the wipers if necessary' onPress={() => { this.setState((pastState) => { return { wipers: !pastState.wipers } }); }}
                     checked={this.state.wipers} style={{ flex: 1 }}></CheckBox>
                 </View>
-                <View style={{ flex: 2, flexDirection: "row" }}>
+                <View style={{ flex: 1, flexDirection: "row" }}>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>Back</Text>
@@ -69,12 +71,12 @@ class Checklist extends React.Component {
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.navigate("DriveScreen"); }}
-                            disabled={(this.state.mirrors && this.state.snow &&
+                            disabled={(this.state.mirrors && this.state.snow && this.state.seat &&
                                 this.state.seatbelt && this.state.gas &&
                                 this.state.maintenance && this.state.radio
                                 && this.state.headlights && this.state.temperature
                                 && this.state.wipers) ? false : true}
-                            style={(this.state.mirrors && this.state.snow &&
+                            style={(this.state.mirrors && this.state.snow && this.state.seat &&
                                 this.state.seatbelt && this.state.gas && this.state.maintenance
                                 && this.state.radio && this.state.headlights && this.state.temperature
                                 && this.state.wipers) ? styles.nextButtonSelected : styles.nextButtonUnselected}

@@ -43,21 +43,21 @@ class Accident extends React.Component {
                 <Text style={[styles.title, {alignItems:"center" }]}>Don't Panic. </Text>
                 <Text style={[styles.subtitle, {alignItems:"center" }]}>Here's what to do: </Text>
                 </View>
-                <CheckBox fontFamily='Montserrat' center title="check youself for injuries" onPress={() => { this.setState((pastState) => { return { injuries: !pastState.injuries } }); }}
+                <CheckBox fontFamily='Montserrat' center title="Check yourself for injuries" onPress={() => { this.setState((pastState) => { return { injuries: !pastState.injuries } }); }}
                     checked={this.state.injuries} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title="check in on your passengers" onPress={() => { this.setState((pastState) => { return { passengers: !pastState.passengers } }); }}
+                <CheckBox fontFamily='Montserrat' center title="Check in on your passengers" onPress={() => { this.setState((pastState) => { return { passengers: !pastState.passengers } }); }}
                     checked={this.state.passengers} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='get to safety' onPress={() => { this.setState((pastState) => { return { safety: !pastState.safety } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Get to safety' onPress={() => { this.setState((pastState) => { return { safety: !pastState.safety } }); }}
                     checked={this.state.safety} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='call 911' onPress={() => { this.setState((pastState) => { return { call: !pastState.call } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Call 911' onPress={() => { this.setState((pastState) => { return { call: !pastState.call } }); }}
                     checked={this.state.call} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='call your parents' onPress={() => { this.setState((pastState) => { return { parents: !pastState.parents } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Call your parents' onPress={() => { this.setState((pastState) => { return { parents: !pastState.parents } }); }}
                     checked={this.state.parents} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='wait for help to arrive' onPress={() => { this.setState((pastState) => { return { wait: !pastState.wait } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Wait for help to arrive' onPress={() => { this.setState((pastState) => { return { wait: !pastState.wait } }); }}
                     checked={this.state.wait} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='exchange contact and insurance information' onPress={() => { this.setState((pastState) => { return { exchange: !pastState.exchange } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Exchange contact and insurance information' onPress={() => { this.setState((pastState) => { return { exchange: !pastState.exchange } }); }}
                     checked={this.state.exchange} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='document the accident with notes and phots' onPress={() => { this.setState((pastState) => { return { document: !pastState.document } }); }}
+                <CheckBox fontFamily='Montserrat' center title='Document the accident with notes and photos' onPress={() => { this.setState((pastState) => { return { document: !pastState.document } }); }}
                     checked={this.state.document} style={{ flex: 1 }}></CheckBox>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }}
