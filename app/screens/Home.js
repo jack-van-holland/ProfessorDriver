@@ -109,9 +109,10 @@ class Home extends React.Component {
     return (
       this.state.userLevel ?
         <View style={[styles.container, {flex:1, justifyContent:"space-between"}]}>
-          <Text style={[styles.title, {marginTop:50, flex:0}]}>Welcome!</Text>
+          <Text style={[styles.title, {marginTop:50, flex:0}]}>Professor Driver</Text>
+          <Text style={[styles.subtitle, {flex:1}]}>Welcome!</Text>
           
-          <View style={{backgroundColor:'#E1F6D0', borderRadius: 16, height : 400}}>
+          <View style={{backgroundColor:'#E1F6D0', borderRadius: 16, marginBottom: 70, flex:3}}>
           <Text style={styles.subtitle}>Level {this.state.userLevel.level}</Text>
           <Text style={styles.subtitle}>{this.state.userLevel.points} points</Text>
 

@@ -109,7 +109,7 @@ const Reflection = ({ navigation, route }) => {
                     onPress={() => {if (!happy) {setHappy(true); setNeutral(false); setSad(false);}}} style={happy ? styles.moodButtonPressed : styles.moodButton}>
                         <View style={{flex:1}}>
                         <Image style={[styles.image, {tintColor:"green"}]} source={require("../assets/images/smile.png")}></Image>
-                        <Text style={styles.startText}> Happy </Text>
+                        <Text style={styles.startText}> Good </Text>
                         </View>
                     </TouchableHighlight>
                     <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
@@ -123,7 +123,7 @@ const Reflection = ({ navigation, route }) => {
                     onPress={() => {if (!sad) {setHappy(false); setNeutral(false); setSad(true);}}} style={sad ? styles.moodButtonPressed : styles.moodButton}>
                         <View>
                         <Image style={[styles.image, {tintColor:"red"}]} source={require("../assets/images/frown.png")}></Image>
-                        <Text style={styles.startText}>   Sad   </Text>
+                        <Text style={styles.startText}>   bad   </Text>
                         </View>
                     </TouchableHighlight>
                 </View>

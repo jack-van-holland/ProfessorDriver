@@ -24,46 +24,27 @@ import {
 import { RadarChart } from 'react-native-charts-wrapper';
 
 
-class Checklist extends React.Component {
+class DriveScreen extends React.Component {
 
     constructor() {
         super();
-
-        this.state = {
-            mirrors: false, seat: false, seatbelt: false, gas: false, maintenance: false, radio: false, headlights: false, temperature: false, wipers: false, snow: false,
-        };
     }
 
     render() {
 
         return (
-            <View style={{ flex: 1 }}>
-
-                <Text style={[styles.title, { marginTop: 50 }]}>Before you go...</Text>
-                <View style={{flex:10, marginTop: 20}}>
-                <Text style={[styles.subtitle,]}>Make sure that you:</Text>
-                <CheckBox fontFamily='Montserrat' center title='Adjust the mirrors' onPress={() => { this.setState((pastState) => { return { mirrors: !pastState.mirrors } }); }}
-                    checked={this.state.mirrors} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Modify the seat position' onPress={() => { this.setState((pastState) => { return { seat: !pastState.seat } }); }}
-                    checked={this.state.seat} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Clear the windows of any snow or frost' onPress={() => { this.setState((pastState) => { return { snow: !pastState.snow } }); }}
-                    checked={this.state.snow} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Fasten your seatbelt' onPress={() => { this.setState((pastState) => { return { seatbelt: !pastState.seatbelt } }); }}
-                    checked={this.state.seatbelt} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Check your fuel level' onPress={() => { this.setState((pastState) => { return { gas: !pastState.gas } }); }}
-                    checked={this.state.gas} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Check for any maintenance alerts' onPress={() => { this.setState((pastState) => { return { maintenance: !pastState.maintenance } }); }}
-                    checked={this.state.maintenance} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Turn down the radio' onPress={() => { this.setState((pastState) => { return { radio: !pastState.radio } }); }}
-                    checked={this.state.radio} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Turn on the headlights if necessary' onPress={() => { this.setState((pastState) => { return { headlights: !pastState.headlights } }); }}
-                    checked={this.state.headlights} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Adjust the heat or A/C if necessary' onPress={() => { this.setState((pastState) => { return { temperature: !pastState.temperature } }); }}
-                    checked={this.state.temperature} style={{ flex: 1 }}></CheckBox>
-                <CheckBox fontFamily='Montserrat' center title='Turn on the wipers if necessary' onPress={() => { this.setState((pastState) => { return { wipers: !pastState.wipers } }); }}
-                    checked={this.state.wipers} style={{ flex: 1 }}></CheckBox>
-                </View>
-                <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ flex: 1, justifyContent:"space-around" }}>
+                
+                <Text style={[styles.title, { flex: 1, alignItems:"center" }]}>Phone Placement</Text>
+                <Image style={styles.image} source={require("../assets/images/mount.jpg")}></Image>
+                <Text style={[styles.subtitle, { flex: 3, alignItems:"center" }]}>{`
+Please place your phone in a car mount. 
+                
+Make sure that it does not obscure your vision of the road.
+                
+It must be placed fully vertical with cameras faced directly towards the front of the car to ensure proper data collection.`}</Text>
+                    
+                    <View style={{ flex: .65, flexDirection: "row" }}>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>Back</Text>
@@ -71,20 +52,13 @@ class Checklist extends React.Component {
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.navigate("Mount"); }}
-                            disabled={(this.state.mirrors && this.state.snow && this.state.seat &&
-                                this.state.seatbelt && this.state.gas &&
-                                this.state.maintenance && this.state.radio
-                                && this.state.headlights && this.state.temperature
-                                && this.state.wipers) ? false : true}
-                            style={(this.state.mirrors && this.state.snow && this.state.seat &&
-                                this.state.seatbelt && this.state.gas && this.state.maintenance
-                                && this.state.radio && this.state.headlights && this.state.temperature
-                                && this.state.wipers) ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                            style={styles.nextButtonSelected}
                         >
-                            <Text style={styles.nexttext}>Next</Text>
+                            <Text style={styles.nexttext}>I'm Ready!</Text>
                         </TouchableHighlight>
                     </View>
-                </View>
+                    </View>
+
             </View>);
 
     }
@@ -104,17 +78,18 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         justifyContent: "center",
         textAlign: "center",
-        alignItems: "center"
+        alignItems: "center", 
+        marginTop: 50,
 
     }, subtitle: {
         fontFamily: "Montserrat",
         color: "black",
-        fontWeight: "bold",
         fontSize: 22,
         paddingTop: 10,
         justifyContent: "center",
         textAlign: "center",
-        alignItems: "center"
+        alignItems: "center", 
+        marginHorizontal:20,
 
     }, background: {
         flex: 1,
@@ -173,10 +148,10 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     image: {
-        flex: 1,
+        flex: 3,
         width: null,
         height: null,
-        resizeMode: 'contain'
+        resizeMode: 'contain',
     },
     startText: {
         fontFamily: "Montserrat",
@@ -281,8 +256,20 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat",
         color: "#F3F3F5",
         fontWeight: "bold",
+        fontSize: 35,
+    },nexttext: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
         fontSize: 18
+    },
+    emergencyText: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
+        fontSize: 22,
+        paddingTop:15
     },
 });
 
-export default Checklist;
+export default DriveScreen;
