@@ -154,7 +154,7 @@ class Drive extends Component {
                 
                     
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.stopDrive(); this.props.navigation.navigate("Reflection"); }}
+                        <TouchableHighlight onPress={() => { this.stopDrive(); }}
                             style={styles.backButtonSelected}
                         >
                             <Text style={styles.nexttext}>Finish Drive</Text>
