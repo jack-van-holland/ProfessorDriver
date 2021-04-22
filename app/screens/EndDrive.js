@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import update from 'immutability-helper';
 import { Dimensions } from "react-native";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 const screenWidth = Dimensions.get("window").width;
 import colors from "../config/colors";
 import {CheckBox} from "react-native-elements";
@@ -26,55 +28,63 @@ import {RadarChart} from 'react-native-charts-wrapper';
 
 class EndDrive extends React.Component {
 
-  constructor() {
-    super();
-
-    this.state = {
-      userPerformance: {}, performanceChart: {}, 
-    };
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
-  componentDidMount() {
-    console.log("mounted");
-    console.log(this.state.userLevel);
+  initializeChart = (driveData, driveLength) => {
     this.setState({
-        safetyData: {drive: [7.2, 8.5, 6.3, 9.6, 7.3],}
-  }, () => {
-    
-    this.setState( (pastState) => { 
-        let score = 0;
-        for (let i = 0; i < pastState.safetyData.drive.length; i++) {
-        score += pastState.safetyData.drive[i];
-        }
-        score /= pastState.safetyData.drive.length;
-        return {
-        score: score,
-        driveLength: 34,
-        data: {
-            dataSets: [{
-              values: pastState.safetyData.drive,
-              label: 'DS 1',
-              config: {
-                color: processColor('#FF8C9D'),
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#FF8C9D'),
-                fillAlpha: 100,
-                lineWidth: 2
-              }
-            },],
-        },
-        xAxis: {
-            fontFamily: "Montserrat",
-            valueFormatter: ['     Gentle\nAcceleration', '  Avoiding\nPhone Use', ' Slowing\nfor Turns', 'Proper\nSpeed', ' Gentle\nBraking'],
-        }
-    }
+      safetyData: {drive: driveData,}
+}, () => {
+  console.log(this.state);
+  this.setState( (pastState) => { 
+      let score = 0;
+      for (let i = 0; i < pastState.safetyData.drive.length; i++) {
+      score += pastState.safetyData.drive[i];
+      }
+      score /= pastState.safetyData.drive.length;
+      return {
+      score: score,
+      driveLength: driveLength,
+      data: {
+          dataSets: [{
+            values: pastState.safetyData.drive,
+            label: 'DS 1',
+            config: {
+              color: processColor('#FF8C9D'),
+              drawFilled: true,
+              drawValues: false,
+              fillColor: processColor('#FF8C9D'),
+              fillAlpha: 100,
+              lineWidth: 2
+            }
+          },],
+      },
+      xAxis: {
+          fontFamily: "Montserrat",
+          valueFormatter: ['     Gentle\nAcceleration', '  Avoiding\nPhone Use', ' Slowing\nfor Turns', 'Proper\nSpeed', ' Gentle\nBraking'],
+      }
+  }
 }
-    , () => {console.log(this.state.data);});
-  });
-    
-    
-    
+  , () => {console.log(this.state);});
+});
+  };
+
+  componentDidMount() {
+    firestore().collection("users").doc(auth().currentUser.uid).collection("reports").doc(String(this.props.route.params.startDrive)).get().then(
+      (data) => {
+        console.log(String(this.props.route.params.startDrive));
+        console.log(data);
+        const driveData = [];
+        driveData.push(data._data.accel);
+        driveData.push(data._data.phone);
+        driveData.push(data._data.turn);
+        driveData.push(data._data.speed);
+        driveData.push(data._data.brake);
+        this.initializeChart(driveData, data._data.duration);
+      }).catch(
+        (error) => {console.log(error); this.setState({driveLength: -1});});
 }
 
   handleSelect(event) {
@@ -91,7 +101,7 @@ class EndDrive extends React.Component {
   render() {
     
     return (
-      this.state.driveLength ?
+      this.state.driveLength ? this.state.driveLength !== -1 ?
       <View style={{flex: 1}}>
 
         <View style={[styles.container, {flex: 0, justifyContent:"space-between", paddingTop:50}]}>
@@ -136,7 +146,20 @@ class EndDrive extends React.Component {
 
       </View>
 
-    :
+    : <View style={styles.background}>
+    <View style={styles.logoContainer}>
+        <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
+        <Text style={styles.name}>Whoops, something went wrong.</Text>
+        <View style={{flex: 0, flexDirection:"row"}}>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+                  <View>
+                  <Text style={styles.startText}>Done</Text>
+                  </View>
+                </TouchableHighlight>
+                </View>
+    </View>
+</View> :
       <View style={styles.background}>
             <View style={styles.logoContainer}>
                 <Image style={styles.logo} source={require("../assets/images/icon.png")}/>

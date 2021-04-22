@@ -38,7 +38,7 @@ const Reflection = ({ navigation, route }) => {
 
 
     
-    submit = () => {
+    submit = async () => {
         const size = sizeof(route.params.data);
         const max = 1000000;
         let reflection = {
@@ -84,7 +84,11 @@ const Reflection = ({ navigation, route }) => {
                     reflection: reflection,
                 });
             }
-            navigation.navigate("StartDrive");
+            firestore().collection('users').doc(auth().currentUser.uid).collection('reports').doc(String(route.params.startTime)).set({accel: 7.3, brake: 8.5, phone: 9.6, turn: 5.6, speed: 7.8, duration: 34.7}).then(() => {
+                navigation.navigate("EndDrive", {startDrive: route.params.startTime});
+            }).catch( () => {
+                navigation.navigate("Home");
+            });
         };
 
     return (
@@ -239,7 +243,7 @@ const Reflection = ({ navigation, route }) => {
       </SafeAreaView>
                 </View>
             </View>
-            <TouchableHighlight onPress={() => {submit(); navigation.navigate("EndDrive"); }}
+            <TouchableHighlight onPress={() => {submit();}}
                             disabled={(sad || happy || neutral) ? false : true}
                             style={(sad || happy || neutral) ? styles.nextButtonSelected : styles.nextButtonUnselected}
                         >
