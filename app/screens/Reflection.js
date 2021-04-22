@@ -99,7 +99,7 @@ const Reflection = ({ navigation, route }) => {
 
                 <View style={{flex: 1, flexDirection:"row"}}>
                     <TouchableHighlight underlayColor="rgba(100, 128, 59, .5)"
-                    onPress={() => {if (!happy) {setHappy(true); setNeutral(false); setSad(false);}}} style={happy ? styles.moodButtonPressed : styles.moodButton}>
+                    onPress={() => {if (!happy) {setHappy(true); setNeutral(false); setSad(false);} console.log(route.params);}} style={happy ? styles.moodButtonPressed : styles.moodButton}>
                         <View style={{flex:1}}>
                         <Image style={[styles.image, {tintColor:"green"}]} source={require("../assets/images/smile.png")}></Image>
                         <Text style={styles.startText}> Good </Text>

@@ -31,10 +31,6 @@ class Drive extends Component {
         super(props);
         this.state = {startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: [], appState: "active"};
     }
-
-    componentDidMount() {
-        AppState.addEventListener("change", this._handleAppStateChange);
-      }
     
       componentWillUnmount() {
         AppState.removeEventListener("change", this._handleAppStateChange);
@@ -44,6 +40,60 @@ class Drive extends Component {
           console.log(nextAppState);
         this.setState({ appState: nextAppState });
       };
+
+    startDrive = () => {
+        KeepAwake.activate();
+        this.setState({startTime: new Date().getTime()});
+        Geolocation.requestAuthorization("always").then((result) => {
+            if(result === "granted") {
+
+                setUpdateIntervalForType(SensorTypes.accelerometer, 250);
+                setUpdateIntervalForType(SensorTypes.gyroscope, 250);
+                const mySensors = combineLatest(accelerometer, gyroscope);
+                this.subscription = mySensors.subscribe( ([accel, gyro]) => {
+                
+                    //console.log("started");
+                    Geolocation.getCurrentPosition(
+                        (position) => {
+                            if (this.checkPosition(position.coords.latitude, 
+                                position.coords.longitude, this.state.lastRoad.lat, 
+                                this.state.lastRoad.lon)) {
+                                    this.learnRoad(position.coords.latitude, position.coords.longitude);
+                            }
+                          this.setState(state => {
+                              const data = state.data.concat({loc: {accuracy: position.coords.accuracy, 
+                            latitude: position.coords.latitude, longitude: position.coords.longitude, 
+                            heading: position.coords.heading, speed: position.coords.speed, 
+                            time: position.timestamp, roadType: this.state.lastRoad.roadType, 
+                            roadSpeed: this.state.lastRoad.roadSpeed}, 
+                                acc: {x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp},
+                                gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}, phone: {using: this.state.appState}});
+                               
+                              return {
+                                data,
+                              };
+                            });
+                          
+                          //console.log(position);
+                          //console.log(accel.x, accel.y, accel.z, accel.timestamp);
+                        },
+                        (error) => {
+                          // See error code charts below.
+                          console.log(error.code, error.message);
+                        },
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0}
+                    ); });
+                
+        }}
+          );
+    };
+
+    stopDrive = () => {
+        this.subscription.unsubscribe();
+        KeepAwake.deactivate();
+        this.props.navigation.navigate("Reflection", {data: this.state.data, apiRequests: this.state.apiRequests, startTime: this.state.startTime})
+    };
+    
 
     learnRoad = (lat, lon) => {
         this.setState((prevState, props) => ({
@@ -84,73 +134,63 @@ class Drive extends Component {
         console.log(d);
         return d * 1000 > 30;
       }
+      componentDidMount() {
+        AppState.addEventListener("change", this._handleAppStateChange);
+        this.startDrive();
+      }
 
     render() {
         return (
-            <View style={styles.background}>
-                <Text>Welcome</Text>
-                <Text>Welcome</Text>
-                <Text>Welcome</Text>
-                <Text>Welcome</Text>
-                <Button title="Start Drive" style={styles.nextButtonSelected} disabled={this.state.startTime? true : false} onPress={() => {
-                    KeepAwake.activate();
-                    this.setState({startTime: new Date().getTime()});
-                    Geolocation.requestAuthorization("always").then((result) => {
-                        if(result === "granted") {
-            
-                            setUpdateIntervalForType(SensorTypes.accelerometer, 250);
-                            setUpdateIntervalForType(SensorTypes.gyroscope, 250);
-                            const mySensors = combineLatest(accelerometer, gyroscope);
-                            this.subscription = mySensors.subscribe( ([accel, gyro]) => {
-                            
-                                //console.log("started");
-                                Geolocation.getCurrentPosition(
-                                    (position) => {
-                                        if (this.checkPosition(position.coords.latitude, 
-                                            position.coords.longitude, this.state.lastRoad.lat, 
-                                            this.state.lastRoad.lon)) {
-                                                this.learnRoad(position.coords.latitude, position.coords.longitude);
-                                        }
-                                      this.setState(state => {
-                                          const data = state.data.concat({loc: {accuracy: position.coords.accuracy, 
-                                        latitude: position.coords.latitude, longitude: position.coords.longitude, 
-                                        heading: position.coords.heading, speed: position.coords.speed, 
-                                        time: position.timestamp, roadType: this.state.lastRoad.roadType, 
-                                        roadSpeed: this.state.lastRoad.roadSpeed}, 
-                                            acc: {x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp},
-                                            gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}, phone: {using: this.state.appState}});
-                                           
-                                          return {
-                                            data,
-                                          };
-                                        });
-                                      
-                                      //console.log(position);
-                                      //console.log(accel.x, accel.y, accel.z, accel.timestamp);
-                                    },
-                                    (error) => {
-                                      // See error code charts below.
-                                      console.log(error.code, error.message);
-                                    },
-                                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0}
-                                ); });
-                            
-                    }}
-                      );
-                }}></Button>
-                <Button title="Stop Drive" style={styles.nextButtonSelected} disabled={this.state.startTime? false : true} onPress={() => {
-                    this.subscription.unsubscribe();
-                    KeepAwake.deactivate();
-                    this.props.navigation.navigate("Reflection", {data: this.state.data, apiRequests: this.state.apiRequests, startTime: this.state.startTime})
-                }}> 
-                </Button>
-            </View>
-        );
+            <View style={{ flex: 1, justifyContent:"space-around" }}>
+                <View style={{ flex: 2, alignItems: "center", paddingTop: 50}}>
+                        <TouchableHighlight onPress={() => { this.stopDrive(); this.props.navigation.navigate("Accident"); }} style={styles.emergencyButtonSelected}>
+                            <View style={{flexDirection:"row"}}>
+                            <Image source={require("../assets/images/emergency.png")}></Image>
+                            <Text style={styles.emergencyText}>I was in an accident.</Text>
+                            </View>
+                        </TouchableHighlight>
+                </View>
+                <Text style={[styles.title, { flex: 3, alignItems:"center" }]}>Keep your eyes on the road!</Text>
+                
+                    
+                    <View style={{ flex: 1, alignItems: "center" }}>
+                        <TouchableHighlight onPress={() => { this.stopDrive(); this.props.navigation.navigate("Reflection"); }}
+                            style={styles.backButtonSelected}
+                        >
+                            <Text style={styles.nexttext}>Finish Drive</Text>
+                        </TouchableHighlight>
+                </View>
+            </View>);
     }
 }
 
 const styles = StyleSheet.create({
-    background: {
+    container: {
+        backgroundColor: "white",
+        borderRadius: 19,
+        alignItems: "center",
+        //justifyContent: "center"
+    }, title: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontWeight: "bold",
+        fontSize: 40,
+        paddingTop: 10,
+        justifyContent: "center",
+        textAlign: "center",
+        alignItems: "center"
+
+    }, subtitle: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontWeight: "bold",
+        fontSize: 22,
+        paddingTop: 10,
+        justifyContent: "center",
+        textAlign: "center",
+        alignItems: "center"
+
+    }, background: {
         flex: 1,
         backgroundColor: "#F3F3F5",
         alignItems: "center",
@@ -163,9 +203,30 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
+    },
+    note: {
+        fontFamily: "Montserrat-Italic",
+        color: "black",
+        fontSize: 18,
+        paddingTop: 5
+    },
+    startButton: {
+        backgroundColor: "#FD917E",
+        borderRadius: 8,
+        width: 160,
+        height: 64,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    startText: {
+        fontFamily: "Montserrat",
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        //paddingTop: 10
     },
     logo: {
         width: 150,
@@ -173,113 +234,142 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: "Montserrat",
-        color: colors.PDgreen,
-        fontWeight: "bold",
-        fontSize: 18
-    },
-    nexttext: {
-        fontFamily: "Montserrat",
-        color: "#F3F3F5",
-        fontWeight: "bold",
-        fontSize: 18
-    },
-    titletext: {
-        width: 400,
-        height: 44,
-        top: 200,
-        fontFamily: "Montserrat",
-        fontStyle: "normal",
-        fontWeight: "bold",
-        fontSize: 24,
-        lineHeight: 50,
+        fontSize: 16,
         textAlign: "center",
+        zIndex: 2,
     },
-    loginButton: {
-        width: 261,
-        height: 40,
-        top: 506,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
+    chart: {
+        flex: 4,
+        marginTop: 200,
+        height: 100,
+        //backgroundColor: '#C4D9B3',
+        borderRadius: 16,
+        zIndex: 1,
+    },
+    image: {
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: 'contain'
+    },
+    startText: {
+        fontFamily: "Montserrat",
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
+        //paddingTop: 10
+    },
+    topStartText: {
+        fontFamily: "Montserrat",
+        color: "white",
+        //fontWeight: "bold",
+        fontSize: 20,
+        //paddingTop: 10
+    },
+    container: {
+        backgroundColor: "white",
+        borderRadius: 19,
+        alignItems: "center",
+        //justifyContent: "center"
+    },
+    topStartButton: {
+        backgroundColor: "#C4D9B3",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor: "#F3F3F5",
+        borderBottomColor: "#C4D9B3",
+        paddingBottom: 15,
+        paddingTop: 50,
+        flex: 1,
+        borderWidth: 1,
+        height: 150,
         alignItems: "center",
         justifyContent: "center"
     },
-    buttonUnselected: {
-        top: 475,
-        width: 261,
-        height: 40,
-        marginTop: 25,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
+    topStartButtonSelected: {
+        backgroundColor: "rgba(95, 128, 59,255)",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor: "#F3F3F5",
+        borderBottomColor: "rgba(95, 128, 59, 255)",
+        paddingBottom: 15,
+        paddingTop: 50,
+        flex: 1,
+        borderWidth: 1,
+        height: 150,
         alignItems: "center",
         justifyContent: "center"
     },
-    buttonSelected: {
-        top: 475,
-        width: 261,
-        height: 40,
-        marginTop: 25,
-        backgroundColor: "rgba(135, 178, 88, 0.2)",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
+    startButton: {
+        backgroundColor: "#C4D9B3",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor: "#F3F3F5",
+        borderBottomColor: "#C4D9B3",
+        paddingBottom: 15,
+        paddingTop: 15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center"
     },
-    registerButton: {
-        width: 261,
-        height: 40,
-        top: 520,
-        backgroundColor: "#F3F3F5",
-        borderColor: "#87B258",
-        borderWidth: 1.5,
-        borderRadius: 10,
+    startButtonSelected: {
+        backgroundColor: "rgba(95, 128, 59,255)",
+        borderRightColor: "#F3F3F5",
+        borderLeftColor: "#F3F3F5",
+        borderTopColor: "#F3F3F5",
+        borderBottomColor: "rgba(95, 128, 59, 255)",
+        paddingBottom: 15,
+        paddingTop: 15,
+        flex: 1,
+        borderWidth: 1,
+        height: 90,
         alignItems: "center",
         justifyContent: "center"
     },
     nextButtonSelected: {
-        width: 121,
-        height: 40,
-        left: 100,
-        top: 500,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
     },
+    emergencyButtonSelected: {
+        width: 300,
+        height: 75,
+        backgroundColor: '#E60000',
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     backButtonSelected: {
-        width: 121,
-        height: 40,
-        left: -100,
-        top: 500,
+        width: 300,
+        height: 75,
         backgroundColor: '#87B258',
-        borderRadius: 10,
+        borderRadius: 20,
         alignItems: "center",
         justifyContent: "center",
     },
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        left: 207,
-        top: 697,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
-    backButtonUnselected: {
-        width: 121,
-        height: 40,
-        left: 207,
-        top: 697,
-        backgroundColor: '#C4D9B3',
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
+    }, nexttext: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
+        fontSize: 35,
     },
-})
+    emergencyText: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
+        fontSize: 22,
+        paddingTop:15
+    },
+});
 
 export default Drive;
