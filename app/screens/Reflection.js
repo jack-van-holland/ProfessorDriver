@@ -17,37 +17,6 @@ import firestore from '@react-native-firebase/firestore';
 import sizeof from 'object-sizeof'; 
 import { Swipeable } from "react-native-gesture-handler";
 
-const Task = (props) => {
-    const [isSelected, setSelection] = useState(false);
-    return (
-        <View style={styles.checkboxContainer}> 
-          <CheckBox
-            value={isSelected}
-            onValueChange={setSelection}
-            style={styles.checkbox}
-          />
-          <Text style={styles.text}>{props.item}</Text>
-        </View>
-    );
-  }
-
-  const TextInputBox = () => {
-    const [text, onChangeText] = React.useState("");
-  
-    return (
-      <SafeAreaView>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          value={text}
-          placeholder="Write any notes here ..."
-          placeholderTextColor='#D3D3D3' 
-        />
-      </SafeAreaView>
-    );
-  };
-
-
 const Reflection = ({ navigation, route }) => {
     const [happy, setHappy] = useState(false);
     const [neutral, setNeutral] = useState(false);
@@ -64,11 +33,35 @@ const Reflection = ({ navigation, route }) => {
     const [merging, setMerging] = useState(false);
     const [badOther, setBadOther] = useState(false);
     const [badNone, setBadNone] = useState(false);
+    const [goodText, setGoodText] = React.useState("");
+    const [badText, setbadText] = React.useState("");
+
 
     
     submit = () => {
         const size = sizeof(route.params.data);
         const max = 1000000;
+        let reflection = {
+            sentiment: happy ? "happy" : neutral ? "neutral" : "sad",
+            good: {
+                signal: signal ? true : false,
+                mirrors: mirrors ? true : false,
+                lane: lane ? true : false,
+                speed: speed ? true : false,
+                other: goodOthers ? true : false,
+                none: goodNone ? true : false,
+                notes: goodText,
+            },
+            bad: {
+                parking: parking ? true : false,
+                distractions: distractions ? true : false,
+                left: left ? true : false,
+                merging: merging ? true : false,
+                other: badOther ? true : false,
+                none: badNone ? true : false,
+                notes: badText,
+            },
+        };
                     if (size > max) {
                         const num = Math.ceil(size / max);
                         const section = Math.floor(route.params.data.length / num);
@@ -77,8 +70,8 @@ const Reflection = ({ navigation, route }) => {
                             
                             doc.set({
                             data: route.params.data.slice(i * section, (i + 1) * section), 
-                            apiRequests: route.params.apiRequests
-                            // reflection 
+                            apiRequests: route.params.apiRequests,
+                            reflection: reflection,
                             });
                         }
                     }
@@ -87,8 +80,8 @@ const Reflection = ({ navigation, route }) => {
 
                     doc.set({
                     data: route.params.data, 
-                    apiRequests: route.params.apiRequests
-                    // reflection 
+                    apiRequests: route.params.apiRequests,
+                    reflection: reflection,
                 });
             }
             navigation.navigate("StartDrive");
@@ -178,7 +171,15 @@ const Reflection = ({ navigation, route }) => {
                         </View>
                     </View>
 
-                <TextInputBox />
+                    <SafeAreaView>
+        <TextInput
+          style={styles.input}
+          onChangeText={setGoodText}
+          value={goodText}
+          placeholder="Write any notes here ..."
+          placeholderTextColor='#D3D3D3' 
+        />
+      </SafeAreaView>
             </View>
 
             <View style={{ flex: 1 }}>
@@ -227,10 +228,18 @@ const Reflection = ({ navigation, route }) => {
                         </TouchableHighlight>
                     </View>
 
-                    <TextInputBox />
+                    <SafeAreaView>
+        <TextInput
+          style={styles.input}
+          onChangeText={setbadText}
+          value={badText}
+          placeholder="Write any notes here ..."
+          placeholderTextColor='#D3D3D3' 
+        />
+      </SafeAreaView>
                 </View>
             </View>
-            <TouchableHighlight onPress={() => {navigation.navigate("EndDrive"); }}
+            <TouchableHighlight onPress={() => {submit(); navigation.navigate("EndDrive"); }}
                             disabled={(sad || happy || neutral) ? false : true}
                             style={(sad || happy || neutral) ? styles.nextButtonSelected : styles.nextButtonUnselected}
                         >

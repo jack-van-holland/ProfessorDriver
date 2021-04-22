@@ -51,7 +51,7 @@ It must be placed fully vertical with cameras faced directly towards the front o
                         </TouchableHighlight>
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.props.navigation.navigate("Mount"); }}
+                        <TouchableHighlight onPress={() => { this.props.navigation.navigate("DriveScreen"); }}
                             style={styles.nextButtonSelected}
                         >
                             <Text style={styles.nexttext}>I'm Ready!</Text>
