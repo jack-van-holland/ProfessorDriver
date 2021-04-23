@@ -112,8 +112,10 @@ const Reflection = ({ navigation, route }) => {
                 }
                 firestore.collection('users').doc(auth().currentUser.uid).update({
                     statistics: stat,
-                })
+                });
             });
+
+            
 
             firestore().collection('users').doc(auth().currentUser.uid).collection('reports').doc(String(route.params.startTime)).set({accel: 7.3, brake: 8.5, phone: 9.6, turn: 5.6, speed: 7.8, duration: 130}).then(() => {
                 navigation.navigate("EndDrive", {startDrive: route.params.startTime});

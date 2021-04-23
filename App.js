@@ -39,7 +39,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
   SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, 
-  Query, StartDrive, Reflection, ParentHome, Account, 
+ StartDrive, Reflection, ParentHome, Account, 
   ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
   Log, LogStats, Checklist, Accident, Mount, Level,
 } from './app/screens';
@@ -75,7 +75,6 @@ class App extends React.Component {
           <Stack.Screen name="SignupScanConfirm" component={SignupScanConfirm} />
           <Stack.Screen name="StartDrive" component={StartDrive} />
           <Stack.Screen name="Drive" component={Drive} />
-          <Stack.Screen name="Query" component={Query}/>
           <Stack.Screen name="Reflection" component={Reflection}/>
           <Stack.Screen name="ParentHome" component={ParentHome}/>
           <Stack.Screen name="Account" component={Account}/>
