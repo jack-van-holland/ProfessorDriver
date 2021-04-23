@@ -12,6 +12,8 @@ import update from 'immutability-helper';
 import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 import colors from "../config/colors";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import {
     LineChart,
@@ -29,79 +31,18 @@ class Home extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      userPerformance: {}, performanceChart: {},
-    };
+    this.state = {};
   }
 
   componentDidMount() {
     console.log("mounted");
     console.log(this.state.userLevel);
-    this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+      this.setState({
+        userLevel: {points: data._data.points.toFixed(0), level: data._data.level,}
+    }, () => {console.log(this.state.userLevel);});
+    })
     
-    
-    
-    this.setState(
-      update(this.state, {
-        data: {
-          $set: {
-            dataSets: [{
-              values: [1, 1, 1, 1, 1],
-              label: 'DS 1',
-              config: {
-                color: processColor('#FF8C9D'),
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#FF8C9D'),
-                fillAlpha: 100,
-                lineWidth: 2
-              }
-            }, {
-              values: [1, 2, 3, 4, 5],
-              label: 'DS 2',
-              config: {
-                color: processColor('#C0FF8C'),
-
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#C0FF8C'),
-                fillAlpha: 150,
-                lineWidth: 1.5
-              }
-            }, {
-              values: [6, 10, 2, 5, 4],
-              label: 'DS 3',
-              config: {
-                color: processColor('#8CEAFF'),
-                drawValues: false,
-                drawFilled: true,
-                fillColor: processColor('#8CEAFF')
-              }
-            }],
-          }
-        },
-        xAxis: {
-            
-          $set: {
-            fontFamily: "Montserrat",
-            valueFormatter: ['Acceleration', 'Phone Use', 'Turning', 'Speed', 'Braking']
-          }
-        }
-      })
-    );
-  }
-
-  handleSelect(event) {
-    let entry = event.nativeEvent
-    if (entry == null) {
-      this.setState({...this.state, selectedEntry: null})
-    } else {
-      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
-    }
-
-    console.log(event.nativeEvent)
   }
 
   render() {

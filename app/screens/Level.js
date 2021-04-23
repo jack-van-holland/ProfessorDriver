@@ -46,7 +46,7 @@ class Level extends React.Component {
                 </View>
                 
                 <View style={{ flex: 0, alignItems: "center", marginBottom:50 }}>
-                        <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }}
+                        <TouchableHighlight onPress={() => { this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],}); }}
                             style={styles.backButtonSelected}
                         >
                             <Text style={styles.nexttext}>OK</Text>
