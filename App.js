@@ -41,7 +41,7 @@ import { WelcomeScreen, SignupRole, SignupContact, SignupExperience,
   SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, 
   Query, StartDrive, Reflection, ParentHome, Account, 
   ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
-  Log, LogStats, Checklist, Accident, Mount,
+  Log, LogStats, Checklist, Accident, Mount, Level,
 } from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
@@ -90,6 +90,8 @@ class App extends React.Component {
           <Stack.Screen name="Checklist" component={Checklist}/>
           <Stack.Screen name="Accident" component={Accident}/>
           <Stack.Screen name="Mount" component={Mount}/>
+          <Stack.Screen name="Level" component={Level}/>
+
 
 
 

@@ -67,7 +67,24 @@ class EndDrive extends React.Component {
       }
   }
 }
-  , () => {console.log(this.state);});
+  , () => {
+    firestore().collection("users").doc(auth().currentUser.uid).get().then((data) => {
+      let newPoints = Number(data._data.points) + this.state.score * this.state.driveLength; 
+      let level = false;
+      if (newPoints > 3000) {
+        newPoints -= 3000;
+        firestore().collection("users").doc(auth().currentUser.uid).update({
+          points: newPoints,
+          level: data._data.level + 1,
+        });
+        this.setState({levelUp: true, level: data._data.level + 1});
+      } else {
+      firestore().collection("users").doc(auth().currentUser.uid).update({
+        points: newPoints,
+      });
+    }
+
+    }); console.log(this.state);});
 });
   };
 
@@ -137,7 +154,7 @@ class EndDrive extends React.Component {
         
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+                onPress={() => {if (this.state.levelUp) { this.props.navigation.navigate("Level", {level: this.state.level});} else {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}}} style={styles.startButton}>
                   <View>
                   <Text style={styles.startText}>Done</Text>
                   </View>
