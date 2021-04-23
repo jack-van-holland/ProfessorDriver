@@ -15,7 +15,7 @@ import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import sizeof from 'object-sizeof'; 
-import { Swipeable } from "react-native-gesture-handler";
+import { State, Swipeable } from "react-native-gesture-handler";
 
 const Reflection = ({ navigation, route }) => {
     const [happy, setHappy] = useState(false);
@@ -84,6 +84,37 @@ const Reflection = ({ navigation, route }) => {
                     reflection: reflection,
                 });
             }
+            firestore.collection('users').doc(auth().currentUser.uid).get().then((data) => {
+                let stat = data._data.statistics;
+                if (mirrors) {
+                    stat.goodSkills.mirrors += 1;
+                }
+                if (lane) {
+                    stat.goodSkills.lane += 1;
+                }
+                if (speed) {
+                    stat.goodSkills.speed += 1;
+                }
+                if (signals) {
+                    stat.goodSkills.signals += 1;
+                }
+                if (distractions) {
+                    stat.badSkills.distractions += 1;
+                }
+                if (left) {
+                    stat.badSkills.left += 1;
+                }
+                if (merging) {
+                    stat.badSkills.mergin += 1;
+                }
+                if (parking) {
+                    stat.badSkills.parking += 1;
+                }
+                firestore.collection('users').doc(auth().currentUser.uid).update({
+                    statistics: stat,
+                })
+            });
+
             firestore().collection('users').doc(auth().currentUser.uid).collection('reports').doc(String(route.params.startTime)).set({accel: 7.3, brake: 8.5, phone: 9.6, turn: 5.6, speed: 7.8, duration: 130}).then(() => {
                 navigation.navigate("EndDrive", {startDrive: route.params.startTime});
             }).catch( () => {
