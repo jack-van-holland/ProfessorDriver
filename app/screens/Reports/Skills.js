@@ -23,6 +23,8 @@ import {
     ContributionGraph,
     StackedBarChart
   } from "react-native-chart-kit";
+  import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {RadarChart} from 'react-native-charts-wrapper';
 
 
@@ -31,32 +33,36 @@ class Skills extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      skillsData: {
-        labels: ["Lane Centering", "Mirrors", "Speed Control", "Signals"],
-        datasets: [
-          {
-            data: [20, 45, 28, 80,]
-          }
-        ]
-      }, 
-      challengesData: {
-        labels: ["Parking", "Distractions", "Merging", "Left Turns"],
-        datasets: [
-          {
-            data: [89, 69, 12, 48,]
-          }
-        ]
-      }, 
-    };
+    this.state = {};
   }
 
   componentDidMount() {
     console.log("mounted");
-    console.log(this.state.userLevel);
-    this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+      console.log(data._data);
+      const userSkills = [Number(data._data.statistics.goodSkills.lane), Number(data._data.statistics.goodSkills.mirrors),
+        Number(data._data.statistics.goodSkills.speed),Number(data._data.statistics.goodSkills.signals)];
+      const userChallenges = [Number(data._data.statistics.badSkills.parking), Number(data._data.statistics.badSkills.distractions),
+        Number(data._data.statistics.badSkills.merging),Number(data._data.statistics.badSkills.left)];
+        this.setState({
+          skillsData: {
+            labels: ["Lane Centering", "Mirrors", "Speed Control", "Signals"],
+            datasets: [
+              {
+                data: userSkills,
+              }
+            ]
+          }, 
+          challengesData: {
+            labels: ["Parking", "Distractions", "Merging", "Left Turns"],
+            datasets: [
+              {
+                data: userChallenges,
+              }
+            ]
+          }, 
+        });
+    });
     
 
   }
