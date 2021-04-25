@@ -13,6 +13,8 @@ import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 import colors from "../../config/colors";
 import {CheckBox} from "react-native-elements";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {
     LineChart,
     BarChart,
@@ -37,53 +39,86 @@ class Safety extends React.Component {
   componentDidMount() {
     console.log("mounted");
     console.log(this.state.userLevel);
-    this.setState({
-        safetyData: {week: [7.2, 8.5, 6.3, 9.6, 7.3], overall: [6.7, 5.2, 6.4, 6.5, 3.8], average: [6.6, 7.3, 3.5, 8.1, 4.0]}
-  }, () => {
-    this.setState( (pastState) => { return {
-        data: {
-            dataSets: [{
-              values: pastState.safetyData.week,
-              label: 'DS 1',
-              config: {
-                color: processColor('#FF8C9D'),
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#FF8C9D'),
-                fillAlpha: 100,
-                lineWidth: 2
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+      firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
+        const minDate = String(Date.now() - 604800000);
+        firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
+          let userAccel = 0;
+          let userPhone = 0;
+          let userTurn = 0;
+          let userBrake = 0;
+          let userSpeed = 0;
+          let userCount = 0;
+          reportData._docs.forEach(element => {
+            userAccel += Number(element._data.accel);
+            userPhone += Number(element._data.phone);
+            userTurn += Number(element._data.turn);
+            userBrake += Number(element._data.brake);
+            userSpeed += Number(element._data.speed);
+            userCount += 1;
+          });
+          if (userCount == 0) {
+            this.setState({hasData: false});
+          } else {
+            userAccel /= userCount;
+            userPhone /= userCount;
+            userTurn /= userCount;
+            userBrake /= userCount;
+            userSpeed /= userCount;
+            const weekData = [userAccel, userPhone, userTurn, userSpeed, userBrake];
+            const overallData = [Number(data._data.statistics.accel),Number(data._data.statistics.phone),
+              Number(data._data.statistics.turn),Number(data._data.statistics.speed),Number(data._data.statistics.brake)];
+            const allData = [statData._data.accelMean, statData._data.phoneMean,statData._data.turnMean,
+              statData._data.speedMean,statData._data.brakeMean,]
+            this.setState({hasData:true, safetyData: {week: weekData, overall: overallData, average: allData}}, () => {
+              this.setState( (pastState) => { return {
+                  data: {
+                      dataSets: [{
+                        values: pastState.safetyData.week,
+                        label: 'DS 1',
+                        config: {
+                          color: processColor('#FF8C9D'),
+                          drawFilled: true,
+                          drawValues: false,
+                          fillColor: processColor('#FF8C9D'),
+                          fillAlpha: 100,
+                          lineWidth: 2
+                        }
+                      }, {
+                          values: pastState.safetyData.average,
+                          label: 'DS 2',
+                          config: {
+                            color: 0,
+            
+                            drawFilled: true,
+                            drawValues: false,
+                            fillColor: 0,
+                            fillAlpha: 255,
+                            lineWidth: 0
+                          }
+                        }, {
+                          values: pastState.safetyData.overall,
+                          label: 'DS 3',
+                          config: {
+                            color: 0,
+                            drawValues: false,
+                            drawFilled: true,
+                            fillColor: 0
+                          }
+                        }],
+                  },
+                  xAxis: {
+                      fontFamily: "Montserrat",
+                      valueFormatter: ['     Gentle\nAcceleration', '  Avoiding\nPhone Use', ' Slowing\nfor Turns', 'Proper\nSpeed', ' Gentle\nBraking'],
+                  }
               }
-            }, {
-                values: pastState.safetyData.average,
-                label: 'DS 2',
-                config: {
-                  color: 0,
-  
-                  drawFilled: true,
-                  drawValues: false,
-                  fillColor: 0,
-                  fillAlpha: 255,
-                  lineWidth: 0
-                }
-              }, {
-                values: pastState.safetyData.overall,
-                label: 'DS 3',
-                config: {
-                  color: 0,
-                  drawValues: false,
-                  drawFilled: true,
-                  fillColor: 0
-                }
-              }],
-        },
-        xAxis: {
-            fontFamily: "Montserrat",
-            valueFormatter: ['     Gentle\nAcceleration', '  Avoiding\nPhone Use', ' Slowing\nfor Turns', 'Proper\nSpeed', ' Gentle\nBraking'],
-        }
-    }
-}
-    , () => {console.log(this.state.data);});
-  });
+          }
+              , () => {console.log(this.state.data);});
+            });
+          }
+        });
+      });
+    });
     
     this.updateRadar = () => {
         console.log("hi");
@@ -159,21 +194,11 @@ class Safety extends React.Component {
     
 }
 
-  handleSelect(event) {
-    let entry = event.nativeEvent
-    if (entry == null) {
-      this.setState({...this.state, selectedEntry: null})
-    } else {
-      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
-    }
-
-    console.log(event.nativeEvent)
-  }
 
   render() {
     
     return (
-      this.state.safetyData ?
+      this.state.hasData ? this.state.safetyData ? 
       <View style={{flex: 1}}>
 
         <View style={[styles.container, {flex: .75, justifyContent:"space-between"}]}>
@@ -278,6 +303,14 @@ class Safety extends React.Component {
                 </TouchableHighlight>
                 </View>
 
+      </View>
+    :
+
+    <View style={styles.background}>
+            <View style={styles.logoContainer}>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+                <Text style={styles.name}>You haven't practiced driving yet this week.</Text>
+            </View>
       </View>
 
     :

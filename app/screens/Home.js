@@ -115,7 +115,8 @@ class Home extends React.Component {
         {this.state.userLevel.level !== 10 ? 
         <Text style={[styles.text, {flex:0}]}>You need {3000 - this.state.userLevel.points} more points to level up! </Text> : null}
         {this.state.percentile ? 
-        <Text style={[styles.text, {flex:0}]}>You drive more safely than {this.state.percentile}% of drivers at your level. </Text> : null}
+        <Text style={[styles.text, {flex:0}]}>This week you drove more safely than {this.state.percentile}% of drivers at your level. </Text> : 
+        <Text style={[styles.text, {flex:0}]}>You haven't practiced driving yet this week. </Text>}
         
   </View>
   <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
