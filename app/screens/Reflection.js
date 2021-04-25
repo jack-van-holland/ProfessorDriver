@@ -84,7 +84,7 @@ const Reflection = ({ navigation, route }) => {
                     reflection: reflection,
                 });
             }
-            firestore.collection('users').doc(auth().currentUser.uid).get().then((data) => {
+            firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
                 let stat = data._data.statistics;
                 if (mirrors) {
                     stat.goodSkills.mirrors += 1;
@@ -95,8 +95,8 @@ const Reflection = ({ navigation, route }) => {
                 if (speed) {
                     stat.goodSkills.speed += 1;
                 }
-                if (signals) {
-                    stat.goodSkills.signals += 1;
+                if (signal) {
+                    stat.goodSkills.signal += 1;
                 }
                 if (distractions) {
                     stat.badSkills.distractions += 1;
@@ -105,21 +105,22 @@ const Reflection = ({ navigation, route }) => {
                     stat.badSkills.left += 1;
                 }
                 if (merging) {
-                    stat.badSkills.mergin += 1;
+                    stat.badSkills.merging += 1;
                 }
                 if (parking) {
                     stat.badSkills.parking += 1;
                 }
-                firestore.collection('users').doc(auth().currentUser.uid).update({
+                firestore().collection('users').doc(auth().currentUser.uid).update({
                     statistics: stat,
                 });
-            });
+            }).catch((error) => {console.log(error)});
 
             
 
             firestore().collection('users').doc(auth().currentUser.uid).collection('reports').doc(String(route.params.startTime)).set({accel: 7.3, brake: 8.5, phone: 9.6, turn: 5.6, speed: 7.8, duration: 130}).then(() => {
                 navigation.navigate("EndDrive", {startDrive: route.params.startTime});
-            }).catch( () => {
+            }).catch( (error) => {
+                console.log(error);
                 navigation.navigate("Home");
             });
         };
