@@ -22,40 +22,56 @@ import {
     StackedBarChart
   } from "react-native-chart-kit";
 import {PieChart, RadarChart} from 'react-native-charts-wrapper';
-
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import Gradient from "javascript-color-gradient";
 
 class Roads extends React.Component {
 
   constructor() {
     super();
 
-    this.state = {
-        data: {
-          label: 'Pie dataset',
-          dataSets: [{
-            values: [{value: 45, label: 'Residential'},
-              {value: 21, label: 'Highway'},
-              {value: 10, label: 'Rural'},
-              {value: 9, label: 'Interstate'},
-              {value: 15, label: 'City'}],
-            config: {
-              colors: [processColor('#699249'), processColor('#75a351'), processColor('#8fb86f'), processColor('#a9c891'), processColor('#c4d9b3'),],
-              valueTextSize: 0,
-              valueTextColor: 0,
-              //sliceSpace: 5,
-              //selectionShift: 13,
-              // xValuePosition: "OUTSIDE_SLICE",
-              // yValuePosition: "OUTSIDE_SLICE",
-              //valueFormatter: "#.#'%'",
-              //valueLineColor: processColor('green'),
-              //valueLinePart1Length: 0.5
-            }, label: "Roads"
-          }],
-        },
-      };
+    this.state = {};
     }
   
-    
+    componentDidMount() {
+      firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+        const roadMap = [];
+        for (const [key, value] of Object.entries(data._data.statistics.roads)) {
+          roadMap.push({value: value, label: key});
+        }
+        const colorGradient = new Gradient();
+        colorGradient.setMidpoint(roadMap.length);
+        colorGradient.setGradient('#3f7810', '#c4d9b3');
+        let colorArray = colorGradient.getArray();
+        for (let i = 0; i < colorArray.length; i++) {
+          colorArray[i] = processColor(colorArray[i]);
+        }
+
+        this.setState({
+          data: {
+            label: 'Pie dataset',
+            dataSets: [{
+              values: roadMap,
+              config: {
+                colors: colorArray,
+                valueTextSize: 0,
+                valueTextColor: 0,
+                //sliceSpace: 5,
+                //selectionShift: 13,
+                // xValuePosition: "OUTSIDE_SLICE",
+                // yValuePosition: "OUTSIDE_SLICE",
+                //valueFormatter: "#.#'%'",
+                //valueLineColor: processColor('green'),
+                //valueLinePart1Length: 0.5
+              }, label: "Roads"
+            }],
+          },
+        });        
+
+      });
+      
+    }
 
   render() {
     
