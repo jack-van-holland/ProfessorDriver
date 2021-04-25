@@ -22,93 +22,167 @@ import {
     StackedBarChart
   } from "react-native-chart-kit";
 import {RadarChart} from 'react-native-charts-wrapper';
-
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import { Linking } from 'react-native';
 
 class ReportsMain extends React.Component {
 
   constructor() {
     super();
 
-    this.state = {
-      userPerformance: {}, performanceChart: {},
-    };
+    this.state = {};
   }
+
+  habitNames = [
+    "Proper Speed", "Gentle Acceleration", "Gentle Braking", "Avoiding Phone Use", "Slowing for Turns"
+  ]
+
+  habitTips = ["take a moment to center yourself before driving. Life can get busy and chaotic, " +
+  "but speeding generally on saves a couple minutes of time and contributes to a third of collisions." +
+  " Before a drive, take a moment to make the decision not to speed.", 
+  "remember that there may be unexpected objects in your path. Accelerating more slowly will " +
+  "help give you time to react to these dangerous events. This is also more efficent," +  
+  "and will help lower your fuel costs and carbon footprint!", 
+  "Braking suddenly can surprise drivers behind you and cause collisions. If possible, " +
+  "start braking earlier so that you can brake more gently over a longer period of time. However, " +
+  "you should still brake hard when necessary, such as when you see an unexpected pedestrian.", 
+  "enable do-not-disturb when you drive so that you won't be distracted by alerts. " +
+      "Your friends and family will understand if you don't respond while driving.", ""
+];
+  habitLinks = ["https://www.youtube.com/watch?v=SzcDDuiZW2U",
+  "https://www.youtube.com/watch?v=zuiErrLL8lQ",
+  "https://www.youtube.com/watch?v=YpdfT6eKg1w",
+  "https://www.youtube.com/watch?v=IhAIzc1MgVc",
+  "https://www.youtube.com/watch?v=4Lt-xIvXrf8"];
+
+  challengeNames = ["Parking", "Distractions", "Merging", "Left Turns"];
+
+  challengeTips = ["make sure to find a space you are confident in. Don't worry about a slightly longer walk" + 
+  " to your destination if there is a less crowded area of the parking lot.",
+  "passenger conversations can be distracting. Your passengers are counting on you to keep them safe. They "
+  + "won't be offended if you ask them for quiet to concentrate on the road.",
+  "make sure to adjust your speed to the traffic you are merging into. Some learning drivers " +
+      "have the instinct to slow down before merging; this can actually be more dangerous in this situation.",
+      "remember that the choice of when to turn is yours. Do not let drivers behind you pressure "+
+      "you into turning unsafely.",
+];
+  challengeLinks = ["https://www.youtube.com/watch?v=v-OmDGydsHc&t=25s", 
+  "https://www.youtube.com/watch?v=V2h0jxCbKso",
+  "https://www.youtube.com/watch?v=wfXQ2YWB34Y",
+  "https://www.youtube.com/watch?v=dvvUt8mAxHk"];
 
   componentDidMount() {
-    console.log("mounted");
-    console.log(this.state.userLevel);
-    this.setState({
-      userLevel: {points: 2132, level: 6,}
-  }, () => {console.log(this.state.userLevel);});
-    
-    
-    
-    this.setState(
-      update(this.state, {
-        data: {
-          $set: {
-            dataSets: [{
-              values: [1, 1, 1, 1, 1],
-              label: 'DS 1',
-              config: {
-                color: processColor('#FF8C9D'),
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#FF8C9D'),
-                fillAlpha: 100,
-                lineWidth: 2
-              }
-            }, {
-              values: [1, 2, 3, 4, 5],
-              label: 'DS 2',
-              config: {
-                color: processColor('#C0FF8C'),
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+      const minDate = String(Date.now() - 604800000);
+      firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
+        firestore().collection('users').doc(auth().currentUser.uid).collection('drives').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((driveData) => {
+        let habits = [0,0,0,0,0];
+        let challenges = [0,0,0,0];
 
-                drawFilled: true,
-                drawValues: false,
-                fillColor: processColor('#C0FF8C'),
-                fillAlpha: 150,
-                lineWidth: 1.5
-              }
-            }, {
-              values: [6, 10, 2, 5, 4],
-              label: 'DS 3',
-              config: {
-                color: processColor('#8CEAFF'),
-                drawValues: false,
-                drawFilled: true,
-                fillColor: processColor('#8CEAFF')
-              }
-            }],
+        reportData._docs.forEach(element => {
+          habits[0] += element._data.speed;
+          habits[1] += element._data.accel;
+          habits[2] += element._data.brake;
+          habits[3] += element._data.phone;
+          habits[4] += element._data.turn;
+        });
+        driveData._docs.forEach(element => {
+          if (element._data.reflection.bad.parking) {
+            challenges[0] += 1;
           }
-        },
-        xAxis: {
-            
-          $set: {
-            fontFamily: "Montserrat",
-            valueFormatter: ['Acceleration', 'Phone Use', 'Turning', 'Speed', 'Braking']
+          if (element._data.reflection.bad.distractions) {
+            challenges[1] += 1;
+          }
+          if (element._data.reflection.bad.merging) {
+            challenges[2] += 1;
+          }
+          if (element._data.reflection.bad.left) {
+            challenges[3] += 1;
+          }
+        });
+        let habitMax = 0;
+        let habitMaxIndex = 0;
+        for (let i = 0; i < 5; i++) {
+          if (habits[i] > habitMax) {
+            habitMax = habits[i];
+            habitMaxIndex = i;
           }
         }
-      })
-    );
-  }
+        let skillMax = 0;
+        let skillMaxIndex = 0;
+        for (let i = 0; i < 4; i++) {
+          if (challenges[i] > skillMax) {
+            skillMax = challenges[i];
+            skillMaxIndex = i;
+          }
+        }
 
-  handleSelect(event) {
-    let entry = event.nativeEvent
-    if (entry == null) {
-      this.setState({...this.state, selectedEntry: null})
-    } else {
-      this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
-    }
+        let road = "";
+        let roads = [data._data.statistics.roads.rural, data._data.statistics.roads.residential, 
+          data._data.statistics.roads.highway, data._data.statistics.roads.city, 
+          data._data.statistics.roads.interstate];
+        let roadNames = ["rural","residential", "highway", "city", "interstate"];
+        if (data._data.level < 3) {
+          let min = roads[0];
+          let minIndex = 0;
+          for (let i = 0; i < 2; i++) {
+            if (roads[i] < min) {
+              min = roads[i];
+              minIndex = i;
+            }
+          }
+          road = roadNames[minIndex];
+        }
+        else if (data._data.level < 5) {
+          let min = roads[0];
+          let minIndex = 0;
+          for (let i = 0; i < 3; i++) {
+            if (roads[i] < min) {
+              min = roads[i];
+              minIndex = i;
+            }
+          }
+          road = roadNames[minIndex];
+        }
+        else if (data._data.level < 8) {
+          let min = roads[0];
+          let minIndex = 0;
+          for (let i = 0; i < 4; i++) {
+            if (roads[i] < min) {
+              min = roads[i];
+              minIndex = i;
+            }
+          }
+          road = roadNames[minIndex];
+        } else {
+          let min = roads[0];
+          let minIndex = 0;
+          for (let i = 0; i < 5; i++) {
+            if (roads[i] < min) {
+              min = roads[i];
+              minIndex = i;
+            }
+          }
+          road = roadNames[minIndex];
+        }
 
-    console.log(event.nativeEvent)
+        this.setState({
+          habit: habitMaxIndex,
+          challenge: skillMaxIndex,
+          roadType: road,
+        })
+      
+      });
+      });
+    });
   }
 
   render() {
     
     return (
-      this.state.userLevel ?
-        <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
+      this.state.roadType ?
+        <View style={[styles.container, {flex: 1, justifyContent:"space-evenly"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                  onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
@@ -146,20 +220,33 @@ class ReportsMain extends React.Component {
                 </View>
                 </TouchableHighlight>
   </View>
-          <Text style={[styles.title, {marginTop:10}]}>Your Top 3 Tips from this week to improve your driving!</Text>
-          <View style={{flex: 1, justifyContent:"flex-start", marginTop:25}}>
+          <Text style={[styles.toptitle, {marginTop:10}]}>Your Top 3 Tips from this week to improve your driving!</Text>
+          <View style={{flex: 2}}>
           <Text style={[styles.title, ]}>Safety Habits</Text>
-          <Text style={[styles.subtitle, ]}>You struggle most with: proper speed.</Text>
-          <Text style={[styles.text,]}>Our recommendation: take a moment to center yourself before driving. Life can get busy and chaotic, but speeding generally on saves a couple minutes of time and contributes to a third of collisions. Before a drive, take a moment to make the decision not to speed.</Text>
+          <Text style={[styles.subtitle, ]}>You struggle most with: </Text>
+          <Text style={[styles.subtitle, ]}>{this.habitNames[this.state.habit]}</Text>
+
+          <Text style={[styles.text,]}>Our recommendation: {this.habitTips[this.state.habit]}</Text>
+          <View style={{ flex: 1, alignItems: "center" }}>
+                        <TouchableHighlight onPress={() => { Linking.openURL(this.habitLinks[this.state.habit]); }} style={styles.backButtonSelected}>
+                            <Text style={styles.nexttext}>Video to Learn More</Text>
+                        </TouchableHighlight>
           </View>
-          <View style={{flex: 1, justifyContent:"flex-start", marginTop:25}}>
+          </View>
+          <View style={{flex: 2}}>
           <Text style={[styles.title]}>Skills</Text>
-          <Text style={[styles.subtitle]}>You struggle most with: left turns.</Text>
-          <Text style={[styles.text]}>Our recommendation: remember that the choice of when to turn is yours. Do not let drivers behind you pressure you into turning unsafely.</Text>
+          <Text style={[styles.subtitle]}>You struggle most with: </Text>
+          <Text style={[styles.subtitle]}>{this.challengeNames[this.state.challenge]}</Text>
+          <Text style={[styles.text]}>Our recommendation: {this.challengeTips[this.state.challenge]}</Text>
+          <View style={{ flex: 1, alignItems: "center" }}>
+                        <TouchableHighlight onPress={() => { Linking.openURL(this.challengeLinks[this.state.challenge]); }} style={styles.backButtonSelected}>
+                            <Text style={styles.nexttext}>Video to Learn More</Text>
+                        </TouchableHighlight>
           </View>
-          <View style={{flex: 1, justifyContent:"flex-start"}}>
+          </View>
+          <View style={{flex: 1}}>
           <Text style={[styles.title]}>Road Types</Text>
-          <Text style={[styles.subtitle]}>Practice more on highway roads. </Text>
+          <Text style={[styles.subtitle]}>Practice more on {this.state.roadType} roads. </Text>
           <Text style={[styles.text,{marginBottom:25}]}>This is at your skill level and will help you gain valuable experience.</Text>
           </View>
 
@@ -225,10 +312,20 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat",
     color: "black",
     fontWeight: "bold",
-    fontSize: 30,
+    fontSize: 22,
     paddingTop: 10,
     textAlign: "center",
-},background: {
+},
+toptitle: {
+  fontFamily: "Montserrat",
+  color: "black",
+  fontWeight: "bold",
+  fontSize: 25,
+  paddingTop: 10,
+  paddingHorizontal:20,
+  textAlign: "center",
+},
+background: {
   flex: 1,
   backgroundColor: "#F3F3F5",
   alignItems: "center",
@@ -372,7 +469,19 @@ text: {
         height: 90, 
         alignItems: "center", 
         justifyContent: "center"
-    },
+    },backButtonSelected: {
+      height: 40,
+      paddingHorizontal:10,
+      backgroundColor: '#87B258',
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+  },nexttext: {
+    fontFamily: "Montserrat",
+    color: "#F3F3F5",
+    fontWeight: "bold",
+    fontSize: 18
+},
 });
 
 export default ReportsMain;

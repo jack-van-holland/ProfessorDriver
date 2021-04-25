@@ -68,6 +68,7 @@ componentDidMount() {
     const userTurnData = [];
     const userSpeedData = [];
     const userDates = [];
+
     data._docs.forEach((report) => {
       userAccelData.push(report._data.accel);
       userPhoneData.push(report._data.phone);

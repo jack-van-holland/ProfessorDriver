@@ -38,7 +38,9 @@ class Roads extends React.Component {
       firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
         const roadMap = [];
         for (const [key, value] of Object.entries(data._data.statistics.roads)) {
+          if (value > 0) {
           roadMap.push({value: value, label: key});
+          }
         }
         const colorGradient = new Gradient();
         colorGradient.setMidpoint(roadMap.length);
