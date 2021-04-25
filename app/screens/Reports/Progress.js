@@ -146,13 +146,13 @@ componentDidMount() {
 
   <ScrollView
 horizontal={true}
-contentOffset={{ x: 900 - Dimensions.get("window").width, y: 0 }} // i needed the scrolling to start from the end not the start
+contentOffset={{ x: (this.state.dates.length * 60) - Dimensions.get("window").width, y: 0 }} // i needed the scrolling to start from the end not the start
 showsHorizontalScrollIndicator={false}
 style={{flex:1}} // to hide scroll bar
 >
   <LineChart
     data={this.state.data}
-    width={900}
+    width={(this.state.dates.length * 60)}
     height={250}
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{

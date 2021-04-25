@@ -31,6 +31,34 @@ const SignupContact = ({ navigation, route }) => {
                     lastName: lastName,
                     role: route.params.role,
                     level: route.params.level,
+                    points: 0,
+                    statistics: {
+                        accel: 0,
+                        phone: 0,
+                        turn: 0,
+                        brake: 0,
+                        speed: 0,
+                        count: 0,
+                        roads: {
+                            rural: 0,
+                            residential: 0,
+                            highway: 0,
+                            city: 0,
+                            interstate: 0,
+                        },
+                        goodSkills: {
+                            mirrors: 0,
+                            lane: 0,
+                            speed: 0,
+                            signal: 0,
+                        }, badSkills: {
+                            merging: 0,
+                            parking: 0,
+                            distractions: 0,
+                            left: 0,
+                        }
+
+                    },
                     child: route.params.child,
                 });
             }).then(() => {

@@ -46,7 +46,8 @@ const SignupExperience = ({ navigation }) => {
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
                     <TouchableHighlight onPress={() => {
-                        navigation.navigate("SignupContact", {role: "driver", level: exp, child : ""})
+                        navigation.navigate("SignupContact", {role: "driver", level: exp === "novice" ? 1
+                         : exp === "beginning" ? 3 : exp === "intermediate" ? 5 : 8, child : ""})
                     }}
                     style={exp ? styles.nextButtonSelected : styles.nextButtonUnselected}
                     disabled={exp ? false : true}>
