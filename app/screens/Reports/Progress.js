@@ -13,7 +13,8 @@ import update from 'immutability-helper';
 import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 import colors from "../../config/colors";
-
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {
     LineChart,
     BarChart,
@@ -29,114 +30,69 @@ class Progress extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-        accel: true,
-        brake: false,
-        turn: false,
-        speed: false,
-        phone: false,
-        accelData: [Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,],
-            brakeData: [Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,],
-                accelData: [Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,],
-            turnData: [Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,
-                Math.random() * 10,],
-                speedData: [Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,
-                    Math.random() * 10,],
-                    phoneData: [Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,
-                        Math.random() * 10,],
-  }
-  
-  this.updateData = () => {
-    this.setState((pastState) => {
-        let dataChosen = [];
-        if (pastState.accel) {
-            dataChosen.push({data: pastState.accelData,color: (opacity = 1) => `rgba(0, 102, 51, ${opacity})`,});
-        }
-        if (pastState.brake) {
-          dataChosen.push({data: pastState.brakeData,color: (opacity = 1) => `rgba(255, 51, 51, ${opacity})`,});
-        }
-        if (pastState.turn) {
-          dataChosen.push({data: pastState.turnData,color: (opacity = 1) => `rgba(102, 0, 102, ${opacity})`});
-        }
-        if (pastState.speed) {
-          dataChosen.push({data: pastState.speedData,color: (opacity = 1) => `rgba(255, 215, 0, ${opacity})`,});
-        }
-        if (pastState.phone) {
-          dataChosen.push({data: pastState.phoneData,color: (opacity = 1) => `rgba(0, 153, 204, ${opacity})`});
-        }
-        return {data: {
-          labels: ["1/17","1/24","1/31","2/7","2/14","2/21","2/28", "3/7", "3/14", "3/21", "3/28", "4/4"],
-          datasets: dataChosen,
-        }}; 
-      
-    });
+    
+    this.state = {};
 }
+
+updateData = () => {
+  this.setState((pastState) => {
+      let dataChosen = [];
+      if (pastState.accel) {
+          dataChosen.push({data: pastState.accelData,color: (opacity = 1) => `rgba(0, 102, 51, ${opacity})`,});
+      }
+      if (pastState.brake) {
+        dataChosen.push({data: pastState.brakeData,color: (opacity = 1) => `rgba(255, 51, 51, ${opacity})`,});
+      }
+      if (pastState.turn) {
+        dataChosen.push({data: pastState.turnData,color: (opacity = 1) => `rgba(102, 0, 102, ${opacity})`});
+      }
+      if (pastState.speed) {
+        dataChosen.push({data: pastState.speedData,color: (opacity = 1) => `rgba(255, 215, 0, ${opacity})`,});
+      }
+      if (pastState.phone) {
+        dataChosen.push({data: pastState.phoneData,color: (opacity = 1) => `rgba(0, 153, 204, ${opacity})`});
+      }
+      return {data: {
+        labels: pastState.dates,
+        datasets: dataChosen,
+      }}; 
+    
+  });
 }
+
 componentDidMount() {
-    this.updateData();
+  firestore().collection('users').doc(auth().currentUser.uid).collection('reports').get().then((data) => {
+    const userAccelData = [];
+    const userPhoneData = [];
+    const userBrakeData = [];
+    const userTurnData = [];
+    const userSpeedData = [];
+    const userDates = [];
+    data._docs.forEach((report) => {
+      userAccelData.push(report._data.accel);
+      userPhoneData.push(report._data.phone);
+      userBrakeData.push(report._data.brake);
+      userTurnData.push(report._data.turn);
+      userSpeedData.push(report._data.speed);
+      let pathParts = report._ref._documentPath._parts;
+      let date = new Date(Number(pathParts[pathParts.length - 1]));
+      
+      userDates.push(String(date.getMonth()) + "/" + String(date.getDate()) + "/" + String(date.getFullYear()).substring(2));
+    });
+    this.setState({
+      accel: true,
+      brake: false,
+      turn: false,
+      speed: false,
+      phone: false,
+      accelData: userAccelData,
+      brakeData: userBrakeData,
+      turnData: userTurnData,
+      speedData: userSpeedData,
+      phoneData: userPhoneData,
+      dates: userDates,
+}, () => {this.updateData();});
+  });
 }
     
     
