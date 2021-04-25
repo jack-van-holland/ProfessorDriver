@@ -14,6 +14,7 @@ const screenWidth = Dimensions.get("window").width;
 import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+var ztable = require('ztable');
 
 import {
     LineChart,
@@ -34,14 +35,44 @@ class Home extends React.Component {
     this.state = {};
   }
 
+
+
   componentDidMount() {
     console.log("mounted");
     console.log(this.state.userLevel);
+    
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+      firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
+        const minDate = String(Date.now() - 604800000);
+        firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
+          const statMean = (Number(statData._data.accelMean) + Number(statData._data.turnMean) + 
+          Number(statData._data.phoneMean) + Number(statData._data.brakeMean) + Number(statData._data.speedMean)) / 5;
+          const count = Number(statData._data.count);
+          const stdMean = (Math.sqrt(Number(statData._data.accelM2) / count) + Math.sqrt(Number(statData._data.turnM2) / count) +
+          Math.sqrt(Number(statData._data.phoneM2) / count) + Math.sqrt(Number(statData._data.brakeM2) / count) 
+          + Math.sqrt(Number(statData._data.speedM2) / count)) / 5;
+          let userMean = 0;
+          let userCount = 0;
+          reportData._docs.forEach(element => {
+            const thisMean = (Number(element._data.accel) + Number(element._data.phone) + Number(element._data.turn) 
+              + Number(element._data.brake) + Number(element._data.speed)) / 5;
+            userMean += thisMean;
+            userCount += 1;
+          });
+          if (userCount == 0) {
+            this.setState({week: false});
+          } else {
+            userMean /= userCount;
+            const z = (userMean - statMean) / stdMean;
+            const percentile = ztable(z);
+            this.setState({week : true, percentile: (percentile * 100).toFixed(0)});
+          }
+        });
+      });
       this.setState({
         userLevel: {points: data._data.points.toFixed(0), level: data._data.level,}
     }, () => {console.log(this.state.userLevel);});
-    })
+    });
     
   }
 
@@ -53,7 +84,7 @@ class Home extends React.Component {
           <Text style={[styles.title, {marginTop:50, flex:0}]}>Professor Driver</Text>
           <Text style={[styles.subtitle, {flex:1}]}>Welcome!</Text>
           
-          <View style={{backgroundColor:'#E1F6D0', borderRadius: 16, marginBottom: 70, flex:3}}>
+          <View style={{backgroundColor:'#E1F6D0', borderRadius: 16, marginBottom: 70, marginHorizontal:10, flex:5}}>
           <Text style={styles.subtitle}>Level {this.state.userLevel.level}</Text>
           <Text style={styles.subtitle}>{this.state.userLevel.points} points</Text>
 
@@ -83,7 +114,9 @@ class Home extends React.Component {
         />
         {this.state.userLevel.level !== 10 ? 
         <Text style={[styles.text, {flex:0}]}>You need {3000 - this.state.userLevel.points} more points to level up! </Text> : null}
-
+        {this.state.percentile ? 
+        <Text style={[styles.text, {flex:0}]}>You drive more safely than {this.state.percentile}% of drivers at your level. </Text> : null}
+        
   </View>
   <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
