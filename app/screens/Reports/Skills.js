@@ -41,9 +41,11 @@ class Skills extends React.Component {
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
       console.log(data._data);
       const userSkills = [Number(data._data.statistics.goodSkills.lane), Number(data._data.statistics.goodSkills.mirrors),
-        Number(data._data.statistics.goodSkills.speed),Number(data._data.statistics.goodSkills.signals)];
+        Number(data._data.statistics.goodSkills.speed),Number(data._data.statistics.goodSkills.signal)];
       const userChallenges = [Number(data._data.statistics.badSkills.parking), Number(data._data.statistics.badSkills.distractions),
         Number(data._data.statistics.badSkills.merging),Number(data._data.statistics.badSkills.left)];
+        console.log(userSkills);
+        console.log(userChallenges);
         this.setState({
           skillsData: {
             labels: ["Lane Centering", "Mirrors", "Speed Control", "Signals"],

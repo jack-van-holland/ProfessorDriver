@@ -68,7 +68,7 @@ componentDidMount() {
     const userTurnData = [];
     const userSpeedData = [];
     const userDates = [];
-
+    console.log(data);
     data._docs.forEach((report) => {
       userAccelData.push(report._data.accel);
       userPhoneData.push(report._data.phone);
@@ -81,6 +81,7 @@ componentDidMount() {
       userDates.push(String(date.getMonth()) + "/" + String(date.getDate()) + "/" + String(date.getFullYear()).substring(2));
     });
     this.setState({
+      empty: data._docs.length === 0,
       accel: true,
       brake: false,
       turn: false,
@@ -100,7 +101,7 @@ componentDidMount() {
   render() {
     
     return (
-      this.state.data ?
+      this.state.data ? !this.state.empty ?
         <View style={[styles.container, {flex: 1, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
@@ -146,13 +147,13 @@ componentDidMount() {
 
   <ScrollView
 horizontal={true}
-contentOffset={{ x: (this.state.dates.length * 60) - Dimensions.get("window").width, y: 0 }} // i needed the scrolling to start from the end not the start
+contentOffset={{ x: Math.max(this.state.dates.length * 60, Dimensions.get("window").width) - Dimensions.get("window").width, y: 0 }} // i needed the scrolling to start from the end not the start
 showsHorizontalScrollIndicator={false}
 style={{flex:1}} // to hide scroll bar
 >
   <LineChart
     data={this.state.data}
-    width={(this.state.dates.length * 60)}
+    width={Math.max(this.state.dates.length * 60, Dimensions.get("window").width)}
     height={250}
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{
@@ -252,6 +253,91 @@ style={{flex:1}} // to hide scroll bar
                 </View>
 
       </View>
+
+:
+<View style={[{flex: 1, justifyContent:"space-evenly"}]}>
+    <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
+    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+             onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
+              <View>
+              <Image style={styles.image} source={require("../../assets/images/road.png")}></Image>
+              <Text style={styles.topStartText}>Roads</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
+            onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Progress'}],});}} style={styles.topStartButtonSelected}>
+            <View>
+              <Image style={styles.image} source={require("../../assets/images/progress.png")}></Image>
+              <Text style={styles.topStartText}>Progress</Text>
+            </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
+            onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.topStartButton}>
+                <View>
+                <Image style={styles.image} source={require("../../assets/images/learning.png")}></Image>
+                <Text style={styles.topStartText}>Tips</Text>
+                </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
+             onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButton}>
+              <View>
+              <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
+              <Text style={styles.topStartText}>Safety</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+            onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButton}>
+            <View>
+              <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
+              <Text style={styles.topStartText}>Skills</Text>
+            </View>
+            </TouchableHighlight>
+</View>
+<View style={[styles.background, {flex: 3}]}>
+        <View style={styles.logoContainer}>
+            <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+            <Text style={styles.title}>Looks like you haven't practiced driving yet. Go on some drives to see your progress!</Text>
+        </View>
+  </View>
+
+<View style={{flex: 0, flexDirection:"row"}}>
+<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/home.png")}></Image>
+<Text style={styles.startText}>Home</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/chart.png")}></Image>
+<Text style={styles.startText}>Reports</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.navigate("Checklist");}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
+<Text style={styles.startText}>Drive</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/diary.png")}></Image>
+<Text style={styles.startText}>Log</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
+<Text style={styles.startText}>Account</Text>
+</View>
+</TouchableHighlight>
+</View>
+</View>
 
     :
       <View style={styles.background}>

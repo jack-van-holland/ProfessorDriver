@@ -38,7 +38,6 @@ class Safety extends React.Component {
 
   componentDidMount() {
     console.log("mounted");
-    console.log(this.state.userLevel);
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
       firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
         const minDate = String(Date.now() - 604800000);
@@ -70,7 +69,8 @@ class Safety extends React.Component {
               Number(data._data.statistics.turn),Number(data._data.statistics.speed),Number(data._data.statistics.brake)];
             const allData = [statData._data.accelMean, statData._data.phoneMean,statData._data.turnMean,
               statData._data.speedMean,statData._data.brakeMean,]
-            this.setState({hasData:true, safetyData: {week: weekData, overall: overallData, average: allData}}, () => {
+            console.log(allData);
+            this.setState({hasData:true, userLevel: data._data.level, safetyData: {week: weekData, overall: overallData, average: allData}}, () => {
               this.setState( (pastState) => { return {
                   data: {
                       dataSets: [{
@@ -261,7 +261,7 @@ class Safety extends React.Component {
         <View style={{flex:1.5}}>
         <CheckBox fontFamily='Montserrat' center title='Your Overall Performance Over Time' onPress={() => {this.setState((pastState) => {return {timeChecked: !pastState.timeChecked}}, () => {this.updateRadar();});}}
   checked={this.state.timeChecked}></CheckBox>
-  <CheckBox fontFamily='Montserrat' center title='Average Level 6 Drivers' onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
+  <CheckBox fontFamily='Montserrat' center title={'Average Level ' + this.state.userLevel + ' Drivers'} onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
   checked={this.state.allChecked}></CheckBox>
   </View>
 
@@ -309,17 +309,94 @@ class Safety extends React.Component {
     <View style={styles.background}>
             <View style={styles.logoContainer}>
                 <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
-                <Text style={styles.name}>You haven't practiced driving yet this week.</Text>
+                <Text style={styles.name}>Professor Drive</Text>
             </View>
       </View>
 
     :
-      <View style={styles.background}>
-            <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
-                <Text style={styles.name}>Professor Driver</Text>
+    <View style={[{flex: 1, justifyContent:"space-evenly"}]}>
+    <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
+    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+             onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
+              <View>
+              <Image style={styles.image} source={require("../../assets/images/road.png")}></Image>
+              <Text style={styles.topStartText}>Roads</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+            onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Progress'}],});}} style={styles.topStartButton}>
+            <View>
+              <Image style={styles.image} source={require("../../assets/images/progress.png")}></Image>
+              <Text style={styles.topStartText}>Progress</Text>
             </View>
-      </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
+            onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.topStartButton}>
+                <View>
+                <Image style={styles.image} source={require("../../assets/images/learning.png")}></Image>
+                <Text style={styles.topStartText}>Tips</Text>
+                </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
+             onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButtonSelected}>
+              <View>
+              <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
+              <Text style={styles.topStartText}>Safety</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+            onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButton}>
+            <View>
+              <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
+              <Text style={styles.topStartText}>Skills</Text>
+            </View>
+            </TouchableHighlight>
+</View>
+<View style={[styles.background, {flex: 3}]}>
+        <View style={styles.logoContainer}>
+            <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+            <Text style={styles.title}>Practice driving this week to see your safety scores!</Text>
+        </View>
+  </View>
+
+<View style={{flex: 0, flexDirection:"row"}}>
+<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/home.png")}></Image>
+<Text style={styles.startText}>Home</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/chart.png")}></Image>
+<Text style={styles.startText}>Reports</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.navigate("Checklist");}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
+<Text style={styles.startText}>Drive</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/diary.png")}></Image>
+<Text style={styles.startText}>Log</Text>
+</View>
+</TouchableHighlight>
+<TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>
+<View>
+<Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
+<Text style={styles.startText}>Account</Text>
+</View>
+</TouchableHighlight>
+</View>
+</View>
     );
   
   }
