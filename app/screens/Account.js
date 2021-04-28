@@ -22,7 +22,7 @@ class Account extends React.Component {
         firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
             const parentNames = [];
             console.log(data);
-            if (data._data.parents[0]) {
+            if (data._data.parents.length) {
             for (let i = 0; i < data._data.parents.length; i++) {
                 firestore().collection('users').doc(data._data.parents[i]).get().then((parent) => {
                     parentNames.push(parent._data.firstName + " " + parent._data.lastName);
@@ -33,7 +33,7 @@ class Account extends React.Component {
             }
             const parentReqs = [];
             //console.log(data._data.parentReqs);
-            if (data._data.parentReqs[0]) {
+            if (data._data.parentReqs.length) {
                 for (let i = 0; i < data._data.parentReqs.length; i++) {
                     parentReqs.push(data._data.parentReqs[i]);
                     this.setState({requests:parentReqs});
@@ -43,6 +43,39 @@ class Account extends React.Component {
             }
         });
     }
+
+    approveRequest = (request) => {
+        firestore().collection('users').doc(request.id).get().then( (parentData) => {
+        let parentRequest = parentData._data.pendingReqs.find(req => req.id === auth().currentUser.uid);
+        firestore().collection('users').doc(auth().currentUser.uid).update({
+            parents: firestore.FieldValue.arrayUnion(request.id),
+            parentReqs: firestore.FieldValue.arrayRemove(request),
+        }).then( () => {
+            firestore().collection('users').doc(request.id).update( {
+                pendingReqs: firestore.FieldValue.arrayRemove(parentRequest),
+                children: firestore.FieldValue.arrayUnion({child: auth().currentUser.uid, role: request.role}),
+                currentChild: auth().currentUser.uid,
+            });
+            this.load();
+        }
+        );
+    });
+    };
+
+    denyRequest = (request) => {
+        firestore().collection('users').doc(request.id).get().then( (parentData) => {
+        let parentRequest = parentData._data.pendingReqs.find(req => req.id === auth().currentUser.uid);
+        firestore().collection('users').doc(auth().currentUser.uid).update({
+            parentReqs: firestore.FieldValue.arrayRemove(request),
+        }).then( () => {
+            firestore().collection('users').doc(request.id).update( {
+                pendingReqs: firestore.FieldValue.arrayRemove(parentRequest),
+            });
+            this.load();
+        }
+        );
+    });
+    };
     render() {
     return (
         <View style={[styles.container, {flex:1, justifyContent:"space-between", alignItems:"center", alignContent: "center"}]}>
@@ -71,14 +104,14 @@ class Account extends React.Component {
                                     {item.role === "parent" ? "parental control" : "view access"}
                                  </Text>
                                  </View>
-                                 <TouchableHighlight style= {[styles.approveButton, {flex:0}]} onPress={() => {this.load()}}>
+                                 <TouchableHighlight style= {[styles.approveButton, {flex:0}]} onPress={() => {this.approveRequest(item);}}>
                                     <View>
                                         <Text style={styles.approveText}>
                                             Approve
                                         </Text>
                                     </View>
                                  </TouchableHighlight>
-                                 <TouchableHighlight style= {[styles.denyButton, {flex:0}]} onPress={() => {this.load()}}>
+                                 <TouchableHighlight style= {[styles.denyButton, {flex:0}]} onPress={() => {this.denyRequest(item);}}>
                                     <View>
                                         <Text style={styles.approveText}>
                                             Deny
