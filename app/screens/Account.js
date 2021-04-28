@@ -1,69 +1,158 @@
 import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, ScrollView} from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 
-const Account = ({ navigation }) => {
+class Account extends React.Component {
 
+    constructor() {
+        super();
+        this.state = {};
+    }
 
+    componentDidMount() {
+        this.load();
+    }
+
+    load = () => {
+        firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+            const parentNames = [];
+            console.log(data);
+            if (data._data.parents[0]) {
+            for (let i = 0; i < data._data.parents.length; i++) {
+                firestore().collection('users').doc(data._data.parents[i]).get().then((parent) => {
+                    parentNames.push(parent._data.firstName + " " + parent._data.lastName);
+                    this.setState({parents: parentNames});
+                });
+            }} else {
+                this.setState({parents: parentNames});
+            }
+            const parentReqs = [];
+            //console.log(data._data.parentReqs);
+            if (data._data.parentReqs[0]) {
+                for (let i = 0; i < data._data.parentReqs.length; i++) {
+                    parentReqs.push(data._data.parentReqs[i]);
+                    this.setState({requests:parentReqs});
+                }
+            } else {
+                this.setState({requests: []})
+            }
+        });
+    }
+    render() {
     return (
         <View style={[styles.container, {flex:1, justifyContent:"space-between", alignItems:"center", alignContent: "center"}]}>
-            <View style={{paddingTop:100, flex:1, justifyContent:"space-evenly"}}>
-                <Text style={styles.title}>Account</Text>
-            </View>
             
-            <View style={{justifyContent:"center"}}>
+            <View style={{justifyContent:"center", paddingTop:50}}>
             <QRCode
             value={auth().currentUser.uid}
             logo={require("../assets/images/icon.png")}
             />
             </View>
-            <View style={{flex:1}}>
-            <Text style={styles.text}> If you are learning with parent or coach, 
-                show them this code when they are creating an account. 
-                This will give them access to view your driving performance.  </Text>
+            <View style={{flex:.5}}>
+            <Text style={styles.text}>Show your parent or coach this code to link your accounts.</Text>
             </View>
-            <View style={{flex:1}}>
+            <View style={{height: 200}}>
+                <Text style={styles.subtitle}>Your Link Requests</Text>
+                <ScrollView>
+                {this.state.requests 
+                            ? this.state.requests.length ? this.state.requests.map((item)=>(
+                                <View style={[styles.historyContainer, {flexDirection: "row"}]} key={item.id}>
+                                    <View style={[{flexDirection: "column", flex: 1, alignItems:"center"}]}>
+
+                                <Text style={[styles.historyText, {flex:1, paddingLeft:10, paddingVertical:10}]}>
+                                    {item.name + " is requesting: "}
+                                </Text>
+                                <Text style={[styles.historyText, {fontWeight:"bold", flex:1, paddingLeft:10, paddingVertical:10}]}>
+                                    {item.role === "parent" ? "parental control" : "view access"}
+                                 </Text>
+                                 </View>
+                                 <TouchableHighlight style= {[styles.approveButton, {flex:0}]} onPress={() => {this.load()}}>
+                                    <View>
+                                        <Text style={styles.approveText}>
+                                            Approve
+                                        </Text>
+                                    </View>
+                                 </TouchableHighlight>
+                                 <TouchableHighlight style= {[styles.denyButton, {flex:0}]} onPress={() => {this.load()}}>
+                                    <View>
+                                        <Text style={styles.approveText}>
+                                            Deny
+                                        </Text>
+                                    </View>
+                                 </TouchableHighlight>
+                                <View style={{paddingTop: 6}}></View>
+                                </View>
+                                )) 
+                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>No link requests right now. Click refresh if you think there should be one!</Text> 
+                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>Loading requests...</Text> }
+                </ScrollView>
+            </View>
+            <View style={{height: 200}}>
+                <Text style={styles.subtitle}>Your Coaches</Text>
+                <ScrollView>
+                {this.state.parents 
+                            ? this.state.parents.length ? this.state.parents.map((item)=>(
+                                <View style={styles.historyContainer} key={item}>
+                                <Text style={styles.historyText}>
+                                    {item}
+                                 </Text>
+                                <View style={{paddingTop: 6}}></View>
+                                </View>
+                                )) 
+                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>No coaches added yet. Have them scan your code above to link your accounts.</Text> 
+                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>Loading coaches...</Text> }
+                </ScrollView>
+            </View>
+            <View style={{flex:.5}}>
             <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => 
-            {auth().signOut().then(() => {navigation.reset({index: 0,routes: [{name: 'WelcomeScreen'}],});}); }}
+            {this.load();}}
+            style={styles.backButtonSelected}>
+                <Text style={styles.nexttext}>Refresh</Text>
+            </TouchableHighlight>
+            </View>
+            <View style={{flex:.5}}>
+            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => 
+            {auth().signOut().then(() => {this.props.navigation.reset({index: 0,routes: [{name: 'WelcomeScreen'}],});}); }}
             style={styles.backButtonSelected}>
                 <Text style={styles.nexttext}>Logout</Text>
             </TouchableHighlight>
             </View>
             <View style={{flex: 0, flexDirection:"row"}}>
             <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
                     <Text style={styles.startText}>Home</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButton}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("Checklist");}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.navigate("Checklist");}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("Log")}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/diary.png")}></Image>
                   <Text style={styles.startText}>Log</Text>
                 </View>
                 </TouchableHighlight>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButtonSelected}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButtonSelected}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>
@@ -72,6 +161,7 @@ const Account = ({ navigation }) => {
             </View>
         </View>
     );
+}
 }
 
 const styles = StyleSheet.create({
@@ -84,9 +174,33 @@ const styles = StyleSheet.create({
         backgroundColor: "#C4D9B3",
         borderRadius:15,
         flex: 0,
-        paddingVertical: 20,
+        paddingVertical: 10,
         paddingHorizontal: 50,
         justifyContent: "center"
+    },
+    approveButton: {
+        backgroundColor: "rgba(95, 128, 59,255)",
+        borderRadius:15,
+        flex: 0,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 5,
+        justifyContent: "center"
+    },
+    denyButton: {
+        backgroundColor: "#E60000",
+        borderRadius:15,
+        flex: 0,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 5,
+        justifyContent: "center"
+    },
+    approveText: {
+        fontFamily: "Montserrat",
+        color: "#F3F3F5",
+        fontWeight: "bold",
+        fontSize: 15
     },
     nexttext: {
         fontFamily: "Montserrat",
@@ -99,6 +213,17 @@ const styles = StyleSheet.create({
         color: "black",
         fontWeight: "bold",
         fontSize: 38,
+        paddingTop: 10,
+        justifyContent: "center",
+        textAlign: "center",
+        alignItems: "center",
+        flex: 1,
+    },
+    subtitle: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontWeight: "bold",
+        fontSize: 22,
         paddingTop: 10,
         justifyContent: "center",
         textAlign: "center",
@@ -253,6 +378,20 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         fontSize: 20,
+        //paddingTop: 10
+    },historyContainer: {
+        backgroundColor: "white",
+        width: 350,
+        borderRadius: 5,
+        borderColor: colors.PDgreen,
+        borderWidth: 1,
+        alignItems: "center",
+        //paddingTop: 10
+    },
+    historyText: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontSize: 18,
         //paddingTop: 10
     },
 })
