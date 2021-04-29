@@ -42,7 +42,7 @@ import { WelcomeScreen, SignupRole, SignupContact, SignupExperience,
  StartDrive, Reflection, ParentHome, Account, ParentAccount,
   ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
   Log, LogStats, Checklist, Accident, Mount, Level, Warning,
-  Curfew, CurfewTime, Grounded, DisableAction,
+  Curfew, CurfewTime, Grounded, DisableAction, DriveAlert,
 } from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
@@ -97,6 +97,8 @@ class App extends React.Component {
           <Stack.Screen name="CurfewTime" component={CurfewTime}/>
           <Stack.Screen name="Grounded" component={Grounded}/>
           <Stack.Screen name="DisableAction" component={DisableAction}/>
+          <Stack.Screen name="DriveAlert" component={DriveAlert}/>
+
 
 
 

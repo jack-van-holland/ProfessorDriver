@@ -30,6 +30,7 @@ export { default as Curfew} from './Curfew'
 export { default as CurfewTime} from './CurfewTime'
 export { default as Grounded} from './Grounded'
 export { default as DisableAction} from './DisableAction'
+export { default as DriveAlert} from './DriveAlert'
 
 
 

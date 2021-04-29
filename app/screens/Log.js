@@ -84,7 +84,11 @@ const Log = ({ navigation }) => {
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {navigation.navigate("Checklist");}} style={styles.startButton}>
+                onPress={() => {firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+                    if (data._data.status && data._data.status.type) {
+                        navigation.navigate("DriveAlert", {alert: data._data.status});
+                    }
+                });}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
