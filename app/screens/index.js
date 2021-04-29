@@ -25,6 +25,8 @@ export { default as Checklist} from './Checklist'
 export { default as Accident} from './Accident'
 export { default as Mount} from './Mount'
 export { default as Level} from './Level'
+export { default as Warning} from './Warning'
+
 
 
 

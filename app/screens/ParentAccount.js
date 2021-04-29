@@ -5,6 +5,7 @@ import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { Alert } from "react-native";
 
 
 class ParentAccount extends React.Component {
@@ -20,6 +21,7 @@ class ParentAccount extends React.Component {
 
     load = () => {
         firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+            this.setState({currentChild: data._data.currentChild});
             const childNames = [];
             console.log(data);
             if (data._data.children.length) {
@@ -44,37 +46,13 @@ class ParentAccount extends React.Component {
         });
     }
 
-    approveRequest = (request) => {
-        firestore().collection('users').doc(request.id).get().then( (parentData) => {
-        let parentRequest = parentData._data.pendingReqs.find(req => req.id === auth().currentUser.uid);
+    changeChild = (newCurrent) => {
         firestore().collection('users').doc(auth().currentUser.uid).update({
-            parents: firestore.FieldValue.arrayUnion(request.id),
-            parentReqs: firestore.FieldValue.arrayRemove(request),
-        }).then( () => {
-            firestore().collection('users').doc(request.id).update( {
-                pendingReqs: firestore.FieldValue.arrayRemove(parentRequest),
-                children: firestore.FieldValue.arrayUnion({child: auth().currentUser.uid, role: request.role}),
-                currentChild: auth().currentUser.uid,
-            });
+            currentChild: newCurrent,
+        }).then(() => {
             this.load();
-        }
-        );
-    });
-    };
-
-    denyRequest = (request) => {
-        firestore().collection('users').doc(request.id).get().then( (parentData) => {
-        let parentRequest = parentData._data.pendingReqs.find(req => req.id === auth().currentUser.uid);
-        firestore().collection('users').doc(auth().currentUser.uid).update({
-            parentReqs: firestore.FieldValue.arrayRemove(request),
-        }).then( () => {
-            firestore().collection('users').doc(request.id).update( {
-                pendingReqs: firestore.FieldValue.arrayRemove(parentRequest),
-            });
-            this.load();
-        }
-        );
-    });
+        });
+        
     };
     render() {
     return (
@@ -110,11 +88,13 @@ class ParentAccount extends React.Component {
             </TouchableHighlight>
             </View>
             <View style={{height: 300}}>
-                <Text style={styles.subtitle}>Your Students</Text>
+                <Text style={[styles.subtitle, {flex: 0}]}>Your Students</Text>
+                <Text style={[styles.text, {flex: .25}]}>Tap a student to view their reports.</Text>
+
                 <ScrollView>
                 {this.state.children 
                             ? this.state.children.length ? this.state.children.map((item)=>(
-                                <View style={styles.historyContainer} key={item.id}>
+                                <View onStartShouldSetResponder={() => {this.changeChild(item.id);}} style={item.id === this.state.currentChild ? styles.historyContainerSelected : styles.historyContainer} key={item.id}>
                                 <Text style={[styles.historyText, {fontWeight: "bold"}]}>
                                     {item.name}
                                  </Text>
@@ -126,21 +106,21 @@ class ParentAccount extends React.Component {
                                  {item.role === "parent" ? 
                                 
                                 <View style={{flexDirection:"row"}}>
-                                <TouchableHighlight style= {[styles.warningButton, {backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)": "rgba(255, 255, 0, .25)":  "rgba(255, 255, 0, .25)", flex:0}]} onPress={() => {this.props.navigation.navigate("Warning");}}>
+                                <TouchableHighlight style= {[styles.warningButton, {backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)": "rgba(255, 255, 0, .25)":  "rgba(255, 255, 0, .25)", flex:0}]} onPress={() => {this.props.navigation.navigate("Warning", {id: item.id});}}>
                                 <View>
                                     <Text style={styles.approveText}>
                                         Warning
                                     </Text>
                                 </View>
                              </TouchableHighlight>
-                             <TouchableHighlight style= {[styles.curfewButton, {backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)": "rgba(255, 165, 0, .1)":  "rgba(255, 165, 0, .1)", flex:0}]} onPress={() => {this.props.navigation.navigate("Curfew");}}>
+                             <TouchableHighlight style= {[styles.curfewButton, {backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)": "rgba(255, 165, 0, .1)":  "rgba(255, 165, 0, .1)", flex:0}]} onPress={() => {this.props.navigation.navigate("Curfew",  {id: item.id});}}>
                                 <View>
                                     <Text style={styles.approveText}>
                                         Curfew
                                     </Text>
                                 </View>
                              </TouchableHighlight>
-                             <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} onPress={() => {this.props.navigation.navigate("Grounded");}}>
+                             <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} onPress={() => {this.props.navigation.navigate("Grounded",  {id: item.id});}}>
                                 <View>
                                     <Text style={styles.approveText}>
                                         Grounded
@@ -295,7 +275,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         textAlign: "center",
         alignItems: "center",
-        flex: 0.2,
+        flex: 0.5,
     },
     logoContainer: {
         alignItems: "center",
@@ -328,12 +308,13 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Montserrat",
     color: "black",
-    fontSize: 22,
-    paddingTop: 10,
+    fontSize: 16,
+    paddingTop: 5,
     justifyContent: "center",
     textAlign: "center",
     alignItems: "center",
     paddingHorizontal:25,
+    flex: 1,
   
   },
     loginButton: {
@@ -448,6 +429,14 @@ const styles = StyleSheet.create({
         //paddingTop: 10
     },historyContainer: {
         backgroundColor: "white",
+        width: 350,
+        borderRadius: 5,
+        borderColor: colors.PDgreen,
+        borderWidth: 1,
+        alignItems: "center",
+        //paddingTop: 10
+    },historyContainerSelected: {
+        backgroundColor: "rgba(135, 178, 88, 0.2)",
         width: 350,
         borderRadius: 5,
         borderColor: colors.PDgreen,
