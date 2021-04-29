@@ -174,7 +174,9 @@ class Account extends React.Component {
                 onPress={() => {firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
                     if (data._data.status && data._data.status.type) {
                         this.props.navigation.navigate("DriveAlert", {alert: data._data.status});
-                    }
+                    }else {
+                        this.props.navigation.navigate("Checklist");
+                      }
                 });}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>

@@ -173,7 +173,13 @@ class Roads extends React.Component {
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("Checklist");}} style={styles.startButton}>
+                onPress={() => {firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+                  if (data._data.status && data._data.status.type) {
+                      this.props.navigation.navigate("DriveAlert", {alert: data._data.status});
+                  } else {
+                    this.props.navigation.navigate("Checklist");
+                  }
+              });}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
                   <Text style={styles.startText}>Drive</Text>
@@ -260,7 +266,13 @@ onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMa
 </View>
 </TouchableHighlight>
 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-onPress={() => {this.props.navigation.navigate("Checklist");}} style={styles.startButton}>
+onPress={() => {firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+  if (data._data.status && data._data.status.type) {
+      this.props.navigation.navigate("DriveAlert", {alert: data._data.status});
+  } else {
+    this.props.navigation.navigate("Checklist");
+  }
+});}} style={styles.startButton}>
 <View>
 <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
 <Text style={styles.startText}>Drive</Text>
