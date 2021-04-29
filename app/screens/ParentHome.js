@@ -43,11 +43,12 @@ class ParentHome extends React.Component {
     console.log(screenHeight);
     
     firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
-      if (!parentData._data.currChild) {
+      if (!parentData._data.currentChild) {
         this.setState({child: ""});
       }
       else {
-      firestore().collection('users').doc(parentData._data.currChild).get().then((data) => {
+      this.setState({child: parentData._data.currentChild});
+      firestore().collection('users').doc(parentData._data.currentChild).get().then((data) => {
       firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
         const minDate = String(Date.now() - 604800000);
         firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
@@ -77,7 +78,7 @@ class ParentHome extends React.Component {
       });
       this.setState({
         userLevel: {points: data._data.points.toFixed(0), level: data._data.level,}
-    }, () => {console.log(this.state.userLevel);});
+    }, () => {console.log(this.state.child);});
     });
   }
     
@@ -100,7 +101,7 @@ class ParentHome extends React.Component {
           <ProgressChart
           data={[this.state.userLevel.points / 3000]}
           width={Dimensions.get('window').width - 16}
-          height={250}
+          height={225}
           radius={100}
           hideLegend={true}
           chartConfig={{
@@ -121,10 +122,10 @@ class ParentHome extends React.Component {
           }}
         />
         {this.state.userLevel.level !== 10 ? 
-        <Text style={[styles.text, {flex:0}]}>You need {3000 - this.state.userLevel.points} more points to level up! </Text> : null}
+        <Text style={[styles.text, {flex:0}]}>Your student needs {3000 - this.state.userLevel.points} more points to level up! </Text> : null}
         {this.state.percentile ? 
-        <Text style={[styles.text, {flex:0}]}>This week you drove more safely than {this.state.percentile}% of drivers at your level. </Text> : 
-        <Text style={[styles.text, {flex:0}]}>You haven't practiced driving yet this week. </Text>}
+        <Text style={[styles.text, {flex:0}]}>This week your student drove more safely than {this.state.percentile}% of drivers at their level. </Text> : 
+        <Text style={[styles.text, {flex:0}]}>Your student hasn't practiced driving yet this week. </Text>}
         
   </View>
   <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
