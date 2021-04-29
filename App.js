@@ -41,6 +41,7 @@ import { WelcomeScreen, SignupRole, SignupContact, SignupExperience,
   Scan, SignupGoals, Home, Login, ScanConfirm, Drive, 
  StartDrive, Reflection, ParentHome, Account, ParentAccount,
   ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
+  ParentReportsMain, ParentSafety, ParentRoads, ParentProgress,
   Log, LogStats, Checklist, Accident, Mount, Level, Warning,
   Curfew, CurfewTime, Grounded, DisableAction, DriveAlert,
 } from './app/screens';
@@ -85,6 +86,10 @@ class App extends React.Component {
           <Stack.Screen name="Progress" component={Progress}/>
           <Stack.Screen name="Roads" component={Roads}/>
           <Stack.Screen name="Safety" component={Safety}/>
+          <Stack.Screen name="ParentReportsMain" component={ParentReportsMain}/>
+          <Stack.Screen name="ParentProgress" component={ParentProgress}/>
+          <Stack.Screen name="ParentRoads" component={ParentRoads}/>
+          <Stack.Screen name="ParentSafety" component={ParentSafety}/>
           <Stack.Screen name="EndDrive" component={EndDrive}/>
           <Stack.Screen name="Log" component={Log}/>
           <Stack.Screen name="LogStats" component={LogStats}/>
