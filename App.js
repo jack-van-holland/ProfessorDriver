@@ -38,8 +38,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import auth from '@react-native-firebase/auth';
 import { WelcomeScreen, SignupRole, SignupContact, SignupExperience, 
-  SignupParent, SignupGoals, Home, Login, SignupScanConfirm, Drive, 
- StartDrive, Reflection, ParentHome, Account, 
+  Scan, SignupGoals, Home, Login, ScanConfirm, Drive, 
+ StartDrive, Reflection, ParentHome, Account, ParentAccount,
   ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
   Log, LogStats, Checklist, Accident, Mount, Level,
 } from './app/screens';
@@ -67,17 +67,18 @@ class App extends React.Component {
           <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
           <Stack.Screen name="SignupRole" component={SignupRole} />
           <Stack.Screen name="SignupContact" component={SignupContact} />
-          <Stack.Screen name="SignupParent" component={SignupParent} />
+          <Stack.Screen name="Scan" component={Scan} />
           <Stack.Screen name="SignupExperience" component={SignupExperience} />
           <Stack.Screen name="SignupGoals" component={SignupGoals} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="SignupScanConfirm" component={SignupScanConfirm} />
+          <Stack.Screen name="ScanConfirm" component={ScanConfirm} />
           <Stack.Screen name="StartDrive" component={StartDrive} />
           <Stack.Screen name="Drive" component={Drive} />
           <Stack.Screen name="Reflection" component={Reflection}/>
           <Stack.Screen name="ParentHome" component={ParentHome}/>
           <Stack.Screen name="Account" component={Account}/>
+          <Stack.Screen name="ParentAccount" component={ParentAccount}/>
           <Stack.Screen name="ReportsMain" component={ReportsMain}/>
           <Stack.Screen name="Skills" component={Skills}/>
           <Stack.Screen name="Progress" component={Progress}/>

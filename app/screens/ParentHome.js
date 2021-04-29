@@ -9,12 +9,12 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import update from 'immutability-helper';
-import { Dimensions } from "react-native";
-const screenWidth = Dimensions.get("window").width;
 import colors from "../config/colors";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 var ztable = require('ztable');
+import { Dimensions } from "react-native";
+const screenHeight= Dimensions.get("window").height;
 
 import {
     LineChart,
@@ -40,6 +40,7 @@ class ParentHome extends React.Component {
   componentDidMount() {
     console.log("mounted");
     console.log(this.state.userLevel);
+    console.log(screenHeight);
     
     firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
       if (!parentData._data.currChild) {
@@ -142,20 +143,6 @@ class ParentHome extends React.Component {
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {this.props.navigation.navigate("Checklist")}} style={styles.startButton}>
-                  <View>
-                  <Image style={styles.image} source={require("../assets/images/turning.png")}></Image>
-                  <Text style={styles.startText}>Drive</Text>
-                  </View>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
-                <View>
-                  <Image style={styles.image} source={require("../assets/images/diary.png")}></Image>
-                  <Text style={styles.startText}>Log</Text>
-                </View>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
                 onPress={() => {this.props.navigation.navigate("Account")}} style={styles.startButton}>
                 <View>
                   <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
@@ -177,12 +164,35 @@ class ParentHome extends React.Component {
       </View>
     
     :
-    <View style={styles.background}>
-            <View style={styles.logoContainer}>
+    <View style={[{flex: 1}, styles.background]}>
+            <View style={[styles.logoContainer, {flex:1}]}>
                 <Image style={styles.logo} source={require("../assets/images/icon.png")}/>
                 <Text style={styles.title}>Go to your account and add a student to view their progress.</Text>
             </View>
-      </View>
+            <View style={{flexDirection:"row", backgroundColor: "#C4D9B3", top:screenHeight - 90}}>
+                <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButtonSelected}>
+                <View>
+                  <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
+                  <Text style={styles.startText}>Home</Text>
+                </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("ParentReportsMain")}} style={styles.startButton}>
+                    <View>
+                    <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
+                    <Text style={styles.startText}>Reports</Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                onPress={() => {this.props.navigation.navigate("ParentAccount")}} style={styles.startButton}>
+                <View>
+                  <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
+                  <Text style={styles.startText}>Account</Text>
+                </View>
+                </TouchableHighlight>
+  </View>
+      </View> 
     );
   
   }

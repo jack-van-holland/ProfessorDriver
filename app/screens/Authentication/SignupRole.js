@@ -42,7 +42,7 @@ const SignupRole = ({ navigation }) => {
             <View style={{flex: 1, alignItems: "center"}}>
                 <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
                 style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}
-                onPress={driver ? () => navigation.navigate("SignupExperience") : () => navigation.navigate("SignupParent")} 
+                onPress={driver ? () => navigation.navigate("SignupExperience") : () => navigation.navigate("SignupContact", {role: "parent", level : ""})} 
                 disabled={parent || driver ? false : true}>
                     <Text style={styles.nexttext}>Next</Text>
                 </TouchableHighlight>

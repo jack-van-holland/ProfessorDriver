@@ -59,19 +59,17 @@ const SignupContact = ({ navigation, route }) => {
                         }
 
                     },
-                    child: route.params.child,
+                    children: [],
+                    parents: [],
+                    parentReqs: [],
+                    pendingReqs: [],
                 });
             }).then(() => {
-            console.log('User account created & signed in!');
-            console.log(auth().currentUser.uid);
-            console.log(firstName);
-            console.log(lastName);
-            console.log(password);
-            console.log(email);
-            console.log(route.params.role);
-            console.log(route.params.level);
-            console.log(route.params.child);
+            if (route.params.role === "parent") {
+            navigation.navigate("ParentHome");
+            } else {
             navigation.navigate("Home");
+            }
         })
     .catch(error => {
             if (error.code === 'auth/email-already-in-use') {

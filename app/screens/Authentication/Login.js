@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,KeyboardAvoidingView,} from "react-native";
 import auth from '@react-native-firebase/auth';
-
+import firestore from '@react-native-firebase/firestore';
 import colors from "../../config/colors";
 
 const Login = ({ navigation }) => {
@@ -10,7 +10,14 @@ const Login = ({ navigation }) => {
         console.log("beginning login");
         auth().signInWithEmailAndPassword(email, password).then(() => {
             console.log("logged in");
-            navigation.navigate("Home");
+            firestore().collection("users").doc(auth().currentUser.uid).get().then((data) => {
+                console.log(data);
+                if (data._data.role === "parent") {
+                    navigation.navigate("ParentHome");
+                } else {
+                    navigation.navigate("Home");
+                }
+            });
         }).catch((error) => {console.log("fail"); console.error(error);});
         
     };
