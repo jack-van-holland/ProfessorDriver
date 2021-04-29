@@ -42,6 +42,7 @@ import { WelcomeScreen, SignupRole, SignupContact, SignupExperience,
  StartDrive, Reflection, ParentHome, Account, ParentAccount,
   ReportsMain, Safety, Skills, Roads, Progress, EndDrive, 
   Log, LogStats, Checklist, Accident, Mount, Level, Warning,
+  Curfew, CurfewTime, Grounded,
 } from './app/screens';
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
@@ -92,6 +93,10 @@ class App extends React.Component {
           <Stack.Screen name="Mount" component={Mount}/>
           <Stack.Screen name="Level" component={Level}/>
           <Stack.Screen name="Warning" component={Warning}/>
+          <Stack.Screen name="Curfew" component={Curfew}/>
+          <Stack.Screen name="CurfewTime" component={CurfewTime}/>
+          <Stack.Screen name="Grounded" component={Grounded}/>
+
 
 
 

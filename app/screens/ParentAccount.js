@@ -123,7 +123,7 @@ class ParentAccount extends React.Component {
                              <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} onPress={() => {this.props.navigation.navigate("Grounded",  {id: item.id});}}>
                                 <View>
                                     <Text style={styles.approveText}>
-                                        Grounded
+                                        Suspension
                                     </Text>
                                 </View>
                              </TouchableHighlight>
