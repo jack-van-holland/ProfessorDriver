@@ -106,21 +106,24 @@ class ParentAccount extends React.Component {
                                  {item.role === "parent" ? 
                                 
                                 <View style={{flexDirection:"row"}}>
-                                <TouchableHighlight style= {[styles.warningButton, {backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)": "rgba(255, 255, 0, .25)":  "rgba(255, 255, 0, .25)", flex:0}]} onPress={() => {this.props.navigation.navigate("Warning", {id: item.id});}}>
+                                <TouchableHighlight style= {[styles.warningButton, {backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)": "rgba(255, 255, 0, .25)":  "rgba(255, 255, 0, .25)", flex:0}]} 
+                                onPress={() => {if (item.status && item.status.type === "warning") {this.props.navigation.navigate("DisableAction", {id: item.id});} else{this.props.navigation.navigate("Warning", {id: item.id});}}}>
                                 <View>
                                     <Text style={styles.approveText}>
                                         Warning
                                     </Text>
                                 </View>
                              </TouchableHighlight>
-                             <TouchableHighlight style= {[styles.curfewButton, {backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)": "rgba(255, 165, 0, .1)":  "rgba(255, 165, 0, .1)", flex:0}]} onPress={() => {this.props.navigation.navigate("Curfew",  {id: item.id});}}>
+                             <TouchableHighlight style= {[styles.curfewButton, {backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)": "rgba(255, 165, 0, .1)":  "rgba(255, 165, 0, .1)", flex:0}]} 
+                                onPress={() => {if (item.status && item.status.type === "curfew") {this.props.navigation.navigate("DisableAction", {id: item.id});} else{this.props.navigation.navigate("Curfew", {id: item.id});}}}>
                                 <View>
                                     <Text style={styles.approveText}>
                                         Curfew
                                     </Text>
                                 </View>
                              </TouchableHighlight>
-                             <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} onPress={() => {this.props.navigation.navigate("Grounded",  {id: item.id});}}>
+                             <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} 
+                                onPress={() => {if (item.status && item.status.type === "grounded") {this.props.navigation.navigate("DisableAction", {id: item.id});} else{this.props.navigation.navigate("Grounded", {id: item.id});}}}>
                                 <View>
                                     <Text style={styles.approveText}>
                                         Suspension

@@ -28,18 +28,16 @@ import { Dimensions } from "react-native";
   
 
 
-class Curfew extends Component {
+class DisableAction extends Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
 
-    createCurfew = () => {
+    disable = () => {
         firestore().collection('users').doc(this.props.route.params.id).update({
             status: {
-                type: "curfew",
-                end: this.props.route.params.end,
-                curfewTime: (new Date(this.state.time)).getHours() * 60 + (new Date(this.state.time)).getMinutes(),
+                type: "",
             },
         }).then(() => {
             this.props.navigation.reset({index: 0,routes: [{name: 'ParentAccount'}],});
@@ -48,7 +46,7 @@ class Curfew extends Component {
     
       componentDidMount() {
 
-        this.setState({time: Date.now()})
+        this.setState({date: Date.now()})
       }
 
     render() {
@@ -56,16 +54,8 @@ class Curfew extends Component {
             <View style={{ flex: 1, }}>
                 
 
-                <Text style={[styles.subtitle, { paddingTop: 300, flex: 0.25, alignItems:"center" }]}>Set the curfew timing.</Text>
-                <Text style={[styles.subtitle, { flex: 0, alignItems:"center" }]}>Your student cannot drive after...</Text>
+                <Text style={[styles.subtitle, { paddingTop: 300, flex: 0.25, alignItems:"center" }]}>Disable your intervention action?</Text>
 
-                {this.state.time ? <DateTimePicker testID="dateTimePicker"
-          
-          mode={'time'}
-          is24Hour={true}
-          display="default"
-         value={this.state.time} onChange={(event, time) => {this.setState({time: time});}} style={{flex: .25, marginLeft: Dimensions.get("window").width / 2 - 45}}>
-                </DateTimePicker> : null}
                     
                 <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 575}}>
                     <View style={{ flex: 1, alignItems: "center" }}>
@@ -74,10 +64,10 @@ class Curfew extends Component {
                         </TouchableHighlight>
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.createCurfew(); }}
+                        <TouchableHighlight onPress={() => { this.disable(); }}
                             style={styles.nextButtonSelected}
                         >
-                            <Text style={styles.nexttext}>Create Curfew</Text>
+                            <Text style={styles.nexttext}>Yes, Disable</Text>
                         </TouchableHighlight>
                     </View>
                 </View>
@@ -109,7 +99,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         justifyContent: "center",
         textAlign: "center",
-        alignItems: "center"
+        alignItems: "center", 
+        paddingHorizontal:20,
 
     }, background: {
         flex: 1,
@@ -300,4 +291,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Curfew;
+export default DisableAction;

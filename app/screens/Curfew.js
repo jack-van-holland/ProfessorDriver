@@ -33,17 +33,6 @@ class Curfew extends Component {
         super(props);
         this.state = {};
     }
-
-    createCurfew = () => {
-        firestore().collection('users').doc(this.props.route.params.id).update({
-            status: {
-                type: "curfew",
-                end: this.state.date,
-            },
-        }).then(() => {
-            this.props.navigation.navigate("ParentAccount");
-        });
-    }
     
       componentDidMount() {
 

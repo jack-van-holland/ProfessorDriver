@@ -41,7 +41,7 @@ class Grounded extends Component {
                 end: this.state.date,
             },
         }).then(() => {
-            this.props.navigation.navigate("ParentAccount");
+            this.props.navigation.reset({index: 0,routes: [{name: 'ParentAccount'}],});
         });
     }
     
