@@ -25,7 +25,7 @@ class ParentAccount extends React.Component {
             if (data._data.children.length) {
             for (let i = 0; i < data._data.children.length; i++) {
                 firestore().collection('users').doc(data._data.children[i].child).get().then((child) => {
-                    childNames.push(child._data.firstName + " " + child._data.lastName);
+                    childNames.push({status: child._data.status, id: data._data.children[i].child, name : child._data.firstName + " " + child._data.lastName, role: data._data.children[i].role});
                     this.setState({children: childNames});
                 });
             }} else {
@@ -114,13 +114,42 @@ class ParentAccount extends React.Component {
                 <ScrollView>
                 {this.state.children 
                             ? this.state.children.length ? this.state.children.map((item)=>(
-                                <View style={styles.historyContainer} key={item}>
+                                <View style={styles.historyContainer} key={item.id}>
                                 <Text style={[styles.historyText, {fontWeight: "bold"}]}>
-                                    {item}
+                                    {item.name}
                                  </Text>
-                                 <Text style={[styles.historyText,]}>
-                                    Actions
-                                 </Text>
+                                 {item.role === "parent" ? 
+                                 <View>
+                                     <Text style={styles.historyText}>Intervention Actions</Text>
+                                 </View> : <View></View>}
+
+                                 {item.role === "parent" ? 
+                                
+                                <View style={{flexDirection:"row"}}>
+                                <TouchableHighlight style= {[styles.warningButton, {backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)": "rgba(255, 255, 0, .25)":  "rgba(255, 255, 0, .25)", flex:0}]} onPress={() => {this.props.navigation.navigate("Warning");}}>
+                                <View>
+                                    <Text style={styles.approveText}>
+                                        Warning
+                                    </Text>
+                                </View>
+                             </TouchableHighlight>
+                             <TouchableHighlight style= {[styles.curfewButton, {backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)": "rgba(255, 165, 0, .1)":  "rgba(255, 165, 0, .1)", flex:0}]} onPress={() => {this.props.navigation.navigate("Curfew");}}>
+                                <View>
+                                    <Text style={styles.approveText}>
+                                        Curfew
+                                    </Text>
+                                </View>
+                             </TouchableHighlight>
+                             <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} onPress={() => {this.props.navigation.navigate("Grounded");}}>
+                                <View>
+                                    <Text style={styles.approveText}>
+                                        Grounded
+                                    </Text>
+                                </View>
+                             </TouchableHighlight>
+                             </View> : <View><Text>no</Text></View>}
+        
+                                 
                                 <View style={{paddingTop: 6}}></View>
                                 </View>
                                 )) 
@@ -203,9 +232,40 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         justifyContent: "center"
     },
+    warningButton: {
+        backgroundColor: "rgba(255, 255, 0, .25)",
+        borderColor: "#000000",
+        borderWidth: 2,
+        borderRadius:15,
+        flex: 0,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 5,
+        justifyContent: "center"
+    },curfewButton: {
+        backgroundColor: "rgba(255, 165, 0, .1)",
+        borderColor: "#000000",
+        borderWidth: 2,
+        borderRadius:15,
+        flex: 0,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 5,
+        justifyContent: "center"
+    },groundedButton: {
+        backgroundColor: "rgba(255, 0, 0, .1)",
+        borderColor: "#000000",
+        borderWidth: 2,
+        borderRadius:15,
+        flex: 0,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 5,
+        justifyContent: "center"
+    },
     approveText: {
         fontFamily: "Montserrat",
-        color: "#F3F3F5",
+        color: "#000000",
         fontWeight: "bold",
         fontSize: 15
     },
@@ -235,7 +295,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         textAlign: "center",
         alignItems: "center",
-        flex: 1,
+        flex: 0.2,
     },
     logoContainer: {
         alignItems: "center",

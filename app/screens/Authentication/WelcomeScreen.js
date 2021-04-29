@@ -15,7 +15,7 @@ const WelcomeScreen = ({ navigation }) => {
             console.log(user);
             if (user) {
                 firestore().collection('users').doc(auth().currentUser.uid).get().then((userInfo) => {
-                if (userInfo.role === "parent") {
+                if (userInfo._data.role === "parent") {
                     navigation.navigate("ParentHome");
                 } else {
                     navigation.navigate("Home");
