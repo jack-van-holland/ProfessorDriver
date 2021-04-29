@@ -52,7 +52,7 @@ class ParentHome extends React.Component {
         firestore().collection('users').doc(parentData._data.currentChild).get().then((data) => {
           firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
             const minDate = String(Date.now() - 604800000);
-            firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
+            firestore().collection('users').doc(parentData._data.currentChild).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
               const statMean = (Number(statData._data.accelMean) + Number(statData._data.turnMean) +
                 Number(statData._data.phoneMean) + Number(statData._data.brakeMean) + Number(statData._data.speedMean)) / 5;
               const count = Number(statData._data.count);
