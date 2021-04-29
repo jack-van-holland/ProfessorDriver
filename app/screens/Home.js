@@ -25,6 +25,7 @@ import {
   StackedBarChart
 } from "react-native-chart-kit";
 import { RadarChart } from 'react-native-charts-wrapper';
+import { Alert } from 'react-native';
 
 
 class Home extends React.Component {
@@ -41,39 +42,47 @@ class Home extends React.Component {
     console.log("mounted");
     console.log(this.state.userLevel);
 
-    firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
-      firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
-        const minDate = String(Date.now() - 604800000);
-        firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
-          const statMean = (Number(statData._data.accelMean) + Number(statData._data.turnMean) +
-            Number(statData._data.phoneMean) + Number(statData._data.brakeMean) + Number(statData._data.speedMean)) / 5;
-          const count = Number(statData._data.count);
-          const stdMean = (Math.sqrt(Number(statData._data.accelM2) / count) + Math.sqrt(Number(statData._data.turnM2) / count) +
-            Math.sqrt(Number(statData._data.phoneM2) / count) + Math.sqrt(Number(statData._data.brakeM2) / count)
-            + Math.sqrt(Number(statData._data.speedM2) / count)) / 5;
-          let userMean = 0;
-          let userCount = 0;
-          reportData._docs.forEach(element => {
-            const thisMean = (Number(element._data.accel) + Number(element._data.phone) + Number(element._data.turn)
-              + Number(element._data.brake) + Number(element._data.speed)) / 5;
-            userMean += thisMean;
-            userCount += 1;
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((userData) => {
+      if (userData._data.newReport) {
+        Alert.alert("New Driving report available!");
+        this.props.navigation.navigate("EndDrive", {startDrive: userData._data.newReport});
+        return;
+      }
+      else {
+        firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+          firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
+            const minDate = String(Date.now() - 604800000);
+            firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
+              const statMean = (Number(statData._data.accelMean) + Number(statData._data.turnMean) +
+                Number(statData._data.phoneMean) + Number(statData._data.brakeMean) + Number(statData._data.speedMean)) / 5;
+              const count = Number(statData._data.count);
+              const stdMean = (Math.sqrt(Number(statData._data.accelM2) / count) + Math.sqrt(Number(statData._data.turnM2) / count) +
+                Math.sqrt(Number(statData._data.phoneM2) / count) + Math.sqrt(Number(statData._data.brakeM2) / count)
+                + Math.sqrt(Number(statData._data.speedM2) / count)) / 5;
+              let userMean = 0;
+              let userCount = 0;
+              reportData._docs.forEach(element => {
+                const thisMean = (Number(element._data.accel) + Number(element._data.phone) + Number(element._data.turn)
+                  + Number(element._data.brake) + Number(element._data.speed)) / 5;
+                userMean += thisMean;
+                userCount += 1;
+              });
+              if (userCount == 0) {
+                this.setState({ week: false });
+              } else {
+                userMean /= userCount;
+                const z = (userMean - statMean) / stdMean;
+                const percentile = ztable(z);
+                this.setState({ week: true, percentile: (percentile * 100).toFixed(0) });
+              }
+            });
           });
-          if (userCount == 0) {
-            this.setState({ week: false });
-          } else {
-            userMean /= userCount;
-            const z = (userMean - statMean) / stdMean;
-            const percentile = ztable(z);
-            this.setState({ week: true, percentile: (percentile * 100).toFixed(0) });
-          }
+          this.setState({
+            userLevel: { points: data._data.points.toFixed(0), level: data._data.level, }
+          }, () => { console.log(this.state.userLevel); });
         });
-      });
-      this.setState({
-        userLevel: { points: data._data.points.toFixed(0), level: data._data.level, }
-      }, () => { console.log(this.state.userLevel); });
-    });
-
+      }
+    })
   }
 
   render() {
