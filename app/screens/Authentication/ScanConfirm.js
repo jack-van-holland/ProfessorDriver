@@ -4,6 +4,7 @@ import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "reac
 import colors from "../../config/colors";
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { Dimensions } from "react-native";
 
 
 const ScanConfirm = ({ navigation, route }) => {
@@ -37,7 +38,7 @@ const ScanConfirm = ({ navigation, route }) => {
         !childUser ? (<View></View>) : (childUser._data ? 
         (<View style={[styles.background, {flex:1}]}>
             
-            <View style={{flex:.25, paddingTop:50}}>
+            <View style={{flex:0, paddingTop:250}}>
                 <Text style={styles.titletext}>Your student:</Text>
                 <Text style={styles.titletext}>{childUser._data.firstName + " " + childUser._data.lastName}</Text>
                 <Text style={styles.titletext}>{childUser._data.email}</Text>
@@ -55,7 +56,7 @@ const ScanConfirm = ({ navigation, route }) => {
             underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Parental Control (select for most parents)</Text>
             </TouchableHighlight>
-            <View style={{flexDirection:"row", flex:1}}>
+            <View style={{flexDirection:"row", flex:1, top:Dimensions.get("window").height - 600}}>
             <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
             style={styles.backButtonSelected}>
                 <Text style={styles.nexttext}>Rescan</Text>

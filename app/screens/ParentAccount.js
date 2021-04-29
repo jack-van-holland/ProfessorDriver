@@ -88,8 +88,8 @@ class ParentAccount extends React.Component {
             </TouchableHighlight>
             </View>
             <View style={{height: 300}}>
-                <Text style={[styles.subtitle, {flex: 0}]}>Your Students</Text>
-                <Text style={[styles.text, {flex: .25}]}>Tap a student to view their reports.</Text>
+                <Text style={[styles.subtitle, {flex: 1}]}>Your Students</Text>
+                <Text style={[styles.text, {flex: 1}]}>Tap a student to view their reports.</Text>
 
                 <ScrollView>
                 {this.state.children 
@@ -130,7 +130,7 @@ class ParentAccount extends React.Component {
                                     </Text>
                                 </View>
                              </TouchableHighlight>
-                             </View> : <View><Text>no</Text></View>}
+                             </View> : <View><Text style={styles.historyText}>View-only Access</Text></View>}
         
                                  
                                 <View style={{paddingTop: 6}}></View>
