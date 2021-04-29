@@ -38,10 +38,11 @@ class ParentSafety extends React.Component {
 
   componentDidMount() {
     console.log("mounted");
-    firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
+    firestore().collection('users').doc(parentData._data.currentChild).get().then((data) => {
       firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
         const minDate = String(Date.now() - 604800000);
-        firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
+        firestore().collection('users').doc(parentData._data.currentChild).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
           let userAccel = 0;
           let userPhone = 0;
           let userTurn = 0;
@@ -118,7 +119,7 @@ class ParentSafety extends React.Component {
           }
         });
       });
-    });
+    });});
     
     this.updateRadar = () => {
         console.log("hi");
@@ -204,42 +205,35 @@ class ParentSafety extends React.Component {
         <View style={[styles.container, {flex: .75, justifyContent:"space-between"}]}>
         <View style={{flex: 0, flexDirection:"row", backgroundColor: "#C4D9B3"}}>
         <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Roads'}],});}} style={styles.topStartButton}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentRoads'}],});}} style={styles.topStartButton}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/road.png")}></Image>
                   <Text style={styles.topStartText}>Roads</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Progress'}],});}} style={styles.topStartButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentProgress'}],});}} style={styles.topStartButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/progress.png")}></Image>
                   <Text style={styles.topStartText}>Progress</Text>
                 </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" 
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.topStartButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentReportsMain'}],});}} style={styles.topStartButton}>
                     <View>
                     <Image style={styles.image} source={require("../../assets/images/learning.png")}></Image>
                     <Text style={styles.topStartText}>Tips</Text>
                     </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" disabled={true}
-                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Safety'}],});}} style={styles.topStartButtonSelected}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentSafety'}],});}} style={styles.topStartButtonSelected}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/car.png")}></Image>
                   <Text style={styles.topStartText}>Safety</Text>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Skills'}],});}} style={styles.topStartButton}>
-                <View>
-                  <Image style={styles.image} source={require("../../assets/images/skills.png")}></Image>
-                  <Text style={styles.topStartText}>Skills</Text>
-                </View>
-                </TouchableHighlight>
   </View>
-          <Text style={[styles.text, {marginTop:25}]}>These are the most dangerous habits while driving. Here's how you performed this week:</Text>
+          <Text style={[styles.text, {marginTop:25}]}>These are the most dangerous habits while driving. Here's how your student performed this week:</Text>
           
 
 </View>
@@ -259,7 +253,7 @@ class ParentSafety extends React.Component {
           />
         <Text style={styles.title}>Compare with...</Text>
         <View style={{flex:1.5}}>
-        <CheckBox fontFamily='Montserrat' center title='Your Overall Performance Over Time' onPress={() => {this.setState((pastState) => {return {timeChecked: !pastState.timeChecked}}, () => {this.updateRadar();});}}
+        <CheckBox fontFamily='Montserrat' center title="Your Student's Overall Performance Over Time" onPress={() => {this.setState((pastState) => {return {timeChecked: !pastState.timeChecked}}, () => {this.updateRadar();});}}
   checked={this.state.timeChecked}></CheckBox>
   <CheckBox fontFamily='Montserrat' center title={'Average Level ' + this.state.userLevel + ' Drivers'} onPress={() => {this.setState((pastState) => {return {allChecked: !pastState.allChecked}}, () => {this.updateRadar();});}}
   checked={this.state.allChecked}></CheckBox>
@@ -267,41 +261,21 @@ class ParentSafety extends React.Component {
 
         <View style={{flex: 0, flexDirection:"row"}}>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentHome'}],});}} style={styles.startButton}>
                   <View>
                   <Image style={styles.image} source={require("../../assets/images/home.png")}></Image>
                   <Text style={styles.startText}>Home</Text>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
+                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentReportsMain'}],});}} style={styles.startButtonSelected}>
                     <View>
                     <Image style={styles.image} source={require("../../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
-                  if (data._data.status && data._data.status.type) {
-                      this.props.navigation.navigate("DriveAlert", {alert: data._data.status});
-                  }else {
-                    this.props.navigation.navigate("Checklist");
-                  }
-              });}} style={styles.startButton}>
-                  <View>
-                  <Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
-                  <Text style={styles.startText}>Drive</Text>
-                  </View>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
-                <View>
-                  <Image style={styles.image} source={require("../../assets/images/diary.png")}></Image>
-                  <Text style={styles.startText}>Log</Text>
-                </View>
-                </TouchableHighlight>
                 <TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>
+                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentAccount'}],});}} style={styles.startButton}>
                 <View>
                   <Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
                   <Text style={styles.startText}>Account</Text>
@@ -367,41 +341,21 @@ class ParentSafety extends React.Component {
 
 <View style={{flex: 0, flexDirection:"row"}}>
 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],});}} style={styles.startButton}>
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentHome'}],});}} style={styles.startButton}>
 <View>
 <Image style={styles.image} source={require("../../assets/images/home.png")}></Image>
 <Text style={styles.startText}>Home</Text>
 </View>
 </TouchableHighlight>
 <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ReportsMain'}],});}} style={styles.startButtonSelected}>
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentReportsMain'}],});}} style={styles.startButtonSelected}>
 <View>
 <Image style={styles.image} source={require("../../assets/images/chart.png")}></Image>
 <Text style={styles.startText}>Reports</Text>
 </View>
 </TouchableHighlight>
-<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-onPress={() => {firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
-  if (data._data.status && data._data.status.type) {
-      this.props.navigation.navigate("DriveAlert", {alert: data._data.status});
-  }else {
-    this.props.navigation.navigate("Checklist");
-  }
-});}} style={styles.startButton}>
-<View>
-<Image style={styles.image} source={require("../../assets/images/turning.png")}></Image>
-<Text style={styles.startText}>Drive</Text>
-</View>
-</TouchableHighlight>
-<TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-onPress={() => {this.props.navigation.navigate("Log")}} style={styles.startButton}>
-<View>
-<Image style={styles.image} source={require("../../assets/images/diary.png")}></Image>
-<Text style={styles.startText}>Log</Text>
-</View>
-</TouchableHighlight>
 <TouchableHighlight  underlayColor="rgba(95, 128, 59, .5)"
-onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'Account'}],});}} style={styles.startButton}>
+onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentAccount'}],});}} style={styles.startButton}>
 <View>
 <Image style={styles.image} source={require("../../assets/images/account.png")}></Image>
 <Text style={styles.startText}>Account</Text>
