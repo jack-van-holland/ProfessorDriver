@@ -73,6 +73,13 @@ class ReportsMain extends React.Component {
     "https://www.youtube.com/watch?v=dvvUt8mAxHk"];
 
   componentDidMount() {
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((userData) => {
+      if (userData._data.newReport) {
+        Alert.alert("New Driving report available!");
+        this.props.navigation.navigate("EndDrive", {startDrive: userData._data.newReport});
+        return;
+      }
+      else {
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
       const minDate = String(Date.now() - 604800000);
       firestore().collection('users').doc(auth().currentUser.uid).collection('reports').where(firestore.FieldPath.documentId(), '>=', minDate).get().then((reportData) => {
@@ -175,7 +182,7 @@ class ReportsMain extends React.Component {
 
         });
       });
-    });
+    });}});
   }
 
   render() {

@@ -37,6 +37,13 @@ class Skills extends React.Component {
   }
 
   componentDidMount() {
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((userData) => {
+      if (userData._data.newReport) {
+        Alert.alert("New Driving report available!");
+        this.props.navigation.navigate("EndDrive", {startDrive: userData._data.newReport});
+        return;
+      }
+      else {
     console.log("mounted");
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
       console.log(data._data);
@@ -64,7 +71,7 @@ class Skills extends React.Component {
           ]
         },
       });
-    });
+    });}});
 
 
   }

@@ -37,6 +37,13 @@ class Safety extends React.Component {
   }
 
   componentDidMount() {
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((userData) => {
+      if (userData._data.newReport) {
+        Alert.alert("New Driving report available!");
+        this.props.navigation.navigate("EndDrive", {startDrive: userData._data.newReport});
+        return;
+      }
+      else {
     console.log("mounted");
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
       firestore().collection('statistics').doc(String(data._data.level)).get().then((statData) => {
@@ -193,7 +200,7 @@ class Safety extends React.Component {
           data: { dataSets: datasets }
         };
       }, () => { console.log(this.state.data) });
-    };
+    };}});
 
   }
 

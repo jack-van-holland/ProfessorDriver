@@ -35,6 +35,13 @@ class Roads extends React.Component {
   }
 
   componentDidMount() {
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((userData) => {
+      if (userData._data.newReport) {
+        Alert.alert("New Driving report available!");
+        this.props.navigation.navigate("EndDrive", {startDrive: userData._data.newReport});
+        return;
+      }
+      else {
     firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
       const roadMap = [];
       let zeroes = 0;
@@ -75,7 +82,7 @@ class Roads extends React.Component {
         },
       });
 
-    });
+    });}});
 
   }
 

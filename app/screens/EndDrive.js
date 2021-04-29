@@ -105,17 +105,6 @@ class EndDrive extends React.Component {
         (error) => { console.log(error); this.setState({ driveLength: -1 }); });
   }
 
-  handleSelect(event) {
-    let entry = event.nativeEvent
-    if (entry == null) {
-      this.setState({ ...this.state, selectedEntry: null })
-    } else {
-      this.setState({ ...this.state, selectedEntry: JSON.stringify(entry) })
-    }
-
-    console.log(event.nativeEvent)
-  }
-
   render() {
 
     return (
@@ -155,7 +144,10 @@ class EndDrive extends React.Component {
 
           <View style={{ flex: 0, flexDirection: "row" }}>
             <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-              onPress={() => { if (this.state.levelUp) { this.props.navigation.navigate("Level", { level: this.state.level }); } else { this.props.navigation.reset({ index: 0, routes: [{ name: 'Home' }], }); } }} style={styles.startButton}>
+              onPress={() => { firestore().collection('users').doc(auth().currentUser.uid).update( {
+                newReport: false,
+              }).then(() => { 
+                if (this.state.levelUp) { this.props.navigation.navigate("Level", { level: this.state.level }); } else { this.props.navigation.reset({ index: 0, routes: [{ name: 'Home' }], }); } });}} style={styles.startButton}>
               <View>
                 <Text style={styles.startText}>Done</Text>
               </View>
@@ -170,7 +162,9 @@ class EndDrive extends React.Component {
             <Text style={styles.name}>Whoops, something went wrong.</Text>
             <View style={{ flex: 0, flexDirection: "row" }}>
               <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => { this.props.navigation.reset({ index: 0, routes: [{ name: 'Home' }], }); }} style={styles.startButton}>
+                onPress={() => { firestore().collection('users').doc(auth().currentUser.uid).update( {
+                  newReport: false,
+                }).then(() => { this.props.navigation.reset({ index: 0, routes: [{ name: 'Home' }], });}); }} style={styles.startButton}>
                 <View>
                   <Text style={styles.startText}>Done</Text>
                 </View>
