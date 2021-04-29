@@ -86,16 +86,16 @@ const SignupContact = ({ navigation, route }) => {
     };
 
     return (
-        <View style={styles.background}>
-            <View style={styles.logoContainer}>
+        <View style={[styles.background, {flex: 1}]}>
+            <View style={[styles.logoContainer, {flex: 1}]}>
                 <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
             </View>
 
-            <View>
-                <Text style={styles.titletext}>Almost done...</Text>
+            <View style={{flex:10, paddingTop:123}}>
+                <Text style={[styles.titletext, {flex:.12}]}>Almost done...</Text>
                 <TextInput style={styles.input} value={firstName} onChangeText={setFirstName}
-                placeholder = "First Name" placeholderTextColor="#C4D9B3"
-                autoCompleteType="name" autoCapitalize = "words" autoCorrect={false}></TextInput>
+                placeholder = "First Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
+                autoCompleteType="name" autoCapitalize = "words"></TextInput>
                 <TextInput style={styles.input} value={lastName} onChangeText={setLastName}
                 placeholder = "Last Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
                 autoCompleteType="name" autoCapitalize = "words"></TextInput>
@@ -110,7 +110,7 @@ const SignupContact = ({ navigation, route }) => {
                 autoCapitalize = "none" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
             </View>
 
-            <View style={{flexDirection: "row"}}>
+            <View style={{flexDirection: "row", flex:2}}>
                 <View style={{flex: 1, alignItems: "center"}}>
                     <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
                         <Text style={styles.nexttext}>Back</Text>
@@ -137,8 +137,7 @@ const styles = StyleSheet.create({
     },
     logoContainer: {
         alignItems: "center",
-        position: "absolute",
-        top: 100
+        paddingTop:50,
     },
     name: {
         fontFamily: "Montserrat",
@@ -164,9 +163,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     titletext: {
-        width: 287,
         height: 44,
-        top: 300,
         fontFamily: "Montserrat",
         fontStyle: "normal",
         fontWeight: "bold",
@@ -211,7 +208,6 @@ const styles = StyleSheet.create({
     },
     input: {
         fontFamily: "Montserrat",
-        top: 300,
         fontWeight: "bold",
         fontSize: 20, 
         lineHeight: 20,
@@ -222,6 +218,7 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 0,
         paddingHorizontal: 20,
+        flex:.1,
       },
     registerButton: {
         width: 261,
@@ -237,7 +234,6 @@ const styles = StyleSheet.create({
     nextButtonSelected: {
         width: 121,
         height: 40,
-        top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -246,7 +242,6 @@ const styles = StyleSheet.create({
     backButtonSelected: {
         width: 121,
         height: 40,
-        top: 350,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -255,7 +250,6 @@ const styles = StyleSheet.create({
     nextButtonUnselected: {
         width: 121,
         height: 40,
-        top: 350,
         backgroundColor: '#C4D9B3',
         borderRadius: 10,
         alignItems: "center",
