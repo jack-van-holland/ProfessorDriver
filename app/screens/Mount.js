@@ -33,18 +33,18 @@ class DriveScreen extends React.Component {
     render() {
 
         return (
-            <View style={{ flex: 1, justifyContent:"space-around" }}>
-                
-                <Text style={[styles.title, { flex: 1, alignItems:"center" }]}>Phone Placement</Text>
+            <View style={{ flex: 1, justifyContent: "space-around" }}>
+
+                <Text style={[styles.title, { flex: 1, alignItems: "center" }]}>Phone Placement</Text>
                 <Image style={styles.image} source={require("../assets/images/mount.jpg")}></Image>
-                <Text style={[styles.subtitle, { flex: 3, alignItems:"center" }]}>{`
+                <Text style={[styles.subtitle, { flex: 3, alignItems: "center" }]}>{`
 Please place your phone in a car mount. 
                 
 Make sure that it does not obscure your vision of the road.
                 
 It must be placed fully vertical with cameras faced directly towards the front of the car to ensure proper data collection.`}</Text>
-                    
-                    <View style={{ flex: .65, flexDirection: "row" }}>
+
+                <View style={{ flex: .65, flexDirection: "row" }}>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>Back</Text>
@@ -57,7 +57,7 @@ It must be placed fully vertical with cameras faced directly towards the front o
                             <Text style={styles.nexttext}>I'm Ready!</Text>
                         </TouchableHighlight>
                     </View>
-                    </View>
+                </View>
 
             </View>);
 
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         justifyContent: "center",
         textAlign: "center",
-        alignItems: "center", 
+        alignItems: "center",
         marginTop: 50,
 
     }, subtitle: {
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         justifyContent: "center",
         textAlign: "center",
-        alignItems: "center", 
-        marginHorizontal:20,
+        alignItems: "center",
+        marginHorizontal: 20,
 
     }, background: {
         flex: 1,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 35,
-    },nexttext: {
+    }, nexttext: {
         fontFamily: "Montserrat",
         color: "#F3F3F5",
         fontWeight: "bold",
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
+        paddingTop: 15
     },
 });
 

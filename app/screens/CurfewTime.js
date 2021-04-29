@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState, DatePickerIOS} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState, DatePickerIOS } from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
@@ -11,7 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 import axios from 'axios';
-import sizeof from 'object-sizeof'; 
+import sizeof from 'object-sizeof';
 
 
 import {
@@ -19,13 +19,13 @@ import {
     gyroscope,
     setUpdateIntervalForType,
     SensorTypes
-  } from "react-native-sensors";
+} from "react-native-sensors";
 
 import {
     combineLatest
-  } from "rxjs";
+} from "rxjs";
 import { Dimensions } from "react-native";
-  
+
 
 
 class Curfew extends Component {
@@ -42,32 +42,32 @@ class Curfew extends Component {
                 curfewTime: (new Date(this.state.time)).getHours() * 60 + (new Date(this.state.time)).getMinutes(),
             },
         }).then(() => {
-            this.props.navigation.reset({index: 0,routes: [{name: 'ParentAccount'}],});
+            this.props.navigation.reset({ index: 0, routes: [{ name: 'ParentAccount' }], });
         });
     }
-    
-      componentDidMount() {
 
-        this.setState({time: Date.now()})
-      }
+    componentDidMount() {
+
+        this.setState({ time: Date.now() })
+    }
 
     render() {
         return (
             <View style={{ flex: 1, }}>
-                
 
-                <Text style={[styles.subtitle, { paddingTop: 300, flex: 0.25, alignItems:"center" }]}>Set the curfew timing.</Text>
-                <Text style={[styles.subtitle, { flex: 0, alignItems:"center" }]}>Your student cannot drive after...</Text>
+
+                <Text style={[styles.subtitle, { paddingTop: 300, flex: 0.25, alignItems: "center" }]}>Set the curfew timing.</Text>
+                <Text style={[styles.subtitle, { flex: 0, alignItems: "center" }]}>Your student cannot drive after...</Text>
 
                 {this.state.time ? <DateTimePicker testID="dateTimePicker"
-          
-          mode={'time'}
-          is24Hour={true}
-          display="default"
-         value={this.state.time} onChange={(event, time) => {this.setState({time: time});}} style={{flex: .25, marginLeft: Dimensions.get("window").width / 2 - 45}}>
+
+                    mode={'time'}
+                    is24Hour={true}
+                    display="default"
+                    value={this.state.time} onChange={(event, time) => { this.setState({ time: time }); }} style={{ flex: .25, marginLeft: Dimensions.get("window").width / 2 - 45 }}>
                 </DateTimePicker> : null}
-                    
-                <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 575}}>
+
+                <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 575 }}>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>Cancel</Text>
@@ -268,8 +268,8 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
-    },nextButtonSelected: {
+        paddingTop: 15
+    }, nextButtonSelected: {
         width: 121,
         height: 40,
         backgroundColor: '#87B258',

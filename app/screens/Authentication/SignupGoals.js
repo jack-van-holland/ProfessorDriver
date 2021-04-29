@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight } from "react-native";
 
 import colors from "../../config/colors";
 
@@ -9,37 +9,37 @@ const SignupGoals = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
             </View>
 
             <View>
                 <Text style={styles.titletext}>I am a...</Text>
             </View>
-            
-            <TouchableHighlight onPress={() => {setParent(false); setDriver(true);}}>
-            <View style={driver ? styles.buttonSelected :styles.buttonUnselected}>
-                <Text style={styles.text}>learning driver</Text>
-            </View>
+
+            <TouchableHighlight onPress={() => { setParent(false); setDriver(true); }}>
+                <View style={driver ? styles.buttonSelected : styles.buttonUnselected}>
+                    <Text style={styles.text}>learning driver</Text>
+                </View>
             </TouchableHighlight>
-            <TouchableHighlight onPress={() => {setParent(true); setDriver(false);}}>
-            <View style={parent ? styles.buttonSelected :styles.buttonUnselected}>
-                <Text style={styles.text}>parent or coach</Text>
-            </View>
+            <TouchableHighlight onPress={() => { setParent(true); setDriver(false); }}>
+                <View style={parent ? styles.buttonSelected : styles.buttonUnselected}>
+                    <Text style={styles.text}>parent or coach</Text>
+                </View>
             </TouchableHighlight>
 
-            <View style={{flexDirection: "row"}}>
-                <View style={{flex: 1, alignItems: "center"}}>
+            <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight onPress={() => navigation.goBack()}>
-                    <View style={styles.backButtonSelected}>
-                        <Text style={styles.nexttext}>Back</Text>
-                    </View>
+                        <View style={styles.backButtonSelected}>
+                            <Text style={styles.nexttext}>Back</Text>
+                        </View>
                     </TouchableHighlight>
                 </View>
-                <View style={{flex: 1, alignItems: "center"}}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight onPress={() => navigation.navigate("SignupContact")}>
-                    <View style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}>
-                        <Text style={styles.nexttext}>Next</Text>
-                    </View>
+                        <View style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}>
+                            <Text style={styles.nexttext}>Next</Text>
+                        </View>
                     </TouchableHighlight>
                 </View>
             </View>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center",
     },
     registerButton: {
         width: 261,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
     backButtonUnselected: {
         width: 121,
         height: 40,

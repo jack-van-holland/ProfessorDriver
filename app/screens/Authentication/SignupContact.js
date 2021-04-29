@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, } from "react-native";
 
 import colors from "../../config/colors";
 import auth from '@react-native-firebase/auth';
@@ -23,103 +23,103 @@ const SignupContact = ({ navigation, route }) => {
         }
 
         auth().createUserWithEmailAndPassword(email, password)
-        .then((userCred) => {
+            .then((userCred) => {
                 firestore().collection('users').doc(userCred.user.uid)
-                .set({
-                    email: email,
-                    firstName: firstName,
-                    lastName: lastName,
-                    role: route.params.role,
-                    level: route.params.level,
-                    points: 0,
-                    statistics: {
-                        accel: 0,
-                        phone: 0,
-                        turn: 0,
-                        brake: 0,
-                        speed: 0,
-                        count: 0,
-                        roads: {
-                            rural: 0,
-                            residential: 0,
-                            highway: 0,
-                            city: 0,
-                            interstate: 0,
-                        },
-                        goodSkills: {
-                            mirrors: 0,
-                            lane: 0,
+                    .set({
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        role: route.params.role,
+                        level: route.params.level,
+                        points: 0,
+                        statistics: {
+                            accel: 0,
+                            phone: 0,
+                            turn: 0,
+                            brake: 0,
                             speed: 0,
-                            signal: 0,
-                        }, badSkills: {
-                            merging: 0,
-                            parking: 0,
-                            distractions: 0,
-                            left: 0,
-                        }
+                            count: 0,
+                            roads: {
+                                rural: 0,
+                                residential: 0,
+                                highway: 0,
+                                city: 0,
+                                interstate: 0,
+                            },
+                            goodSkills: {
+                                mirrors: 0,
+                                lane: 0,
+                                speed: 0,
+                                signal: 0,
+                            }, badSkills: {
+                                merging: 0,
+                                parking: 0,
+                                distractions: 0,
+                                left: 0,
+                            }
 
-                    },
-                    children: [],
-                    currentChild: "",
-                    parents: [],
-                    parentReqs: [],
-                    pendingReqs: [],
-                });
+                        },
+                        children: [],
+                        currentChild: "",
+                        parents: [],
+                        parentReqs: [],
+                        pendingReqs: [],
+                    });
             }).then(() => {
-            if (route.params.role === "parent") {
-            navigation.navigate("ParentHome");
-            } else {
-            navigation.navigate("Home");
-            }
-        })
-    .catch(error => {
-            if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
-            }
+                if (route.params.role === "parent") {
+                    navigation.navigate("ParentHome");
+                } else {
+                    navigation.navigate("Home");
+                }
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    console.log('That email address is already in use!');
+                }
 
-            if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
-            }
-        
-            console.error(error);
-        });
+                if (error.code === 'auth/invalid-email') {
+                    console.log('That email address is invalid!');
+                }
+
+                console.error(error);
+            });
     };
 
     return (
-        <View style={[styles.background, {flex: 1}]}>
-            <View style={[styles.logoContainer, {flex: 1}]}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+        <View style={[styles.background, { flex: 1 }]}>
+            <View style={[styles.logoContainer, { flex: 1 }]}>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
             </View>
 
-            <View style={{flex:10, paddingTop:123}}>
-                <Text style={[styles.titletext, {flex:.12}]}>Almost done...</Text>
+            <View style={{ flex: 10, paddingTop: 123 }}>
+                <Text style={[styles.titletext, { flex: .12 }]}>Almost done...</Text>
                 <TextInput style={styles.input} value={firstName} onChangeText={setFirstName}
-                placeholder = "First Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
-                autoCompleteType="name" autoCapitalize = "words"></TextInput>
+                    placeholder="First Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
+                    autoCompleteType="name" autoCapitalize="words"></TextInput>
                 <TextInput style={styles.input} value={lastName} onChangeText={setLastName}
-                placeholder = "Last Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
-                autoCompleteType="name" autoCapitalize = "words"></TextInput>
+                    placeholder="Last Name" placeholderTextColor="#C4D9B3" autoCorrect={false}
+                    autoCompleteType="name" autoCapitalize="words"></TextInput>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
-                placeholder = "Email" autoCapitalize = "none" keyboardType="email-address"
-                autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
+                    placeholder="Email" autoCapitalize="none" keyboardType="email-address"
+                    autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
-                onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
-                autoCompleteType="password" autoCapitalize = "none" autoCorrect={false}></TextInput>
+                    onChangeText={setPassword} placeholder="Password" placeholderTextColor="#C4D9B3"
+                    autoCompleteType="password" autoCapitalize="none" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={confirmPassword} secureTextEntry={true}
-                onChangeText={setConfirmPassword} placeholder = "Confirm Password"
-                autoCapitalize = "none" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
+                    onChangeText={setConfirmPassword} placeholder="Confirm Password"
+                    autoCapitalize="none" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
             </View>
 
-            <View style={{flexDirection: "row", flex:2}}>
-                <View style={{flex: 1, alignItems: "center"}}>
+            <View style={{ flexDirection: "row", flex: 2 }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
                         <Text style={styles.nexttext}>Back</Text>
                     </TouchableHighlight>
                 </View>
-                <View style={{flex: 1, alignItems: "center"}}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight onPress={submit}
-                    disabled={firstName && lastName && email && password && confirmPassword ? false : true}
-                    style={firstName && lastName && email && password && confirmPassword ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                        disabled={firstName && lastName && email && password && confirmPassword ? false : true}
+                        style={firstName && lastName && email && password && confirmPassword ? styles.nextButtonSelected : styles.nextButtonUnselected}
                     >
                         <Text style={styles.nexttext}>Submit</Text>
                     </TouchableHighlight>
@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
     },
     logoContainer: {
         alignItems: "center",
-        paddingTop:50,
+        paddingTop: 50,
     },
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -204,12 +204,12 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center",
     },
     input: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 20, 
+        fontSize: 20,
         lineHeight: 20,
         letterSpacing: 0.015,
         height: 40,
@@ -218,8 +218,8 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 0,
         paddingHorizontal: 20,
-        flex:.1,
-      },
+        flex: .1,
+    },
     registerButton: {
         width: 261,
         height: 40,
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
 })
 
 export default SignupContact;

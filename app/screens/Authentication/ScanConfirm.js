@@ -1,5 +1,5 @@
-import React, {Component, useEffect} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import React, { Component, useEffect } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight } from "react-native";
 
 import colors from "../../config/colors";
 import firestore from '@react-native-firebase/firestore';
@@ -16,70 +16,73 @@ const ScanConfirm = ({ navigation, route }) => {
 
     let sendRequest = (childName, childId, role) => {
         firestore().collection('users').doc(auth().currentUser.uid).update({
-            pendingReqs: firestore.FieldValue.arrayUnion({role: role, id: childId, name: childName})
+            pendingReqs: firestore.FieldValue.arrayUnion({ role: role, id: childId, name: childName })
         }).then(() => {
             firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
                 firestore().collection('users').doc(childId).update({
-                    parentReqs: firestore.FieldValue.arrayUnion({role: role, id: auth().currentUser.uid, 
-                        name: data._data.firstName + " " + data._data.lastName})
+                    parentReqs: firestore.FieldValue.arrayUnion({
+                        role: role, id: auth().currentUser.uid,
+                        name: data._data.firstName + " " + data._data.lastName
+                    })
                 }).then(() => {
                     navigation.navigate("ParentAccount");
                 });
 
             });
-            });
+        });
     };
 
 
-    useEffect( () => {
-    firestore().collection('users').doc(route.params.child).get().then((child) => {setChildUser(child);}).catch((error) => {navigation.goBack();});
+    useEffect(() => {
+        firestore().collection('users').doc(route.params.child).get().then((child) => { setChildUser(child); }).catch((error) => { navigation.goBack(); });
     });
     return (
-        !childUser ? (<View></View>) : (childUser._data ? 
-        (<View style={[styles.background, {flex:1}]}>
-            
-            <View style={{flex:0, paddingTop:250}}>
-                <Text style={styles.titletext}>Your student:</Text>
-                <Text style={styles.titletext}>{childUser._data.firstName + " " + childUser._data.lastName}</Text>
-                <Text style={styles.titletext}>{childUser._data.email}</Text>
-            </View>
+        !childUser ? (<View></View>) : (childUser._data ?
+            (<View style={[styles.background, { flex: 1 }]}>
 
-            <Text style={styles.titletext}>Select your access level: </Text>
+                <View style={{ flex: 0, paddingTop: 250 }}>
+                    <Text style={styles.titletext}>Your student:</Text>
+                    <Text style={styles.titletext}>{childUser._data.firstName + " " + childUser._data.lastName}</Text>
+                    <Text style={styles.titletext}>{childUser._data.email}</Text>
+                </View>
 
-            <TouchableHighlight onPress={() => {setCoach(true); setParent(false);}}
-            style={coach ? styles.buttonSelected :styles.buttonUnselected}
-            underlayColor="rgba(135, 178, 88, 0.2)">
-                <Text style={styles.text}>View Access (select for most coaches)</Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={() => {setParent(true); setCoach(false);}}
-            style={parent ? styles.buttonSelected :styles.buttonUnselected}
-            underlayColor="rgba(135, 178, 88, 0.2)">
-                <Text style={styles.text}>Parental Control (select for most parents)</Text>
-            </TouchableHighlight>
-            <View style={{flexDirection:"row", flex:1, top:Dimensions.get("window").height - 600}}>
-            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Rescan</Text>
-            </TouchableHighlight>
-            <TouchableHighlight onPress={() => {
-                sendRequest(childUser._data.firstName + " " + childUser._data.lastName, route.params.child, parent ? "parent" : "coach");}
-            }
-            style={styles.nextButtonSelected}>
-                <Text style={styles.nexttext}>Request</Text>
-            </TouchableHighlight>
-            </View>
-        </View>) : <View style={styles.background}>
-            <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
-                <Text style={styles.name}>Whoops, something went wrong with the scan.</Text>
-            </View>
-            
-            
-            <TouchableHighlight onPress={() => {navigation.goBack(); route.params.onGoBack();}}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Retry</Text>
-            </TouchableHighlight>
-        </View>)
+                <Text style={styles.titletext}>Select your access level: </Text>
+
+                <TouchableHighlight onPress={() => { setCoach(true); setParent(false); }}
+                    style={coach ? styles.buttonSelected : styles.buttonUnselected}
+                    underlayColor="rgba(135, 178, 88, 0.2)">
+                    <Text style={styles.text}>View Access (select for most coaches)</Text>
+                </TouchableHighlight>
+                <TouchableHighlight onPress={() => { setParent(true); setCoach(false); }}
+                    style={parent ? styles.buttonSelected : styles.buttonUnselected}
+                    underlayColor="rgba(135, 178, 88, 0.2)">
+                    <Text style={styles.text}>Parental Control (select for most parents)</Text>
+                </TouchableHighlight>
+                <View style={{ flexDirection: "row", flex: 1, top: Dimensions.get("window").height - 600 }}>
+                    <TouchableHighlight onPress={() => { navigation.goBack(); route.params.onGoBack(); }}
+                        style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Rescan</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={() => {
+                        sendRequest(childUser._data.firstName + " " + childUser._data.lastName, route.params.child, parent ? "parent" : "coach");
+                    }
+                    }
+                        style={styles.nextButtonSelected}>
+                        <Text style={styles.nexttext}>Request</Text>
+                    </TouchableHighlight>
+                </View>
+            </View>) : <View style={styles.background}>
+                <View style={styles.logoContainer}>
+                    <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
+                    <Text style={styles.name}>Whoops, something went wrong with the scan.</Text>
+                </View>
+
+
+                <TouchableHighlight onPress={() => { navigation.goBack(); route.params.onGoBack(); }}
+                    style={styles.backButtonSelected}>
+                    <Text style={styles.nexttext}>Retry</Text>
+                </TouchableHighlight>
+            </View>)
 
     );
 }
@@ -97,10 +100,10 @@ const styles = StyleSheet.create({
     },
     name: {
         fontFamily: "Montserrat",
-        textAlign:"center",
+        textAlign: "center",
         fontWeight: "bold",
-        fontSize: 33, 
-        padding:20
+        fontSize: 33,
+        padding: 20
     },
     logo: {
         width: 150,
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 28,
         textAlign: "center",
-        flex:0,
+        flex: 0,
     },
     loginButton: {
         width: 261,
@@ -145,10 +148,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginTop: 25,
-        height:50,
+        height: 50,
     },
     buttonSelected: {
-        height:50,
+        height: 50,
         marginTop: 25,
         backgroundColor: "rgba(135, 178, 88, 0.2)",
         borderColor: "#87B258",
@@ -170,8 +173,8 @@ const styles = StyleSheet.create({
     },
     nextButtonSelected: {
         height: 40,
-        paddingHorizontal:20,
-        marginHorizontal:20,
+        paddingHorizontal: 20,
+        marginHorizontal: 20,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -180,8 +183,8 @@ const styles = StyleSheet.create({
     },
     backButtonSelected: {
         height: 40,
-        paddingHorizontal:20,
-        marginHorizontal:20,
+        paddingHorizontal: 20,
+        marginHorizontal: 20,
         backgroundColor: '#87B258',
         borderRadius: 10,
         alignItems: "center",
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
 })
 
 export default ScanConfirm;

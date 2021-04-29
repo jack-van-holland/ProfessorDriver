@@ -33,24 +33,24 @@ class Level extends React.Component {
     render() {
 
         return (
-            <View style={{ flex: 1, justifyContent:"space-around", paddingTop: 50}}>
+            <View style={{ flex: 1, justifyContent: "space-around", paddingTop: 50 }}>
 
 
-                <View style={{flex:1}}>
-                <Text style={[styles.title, {alignItems:"center" }]}>You leveled up! </Text>
-                <Text style={[styles.subtitle, {alignItems:"center" }]}>Way to go! Great driving! Keep up the good work and you'll be ready for your license in no time!</Text>
-                <Text style={[styles.title, {alignItems:"center" }]}>You are now level: </Text>
-                <Text style={[styles.hugetitle, {alignItems:"center" }]}>{this.props.route.params.level} </Text>
+                <View style={{ flex: 1 }}>
+                    <Text style={[styles.title, { alignItems: "center" }]}>You leveled up! </Text>
+                    <Text style={[styles.subtitle, { alignItems: "center" }]}>Way to go! Great driving! Keep up the good work and you'll be ready for your license in no time!</Text>
+                    <Text style={[styles.title, { alignItems: "center" }]}>You are now level: </Text>
+                    <Text style={[styles.hugetitle, { alignItems: "center" }]}>{this.props.route.params.level} </Text>
 
 
                 </View>
-                
-                <View style={{ flex: 0, alignItems: "center", marginBottom:50 }}>
-                        <TouchableHighlight onPress={() => { this.props.navigation.reset({index: 0,routes: [{name: 'Home'}],}); }}
-                            style={styles.backButtonSelected}
-                        >
-                            <Text style={styles.nexttext}>OK</Text>
-                        </TouchableHighlight>
+
+                <View style={{ flex: 0, alignItems: "center", marginBottom: 50 }}>
+                    <TouchableHighlight onPress={() => { this.props.navigation.reset({ index: 0, routes: [{ name: 'Home' }], }); }}
+                        style={styles.backButtonSelected}
+                    >
+                        <Text style={styles.nexttext}>OK</Text>
+                    </TouchableHighlight>
                 </View>
             </View>);
 
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         textAlign: "center",
         alignItems: "center",
-        flex:.25
+        flex: .25
 
     }, hugetitle: {
         fontFamily: "Montserrat",
@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
         fontSize: 200,
         justifyContent: "center",
         textAlign: "center",
-        alignItems: "center", 
-        flex:3
+        alignItems: "center",
+        flex: 3
 
     }, subtitle: {
         fontFamily: "Montserrat",
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
+        paddingTop: 15
     },
 });
 

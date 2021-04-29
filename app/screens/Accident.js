@@ -29,19 +29,19 @@ class Accident extends React.Component {
     constructor() {
         super();
         this.state = {
-            injuries: false, passengers: false, safety: false, call: false, parents: false, wait: false, exchange: false, document: false, 
+            injuries: false, passengers: false, safety: false, call: false, parents: false, wait: false, exchange: false, document: false,
         };
     }
 
     render() {
 
         return (
-            <View style={{ flex: 1, justifyContent:"space-around", paddingTop: 50}}>
+            <View style={{ flex: 1, justifyContent: "space-around", paddingTop: 50 }}>
 
 
-                <View style={{flex:1}}>
-                <Text style={[styles.title, {alignItems:"center" }]}>Don't Panic. </Text>
-                <Text style={[styles.subtitle, {alignItems:"center" }]}>Here's what to do: </Text>
+                <View style={{ flex: 1 }}>
+                    <Text style={[styles.title, { alignItems: "center" }]}>Don't Panic. </Text>
+                    <Text style={[styles.subtitle, { alignItems: "center" }]}>Here's what to do: </Text>
                 </View>
                 <CheckBox fontFamily='Montserrat' center title="Check yourself for injuries" onPress={() => { this.setState((pastState) => { return { injuries: !pastState.injuries } }); }}
                     checked={this.state.injuries} style={{ flex: 1 }}></CheckBox>
@@ -59,12 +59,12 @@ class Accident extends React.Component {
                     checked={this.state.exchange} style={{ flex: 1 }}></CheckBox>
                 <CheckBox fontFamily='Montserrat' center title='Document the accident with notes and photos' onPress={() => { this.setState((pastState) => { return { document: !pastState.document } }); }}
                     checked={this.state.document} style={{ flex: 1 }}></CheckBox>
-                    <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }}
-                            style={styles.backButtonSelected}
-                        >
-                            <Text style={styles.nexttext}>Resolved</Text>
-                        </TouchableHighlight>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }}
+                        style={styles.backButtonSelected}
+                    >
+                        <Text style={styles.nexttext}>Resolved</Text>
+                    </TouchableHighlight>
                 </View>
             </View>);
 
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
+        paddingTop: 15
     },
 });
 

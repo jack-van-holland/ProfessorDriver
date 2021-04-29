@@ -1,6 +1,8 @@
-import React, {Component, useEffect} from "react";
-import {StyleSheet, View, Image, Text, TextInput, 
-    TouchableHighlight, AppRegistry} from "react-native";
+import React, { Component, useEffect } from "react";
+import {
+    StyleSheet, View, Image, Text, TextInput,
+    TouchableHighlight, AppRegistry
+} from "react-native";
 
 import colors from "../../config/colors";
 
@@ -11,31 +13,31 @@ import { RNCamera } from 'react-native-camera';
 const Scan = ({ navigation }) => {
     const scanner = React.useRef(null);
     onSuccess = e => {
-        navigation.navigate("ScanConfirm", {onGoBack: () => {scanner.current.reactivate(); }, role: "parent", child: e.data, level: ""});
+        navigation.navigate("ScanConfirm", { onGoBack: () => { scanner.current.reactivate(); }, role: "parent", child: e.data, level: "" });
     };
 
-    
+
 
     return (
-    <View style={styles.background}>
-      <QRCodeScanner
-        ref={scanner}
-        onRead={this.onSuccess}
-        topContent={
-            <Text style={styles.titletext}>Scan your learning driver's code</Text>
-        }
-        bottomContent={
-            <View style={{flexDirection:"row"}}>
-            <TouchableHighlight style={styles.backButtonSelected}
-            onPress={() => navigation.goBack()}>
-                <Text style={styles.nexttext}>Back</Text>
-            </TouchableHighlight>
-            </View>
-        }
-      />
-      </View>
-            
-        
+        <View style={styles.background}>
+            <QRCodeScanner
+                ref={scanner}
+                onRead={this.onSuccess}
+                topContent={
+                    <Text style={styles.titletext}>Scan your learning driver's code</Text>
+                }
+                bottomContent={
+                    <View style={{ flexDirection: "row" }}>
+                        <TouchableHighlight style={styles.backButtonSelected}
+                            onPress={() => navigation.goBack()}>
+                            <Text style={styles.nexttext}>Back</Text>
+                        </TouchableHighlight>
+                    </View>
+                }
+            />
+        </View>
+
+
     );
 }
 
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center",
     },
     registerButton: {
         width: 261,
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     backButtonSelected: {
-        flex: 1, 
+        flex: 1,
         paddingHorizontal: 20,
         marginHorizontal: 20,
         height: 40,
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
     backButtonUnselected: {
         width: 121,
         height: 40,
@@ -174,18 +176,18 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 32,
         color: '#777'
-      },
-      textBold: {
+    },
+    textBold: {
         fontWeight: '500',
         color: '#000'
-      },
-      buttonText: {
+    },
+    buttonText: {
         fontSize: 21,
         color: 'rgb(0,122,255)'
-      },
-      buttonTouchable: {
+    },
+    buttonTouchable: {
         padding: 16
-      },
+    },
 })
 
 AppRegistry.registerComponent('default', () => ScanScreen);

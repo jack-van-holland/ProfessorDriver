@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState, DatePickerIOS} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState, DatePickerIOS } from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
@@ -11,7 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 import axios from 'axios';
-import sizeof from 'object-sizeof'; 
+import sizeof from 'object-sizeof';
 
 
 import {
@@ -19,13 +19,13 @@ import {
     gyroscope,
     setUpdateIntervalForType,
     SensorTypes
-  } from "react-native-sensors";
+} from "react-native-sensors";
 
 import {
     combineLatest
-  } from "rxjs";
+} from "rxjs";
 import { Dimensions } from "react-native";
-  
+
 
 
 class Curfew extends Component {
@@ -33,36 +33,36 @@ class Curfew extends Component {
         super(props);
         this.state = {};
     }
-    
-      componentDidMount() {
 
-        this.setState({date: Date.now()})
-      }
+    componentDidMount() {
+
+        this.setState({ date: Date.now() })
+    }
 
     render() {
         return (
             <View style={{ flex: 1, }}>
-                
 
-                <Text style={[styles.subtitle, { paddingTop: 300, flex: 0.25, alignItems:"center" }]}>Create a curfew to teach your student to focus more on safe driving.</Text>
-                <Text style={[styles.subtitle, { flex: 0, alignItems:"center" }]}>Set the date when the curfew will expire.</Text>
+
+                <Text style={[styles.subtitle, { paddingTop: 300, flex: 0.25, alignItems: "center" }]}>Create a curfew to teach your student to focus more on safe driving.</Text>
+                <Text style={[styles.subtitle, { flex: 0, alignItems: "center" }]}>Set the date when the curfew will expire.</Text>
 
                 {this.state.date ? <DateTimePicker testID="dateTimePicker"
-          
-          mode={'datetime'}
-          is24Hour={true}
-          display="default"
-         value={this.state.date} onChange={(event, date) => {this.setState({date: date});}} style={{flex: .25, marginLeft: Dimensions.get("window").width / 2 - 100}}>
+
+                    mode={'datetime'}
+                    is24Hour={true}
+                    display="default"
+                    value={this.state.date} onChange={(event, date) => { this.setState({ date: date }); }} style={{ flex: .25, marginLeft: Dimensions.get("window").width / 2 - 100 }}>
                 </DateTimePicker> : null}
-                    
-                <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 575}}>
+
+                <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 575 }}>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>Cancel</Text>
                         </TouchableHighlight>
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.props.navigation.navigate("CurfewTime", {id: this.props.route.params.id, end: this.state.date}); }}
+                        <TouchableHighlight onPress={() => { this.props.navigation.navigate("CurfewTime", { id: this.props.route.params.id, end: this.state.date }); }}
                             style={styles.nextButtonSelected}
                         >
                             <Text style={styles.nexttext}>Continue</Text>
@@ -256,8 +256,8 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
-    },nextButtonSelected: {
+        paddingTop: 15
+    }, nextButtonSelected: {
         width: 121,
         height: 40,
         backgroundColor: '#87B258',

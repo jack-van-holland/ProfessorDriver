@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight } from "react-native";
 
 import colors from "../../config/colors";
 
@@ -11,43 +11,43 @@ const SignupRole = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
             </View>
 
             <View>
                 <Text style={styles.titletext}>I am a...</Text>
             </View>
-            
+
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            style={driver ? styles.buttonSelected :styles.buttonUnselected}
-            onPress={() => {setParent(false); setDriver(true);}}>
+                style={driver ? styles.buttonSelected : styles.buttonUnselected}
+                onPress={() => { setParent(false); setDriver(true); }}>
                 <Text style={styles.text}>learning driver</Text>
             </TouchableHighlight>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            style={parent ? styles.buttonSelected :styles.buttonUnselected}
-            onPress={() => {setParent(true); setDriver(false);}}>
+                style={parent ? styles.buttonSelected : styles.buttonUnselected}
+                onPress={() => { setParent(true); setDriver(false); }}>
                 <Text style={styles.text}>parent or coach</Text>
             </TouchableHighlight>
 
-            <View style={{flexDirection: "row"}}>
+            <View style={{ flexDirection: "row" }}>
 
-            <View style={{flex: 1, alignItems: "center"}}>
-                <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-                style={styles.backButtonSelected}
-                onPress={() => navigation.goBack()}>
-                    <Text style={styles.nexttext}>Back</Text>
-                </TouchableHighlight>
-            </View>
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
+                        style={styles.backButtonSelected}
+                        onPress={() => navigation.goBack()}>
+                        <Text style={styles.nexttext}>Back</Text>
+                    </TouchableHighlight>
+                </View>
 
-            <View style={{flex: 1, alignItems: "center"}}>
-                <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-                style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}
-                onPress={driver ? () => navigation.navigate("SignupExperience") : () => navigation.navigate("SignupContact", {role: "parent", level : ""})} 
-                disabled={parent || driver ? false : true}>
-                    <Text style={styles.nexttext}>Next</Text>
-                </TouchableHighlight>
-            </View>
-            
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
+                        style={parent || driver ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                        onPress={driver ? () => navigation.navigate("SignupExperience") : () => navigation.navigate("SignupContact", { role: "parent", level: "" })}
+                        disabled={parent || driver ? false : true}>
+                        <Text style={styles.nexttext}>Next</Text>
+                    </TouchableHighlight>
+                </View>
+
             </View>
         </View>
     );
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center",
     },
     registerButton: {
         width: 261,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
 })
 
 export default SignupRole;

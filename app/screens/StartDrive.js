@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, Image, Text, Button, TouchableHighlight} from "react-native";
+import { StyleSheet, View, Image, Text, Button, TouchableHighlight } from "react-native";
 
 import colors from "../config/colors";
 
@@ -9,21 +9,21 @@ import auth from '@react-native-firebase/auth';
 const StartDrive = ({ navigation }) => {
 
 
-// read report from db
+    // read report from db
     const [user, setUser] = useState("");
-    const {uid} = auth().currentUser;
+    const { uid } = auth().currentUser;
 
     const getUser = async () => {
         try {
-        const documentSnapshot = await firestore()
-            .collection('users')
-            .doc(uid)
-            .get();
+            const documentSnapshot = await firestore()
+                .collection('users')
+                .doc(uid)
+                .get();
 
-        const userData = documentSnapshot.data();
-        setUser(userData);
+            const userData = documentSnapshot.data();
+            setUser(userData);
         } catch {
-        //do whatever
+            //do whatever
         }
     };
 
@@ -35,22 +35,22 @@ const StartDrive = ({ navigation }) => {
 
     return (
         <View style={styles.background}>
-            <View style={{flex: 7, padding: 20}}>
-                <View style={{flex: 1}} />
-                <View style={[styles.container, {flex: 9}]}>
+            <View style={{ flex: 7, padding: 20 }}>
+                <View style={{ flex: 1 }} />
+                <View style={[styles.container, { flex: 9 }]}>
                     <Text style={styles.title}>Before You Drive</Text>
                     <Text style={styles.note}>“Here is a quick reminder of your reflection from last time”</Text>
-                    <Text> {user ? user.email: ""} </Text>
+                    <Text> {user ? user.email : ""} </Text>
                 </View>
-                <View style={{flex: 1}} />
-                <View style={[styles.container, {flex: 4}]}>
+                <View style={{ flex: 1 }} />
+                <View style={[styles.container, { flex: 4 }]}>
                     <Text style={styles.title}>  Select Your Desired{"\n"}Practice Environment</Text>
                 </View>
-                <View style={{flex: .5}} />
+                <View style={{ flex: .5 }} />
             </View>
-            
-            <View style={[styles.startContainer, {flex: 1}]}>
-                <TouchableHighlight onPress={() => {navigation.navigate("Drive")}} style={styles.startButton}>
+
+            <View style={[styles.startContainer, { flex: 1 }]}>
+                <TouchableHighlight onPress={() => { navigation.navigate("Drive") }} style={styles.startButton}>
                     <Text style={styles.startText}>OK, ready to drive!</Text>
                 </TouchableHighlight>
             </View>
@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
         //justifyContent: "center"
     },
     startContainer: {
-        backgroundColor: "white", 
-        alignItems: "center", 
+        backgroundColor: "white",
+        alignItems: "center",
         justifyContent: "center"
-    }, 
+    },
     title: {
         fontFamily: "Montserrat",
         color: "black",
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#FD917E",
         borderRadius: 8,
         width: 160,
-        height: 64, 
-        alignItems: "center", 
+        height: 64,
+        alignItems: "center",
         justifyContent: "center"
     },
     startText: {

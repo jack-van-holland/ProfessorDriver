@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState, DatePickerIOS} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState, DatePickerIOS } from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
@@ -11,7 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 import axios from 'axios';
-import sizeof from 'object-sizeof'; 
+import sizeof from 'object-sizeof';
 
 
 import {
@@ -19,13 +19,13 @@ import {
     gyroscope,
     setUpdateIntervalForType,
     SensorTypes
-  } from "react-native-sensors";
+} from "react-native-sensors";
 
 import {
     combineLatest
-  } from "rxjs";
+} from "rxjs";
 import { Dimensions } from "react-native";
-  
+
 
 
 class DriveAlert extends Component {
@@ -33,55 +33,55 @@ class DriveAlert extends Component {
         super(props);
         this.state = {};
     }
-    
-      componentDidMount() {
+
+    componentDidMount() {
         if (this.props.route.params.alert.type === "curfew") {
             let currMinutes = (new Date(Date.now())).getMinutes() + (new Date(Date.now())).getHours() * 60;
             let curfew = this.props.route.params.alert.curfewTime;
             console.log(currMinutes);
             console.log(curfew)
             if ((curfew < 360 && (currMinutes < curfew || currMinutes > 360)) || (curfew > 360 && (currMinutes > 360 && currMinutes < curfew))) {
-                this.setState({brokeCurfew: false}, () => {console.log(this.state)})
+                this.setState({ brokeCurfew: false }, () => { console.log(this.state) })
             } else {
-                this.setState({brokeCurfew: true}, () => {console.log(this.state)})
+                this.setState({ brokeCurfew: true }, () => { console.log(this.state) })
             }
         }
-        
-      }
+
+    }
 
     render() {
         return (
             <View style={{ flex: 1, }}>
-                
+
 
                 <Text style={[styles.title, { paddingTop: 50, flex: 0.25, }]}>Alert</Text>
-                <Text style={[styles.subtitle, {flex: 0.25, alignItems:"center" }]}>Your parent has given you a {this.props.route.params.alert.type === "warning" ? "warning" : this.props.route.params.alert.type === "curfew" ? "curfew" : "suspension"}.</Text>
-                <Text style={[styles.subtitle, {flex: 0.5, alignItems:"center" }]}>It's a good idea to have a discussion with them about their concerns and how to improve your behavior.</Text>
-                {this.props.route.params.alert.type === "curfew" ?  <Text style={[styles.subtitle, {flex: 0.5, alignItems:"center" }]}>Your curfew is at: {(new Date(Date.now() - (new Date(Date.now())).getHours() * 60 * 60 * 1000 - (new Date(Date.now())).getMinutes() * 60 * 1000 - (new Date(Date.now())).getSeconds() * 1000 + this.props.route.params.alert.curfewTime * 60 * 1000)).toLocaleTimeString()}</Text>
-                : null}
-                {this.props.route.params.alert.type === "curfew" ? this.state.brokeCurfew ? <Text style={[styles.subtitle, {flex: 0.5, alignItems:"center" }]}> It is past your curfew so you cannot drive right now.</Text> : 
-                <Text style={[styles.subtitle, {flex: 0.5, alignItems:"center" }]}> It is before your curfew so you can drive right now.</Text> : null}
-                {this.props.route.params.alert.type === "grounded" ?  <Text style={[styles.subtitle, {flex: 0.5, alignItems:"center" }]}>Your parents have suspended your driving privileges. You may not drive right now.</Text>
-                : null}
-                <Text style={[styles.subtitle, { flex: 0, alignItems:"center" }]}>{"It will expire on: "}</Text>
-                <Text style={[styles.subtitle, { flex: 0, alignItems:"center" }]}>{
-                (new Date(this.props.route.params.alert.end.seconds * 1000)).toLocaleDateString() + 
-                " at " + (new Date(this.props.route.params.alert.end.seconds * 1000)).toLocaleTimeString()}</Text>
+                <Text style={[styles.subtitle, { flex: 0.25, alignItems: "center" }]}>Your parent has given you a {this.props.route.params.alert.type === "warning" ? "warning" : this.props.route.params.alert.type === "curfew" ? "curfew" : "suspension"}.</Text>
+                <Text style={[styles.subtitle, { flex: 0.5, alignItems: "center" }]}>It's a good idea to have a discussion with them about their concerns and how to improve your behavior.</Text>
+                {this.props.route.params.alert.type === "curfew" ? <Text style={[styles.subtitle, { flex: 0.5, alignItems: "center" }]}>Your curfew is at: {(new Date(Date.now() - (new Date(Date.now())).getHours() * 60 * 60 * 1000 - (new Date(Date.now())).getMinutes() * 60 * 1000 - (new Date(Date.now())).getSeconds() * 1000 + this.props.route.params.alert.curfewTime * 60 * 1000)).toLocaleTimeString()}</Text>
+                    : null}
+                {this.props.route.params.alert.type === "curfew" ? this.state.brokeCurfew ? <Text style={[styles.subtitle, { flex: 0.5, alignItems: "center" }]}> It is past your curfew so you cannot drive right now.</Text> :
+                    <Text style={[styles.subtitle, { flex: 0.5, alignItems: "center" }]}> It is before your curfew so you can drive right now.</Text> : null}
+                {this.props.route.params.alert.type === "grounded" ? <Text style={[styles.subtitle, { flex: 0.5, alignItems: "center" }]}>Your parents have suspended your driving privileges. You may not drive right now.</Text>
+                    : null}
+                <Text style={[styles.subtitle, { flex: 0, alignItems: "center" }]}>{"It will expire on: "}</Text>
+                <Text style={[styles.subtitle, { flex: 0, alignItems: "center" }]}>{
+                    (new Date(this.props.route.params.alert.end.seconds * 1000)).toLocaleDateString() +
+                    " at " + (new Date(this.props.route.params.alert.end.seconds * 1000)).toLocaleTimeString()}</Text>
 
 
-                    
-                <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 650}}>
-                <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => {this.props.navigation.goBack();}} style={styles.backButtonSelected}>
+
+                <View style={{ flex: 1, flexDirection: "row", top: Dimensions.get("window").height - 650 }}>
+                    <View style={{ flex: 1, alignItems: "center" }}>
+                        <TouchableHighlight onPress={() => { this.props.navigation.goBack(); }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>Back</Text>
                         </TouchableHighlight>
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { if (this.props.route.params.alert.type === "warning" || (this.props.route.params.alert.type === "curfew" && !this.state.brokeCurfew)){ this.props.navigation.navigate("Checklist");} else {this.props.navigation.navigate("Home");} }} style={styles.backButtonSelected}>
+                        <TouchableHighlight onPress={() => { if (this.props.route.params.alert.type === "warning" || (this.props.route.params.alert.type === "curfew" && !this.state.brokeCurfew)) { this.props.navigation.navigate("Checklist"); } else { this.props.navigation.navigate("Home"); } }} style={styles.backButtonSelected}>
                             <Text style={styles.nexttext}>{this.props.route.params.alert.type === "warning" ? "Ok" : this.props.route.params.alert.type === "curfew" && !this.state.brokeCurfew ? "Ok" : "Cancel Drive"}</Text>
                         </TouchableHighlight>
                     </View>
-    
+
                 </View>
             </View>);
     }
@@ -268,8 +268,8 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
-    },nextButtonSelected: {
+        paddingTop: 15
+    }, nextButtonSelected: {
         width: 121,
         height: 40,
         backgroundColor: '#87B258',

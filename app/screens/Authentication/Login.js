@@ -1,11 +1,11 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight,KeyboardAvoidingView,} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, KeyboardAvoidingView, } from "react-native";
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import colors from "../../config/colors";
 
 const Login = ({ navigation }) => {
-    
+
     submit = () => {
         console.log("beginning login");
         auth().signInWithEmailAndPassword(email, password).then(() => {
@@ -18,8 +18,8 @@ const Login = ({ navigation }) => {
                     navigation.navigate("Home");
                 }
             });
-        }).catch((error) => {console.log("fail"); console.error(error);});
-        
+        }).catch((error) => { console.log("fail"); console.error(error); });
+
     };
 
     let [email, setEmail] = React.useState("");
@@ -28,31 +28,31 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
             </View>
 
             <View>
                 <Text style={styles.titletext}>Sign In</Text>
                 <TextInput style={styles.input} value={email} onChangeText={setEmail}
-                placeholder = "Email" autoCapitalize = "none" keyboardType="email-address"
-                autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
+                    placeholder="Email" autoCapitalize="none" keyboardType="email-address"
+                    autoCompleteType="email" placeholderTextColor="#C4D9B3" autoCorrect={false}></TextInput>
                 <TextInput style={styles.input} value={password} secureTextEntry={true}
-                onChangeText={setPassword} placeholder = "Password" placeholderTextColor="#C4D9B3"
-                autoCapitalize = "none" autoCompleteType="password" autoCorrect={false}></TextInput>
+                    onChangeText={setPassword} placeholder="Password" placeholderTextColor="#C4D9B3"
+                    autoCapitalize="none" autoCompleteType="password" autoCorrect={false}></TextInput>
             </View>
 
-            <View style={{flexDirection: "row"}}>
-                <View style={{flex: 1, alignItems: "center"}}>
+            <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                    onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
+                        onPress={() => navigation.goBack()} style={styles.backButtonSelected}>
                         <Text style={styles.nexttext}>Back</Text>
                     </TouchableHighlight>
                 </View>
-                <View style={{flex: 1, alignItems: "center"}}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight underlayColor="rgba(95, 128, 59, 1)"
-                    onPress={submit}
-                    disabled={email && password ? false : true}
-                    style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                        onPress={submit}
+                        disabled={email && password ? false : true}
+                        style={email && password ? styles.nextButtonSelected : styles.nextButtonUnselected}
                     >
                         <Text style={styles.nexttext}>Sign In</Text>
                     </TouchableHighlight>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -140,13 +140,13 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center",
     },
     input: {
         fontFamily: "Montserrat",
         top: 300,
         fontWeight: "bold",
-        fontSize: 20, 
+        fontSize: 20,
         lineHeight: 20,
         letterSpacing: 0.015,
         height: 40,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 0,
         paddingHorizontal: 20,
-      },
+    },
     registerButton: {
         width: 261,
         height: 40,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
 })
 
 export default Login;

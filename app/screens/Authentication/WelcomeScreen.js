@@ -1,5 +1,5 @@
-import React, {Component, useEffect} from "react";
-import {StyleSheet, View, Image, Text, Button, TouchableHighlight} from "react-native";
+import React, { Component, useEffect } from "react";
+import { StyleSheet, View, Image, Text, Button, TouchableHighlight } from "react-native";
 
 import colors from "../../config/colors";
 import auth from '@react-native-firebase/auth';
@@ -15,33 +15,34 @@ const WelcomeScreen = ({ navigation }) => {
             console.log(user);
             if (user) {
                 firestore().collection('users').doc(auth().currentUser.uid).get().then((userInfo) => {
-                if (userInfo._data.role === "parent") {
-                    navigation.navigate("ParentHome");
-                } else {
-                    navigation.navigate("Home");
-                }});
+                    if (userInfo._data.role === "parent") {
+                        navigation.navigate("ParentHome");
+                    } else {
+                        navigation.navigate("Home");
+                    }
+                });
             } else {
-                    setLoaded(true);
+                setLoaded(true);
             }
         });
     });
     return (
         loaded ? <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
                 <Text style={styles.name}>Professor Driver</Text>
             </View>
             <TouchableHighlight onPress={() => navigation.navigate('Login')}
-            style={styles.loginButton} underlayColor="rgba(135, 178, 88, 0.2)">
-                    <Text style={styles.text}>Sign In</Text>
+                style={styles.loginButton} underlayColor="rgba(135, 178, 88, 0.2)">
+                <Text style={styles.text}>Sign In</Text>
             </TouchableHighlight>
-            
-            <TouchableHighlight style={styles.registerButton} 
-            onPress={() => navigation.navigate('SignupRole')}
-            underlayColor="rgba(135, 178, 88, 0.2)">
+
+            <TouchableHighlight style={styles.registerButton}
+                onPress={() => navigation.navigate('SignupRole')}
+                underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Sign Up</Text>
             </TouchableHighlight>
-        </View>  : <View></View>
+        </View> : <View></View>
     );
 }
 
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },

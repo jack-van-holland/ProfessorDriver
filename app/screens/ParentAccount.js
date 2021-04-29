@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, ScrollView} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, ScrollView } from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
@@ -21,27 +21,28 @@ class ParentAccount extends React.Component {
 
     load = () => {
         firestore().collection('users').doc(auth().currentUser.uid).get().then((data) => {
-            this.setState({currentChild: data._data.currentChild});
+            this.setState({ currentChild: data._data.currentChild });
             const childNames = [];
             console.log(data);
             if (data._data.children.length) {
-            for (let i = 0; i < data._data.children.length; i++) {
-                firestore().collection('users').doc(data._data.children[i].child).get().then((child) => {
-                    childNames.push({status: child._data.status, id: data._data.children[i].child, name : child._data.firstName + " " + child._data.lastName, role: data._data.children[i].role});
-                    this.setState({children: childNames});
-                });
-            }} else {
-                this.setState({children: childNames});
+                for (let i = 0; i < data._data.children.length; i++) {
+                    firestore().collection('users').doc(data._data.children[i].child).get().then((child) => {
+                        childNames.push({ status: child._data.status, id: data._data.children[i].child, name: child._data.firstName + " " + child._data.lastName, role: data._data.children[i].role });
+                        this.setState({ children: childNames });
+                    });
+                }
+            } else {
+                this.setState({ children: childNames });
             }
             const pendingReqs = [];
             //console.log(data._data.parentReqs);
             if (data._data.pendingReqs.length) {
                 for (let i = 0; i < data._data.pendingReqs.length; i++) {
                     pendingReqs.push(data._data.pendingReqs[i]);
-                    this.setState({requests:pendingReqs});
+                    this.setState({ requests: pendingReqs });
                 }
             } else {
-                this.setState({requests: []})
+                this.setState({ requests: [] })
             }
         });
     }
@@ -52,141 +53,140 @@ class ParentAccount extends React.Component {
         }).then(() => {
             this.load();
         });
-        
+
     };
     render() {
-    return (
-        <View style={[styles.container, {flex:1, justifyContent:"space-between", alignItems:"center", alignContent: "center"}]}>
-            
-            
-            <View style={{height: 200, paddingTop:50}}>
-                <Text style={styles.subtitle}>Your Pending Student Requests</Text>
-                <ScrollView>
-                {this.state.requests 
-                            ? this.state.requests.length ? this.state.requests.map((item)=>(
-                                <View style={[styles.historyContainer, ]} key={item.id}>
+        return (
+            <View style={[styles.container, { flex: 1, justifyContent: "space-between", alignItems: "center", alignContent: "center" }]}>
 
-                                
-                                <Text style={[styles.historyText, {flex:1, paddingLeft:10, paddingVertical:10}]}>
-                                    {"You've requested " + (item.role === "parent" ? "parental control" : "view access") + " for: "}
-                                 </Text>
-                                 <Text style={[styles.historyText, {flex:1}]}>
-                                    {item.name}
-                                 </Text>
-                                <View style={{paddingTop: 6}}></View>
-                                </View>
-                                )) 
-                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>No pending requests right now. Click to add a student.</Text> 
-                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>Loading requests...</Text> }
-                </ScrollView>
-            </View>
-            <View style={{flex:.5}}>
-            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => 
-            {this.props.navigation.navigate("Scan");}}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Add a Student</Text>
-            </TouchableHighlight>
-            </View>
-            <View style={{height: 300}}>
-                <Text style={[styles.subtitle, {flex: 1}]}>Your Students</Text>
-                <Text style={[styles.text, {flex: 1}]}>Tap a student to view their reports.</Text>
 
-                <ScrollView>
-                {this.state.children 
-                            ? this.state.children.length ? this.state.children.map((item)=>(
-                                <View onStartShouldSetResponder={() => {this.changeChild(item.id);}} style={item.id === this.state.currentChild ? styles.historyContainerSelected : styles.historyContainer} key={item.id}>
-                                <Text style={[styles.historyText, {fontWeight: "bold"}]}>
-                                    {item.name}
-                                 </Text>
-                                 {item.role === "parent" ? 
-                                 <View>
-                                     <Text style={styles.historyText}>Intervention Actions</Text>
-                                 </View> : <View></View>}
+                <View style={{ height: 200, paddingTop: 50 }}>
+                    <Text style={styles.subtitle}>Your Pending Student Requests</Text>
+                    <ScrollView>
+                        {this.state.requests
+                            ? this.state.requests.length ? this.state.requests.map((item) => (
+                                <View style={[styles.historyContainer,]} key={item.id}>
 
-                                 {item.role === "parent" ? 
-                                
-                                <View style={{flexDirection:"row"}}>
-                                <TouchableHighlight style= {[styles.warningButton, {backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)": "rgba(255, 255, 0, .25)":  "rgba(255, 255, 0, .25)", flex:0}]} 
-                                onPress={() => {if (item.status && item.status.type === "warning") {this.props.navigation.navigate("DisableAction", {id: item.id});} else{this.props.navigation.navigate("Warning", {id: item.id});}}}>
-                                <View>
-                                    <Text style={styles.approveText}>
-                                        Warning
+
+                                    <Text style={[styles.historyText, { flex: 1, paddingLeft: 10, paddingVertical: 10 }]}>
+                                        {"You've requested " + (item.role === "parent" ? "parental control" : "view access") + " for: "}
                                     </Text>
-                                </View>
-                             </TouchableHighlight>
-                             <TouchableHighlight style= {[styles.curfewButton, {backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)": "rgba(255, 165, 0, .1)":  "rgba(255, 165, 0, .1)", flex:0}]} 
-                                onPress={() => {if (item.status && item.status.type === "curfew") {this.props.navigation.navigate("DisableAction", {id: item.id});} else{this.props.navigation.navigate("Curfew", {id: item.id});}}}>
-                                <View>
-                                    <Text style={styles.approveText}>
-                                        Curfew
+                                    <Text style={[styles.historyText, { flex: 1 }]}>
+                                        {item.name}
                                     </Text>
+                                    <View style={{ paddingTop: 6 }}></View>
                                 </View>
-                             </TouchableHighlight>
-                             <TouchableHighlight style= {[styles.groundedButton, {backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)": "rgba(255, 0, 0, .1)":  "rgba(255, 0, 0, .11)", flex:0}]} 
-                                onPress={() => {if (item.status && item.status.type === "grounded") {this.props.navigation.navigate("DisableAction", {id: item.id});} else{this.props.navigation.navigate("Grounded", {id: item.id});}}}>
-                                <View>
-                                    <Text style={styles.approveText}>
-                                        Suspension
-                                    </Text>
-                                </View>
-                             </TouchableHighlight>
-                             </View> : <View><Text style={styles.historyText}>View-only Access</Text></View>}
-        
-                                 
-                                <View style={{paddingTop: 6}}></View>
-                                </View>
-                                )) 
-                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>No students added yet. Add a student above.</Text> 
-                            : <Text style={[styles.historyText, {textAlign:"center", paddingHorizontal:20}]}>Loading students...</Text> }
-                </ScrollView>
-            </View>
-            
-            <View style={{flex:.5}}>
-            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => 
-            {this.load();}}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Refresh</Text>
-            </TouchableHighlight>
-            </View>
-            <View style={{flex:.5}}>
-            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => 
-            {auth().signOut().then(() => {this.props.navigation.reset({index: 0,routes: [{name: 'WelcomeScreen'}],});}); }}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Logout</Text>
-            </TouchableHighlight>
-            </View>
-            <View style={{flex: 0, flexDirection:"row"}}>
-            <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentHome'}],});}} style={styles.startButton}>
-                    <View>
-                    <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
-                    <Text style={styles.startText}>Home</Text>
-                    </View>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                 onPress={() => {
-                    firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
-                    if (parentData._data.currentChild) {
-                      this.props.navigation.navigate("ParentReportsMain");
-                    } else {
-                      Alert.alert("You must add a student before viewing reports.");
-                    }});}} style={styles.startButton}>
-                    <View>
-                    <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
-                    <Text style={styles.startText}>Reports</Text>
-                    </View>
-                </TouchableHighlight>
-                <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.reset({index: 0,routes: [{name: 'ParentAccount'}],});}} style={styles.startButtonSelected}>
-                <View>
-                  <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
-                  <Text style={styles.startText}>Account</Text>
+                            ))
+                                : <Text style={[styles.historyText, { textAlign: "center", paddingHorizontal: 20 }]}>No pending requests right now. Click to add a student.</Text>
+                            : <Text style={[styles.historyText, { textAlign: "center", paddingHorizontal: 20 }]}>Loading requests...</Text>}
+                    </ScrollView>
                 </View>
-                </TouchableHighlight>
+                <View style={{ flex: .5 }}>
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => { this.props.navigation.navigate("Scan"); }}
+                        style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Add a Student</Text>
+                    </TouchableHighlight>
+                </View>
+                <View style={{ height: 300 }}>
+                    <Text style={[styles.subtitle, { flex: 1 }]}>Your Students</Text>
+                    <Text style={[styles.text, { flex: 1 }]}>Tap a student to view their reports.</Text>
+
+                    <ScrollView>
+                        {this.state.children
+                            ? this.state.children.length ? this.state.children.map((item) => (
+                                <View onStartShouldSetResponder={() => { this.changeChild(item.id); }} style={item.id === this.state.currentChild ? styles.historyContainerSelected : styles.historyContainer} key={item.id}>
+                                    <Text style={[styles.historyText, { fontWeight: "bold" }]}>
+                                        {item.name}
+                                    </Text>
+                                    {item.role === "parent" ?
+                                        <View>
+                                            <Text style={styles.historyText}>Intervention Actions</Text>
+                                        </View> : <View></View>}
+
+                                    {item.role === "parent" ?
+
+                                        <View style={{ flexDirection: "row" }}>
+                                            <TouchableHighlight style={[styles.warningButton, { backgroundColor: item.status ? item.status.type === "warning" ? "rgba(255, 240, 0, 1)" : "rgba(255, 255, 0, .25)" : "rgba(255, 255, 0, .25)", flex: 0 }]}
+                                                onPress={() => { if (item.status && item.status.type === "warning") { this.props.navigation.navigate("DisableAction", { id: item.id }); } else { this.props.navigation.navigate("Warning", { id: item.id }); } }}>
+                                                <View>
+                                                    <Text style={styles.approveText}>
+                                                        Warning
+                                    </Text>
+                                                </View>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight style={[styles.curfewButton, { backgroundColor: item.status ? item.status.type === "curfew" ? "rgba(255, 165, 0, 1)" : "rgba(255, 165, 0, .1)" : "rgba(255, 165, 0, .1)", flex: 0 }]}
+                                                onPress={() => { if (item.status && item.status.type === "curfew") { this.props.navigation.navigate("DisableAction", { id: item.id }); } else { this.props.navigation.navigate("Curfew", { id: item.id }); } }}>
+                                                <View>
+                                                    <Text style={styles.approveText}>
+                                                        Curfew
+                                    </Text>
+                                                </View>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight style={[styles.groundedButton, { backgroundColor: item.status ? item.status.type === "grounded" ? "rgba(255, 0, 0, 1)" : "rgba(255, 0, 0, .1)" : "rgba(255, 0, 0, .11)", flex: 0 }]}
+                                                onPress={() => { if (item.status && item.status.type === "grounded") { this.props.navigation.navigate("DisableAction", { id: item.id }); } else { this.props.navigation.navigate("Grounded", { id: item.id }); } }}>
+                                                <View>
+                                                    <Text style={styles.approveText}>
+                                                        Suspension
+                                    </Text>
+                                                </View>
+                                            </TouchableHighlight>
+                                        </View> : <View><Text style={styles.historyText}>View-only Access</Text></View>}
+
+
+                                    <View style={{ paddingTop: 6 }}></View>
+                                </View>
+                            ))
+                                : <Text style={[styles.historyText, { textAlign: "center", paddingHorizontal: 20 }]}>No students added yet. Add a student above.</Text>
+                            : <Text style={[styles.historyText, { textAlign: "center", paddingHorizontal: 20 }]}>Loading students...</Text>}
+                    </ScrollView>
+                </View>
+
+                <View style={{ flex: .5 }}>
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => { this.load(); }}
+                        style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Refresh</Text>
+                    </TouchableHighlight>
+                </View>
+                <View style={{ flex: .5 }}>
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)" onPress={() => { auth().signOut().then(() => { this.props.navigation.reset({ index: 0, routes: [{ name: 'WelcomeScreen' }], }); }); }}
+                        style={styles.backButtonSelected}>
+                        <Text style={styles.nexttext}>Logout</Text>
+                    </TouchableHighlight>
+                </View>
+                <View style={{ flex: 0, flexDirection: "row" }}>
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                        onPress={() => { this.props.navigation.reset({ index: 0, routes: [{ name: 'ParentHome' }], }); }} style={styles.startButton}>
+                        <View>
+                            <Image style={styles.image} source={require("../assets/images/home.png")}></Image>
+                            <Text style={styles.startText}>Home</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
+                        onPress={() => {
+                            firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
+                                if (parentData._data.currentChild) {
+                                    this.props.navigation.navigate("ParentReportsMain");
+                                } else {
+                                    Alert.alert("You must add a student before viewing reports.");
+                                }
+                            });
+                        }} style={styles.startButton}>
+                        <View>
+                            <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
+                            <Text style={styles.startText}>Reports</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight disabled={true} underlayColor="rgba(95, 128, 59, .5)"
+                        onPress={() => { this.props.navigation.reset({ index: 0, routes: [{ name: 'ParentAccount' }], }); }} style={styles.startButtonSelected}>
+                        <View>
+                            <Image style={styles.image} source={require("../assets/images/account.png")}></Image>
+                            <Text style={styles.startText}>Account</Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
             </View>
-        </View>
-    );
-}
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     },
     backButtonSelected: {
         backgroundColor: "#C4D9B3",
-        borderRadius:15,
+        borderRadius: 15,
         flex: 0,
         paddingVertical: 10,
         paddingHorizontal: 50,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     },
     approveButton: {
         backgroundColor: "rgba(95, 128, 59,255)",
-        borderRadius:15,
+        borderRadius: 15,
         flex: 0,
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     },
     denyButton: {
         backgroundColor: "#E60000",
-        borderRadius:15,
+        borderRadius: 15,
         flex: 0,
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -225,27 +225,27 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255, 255, 0, .25)",
         borderColor: "#000000",
         borderWidth: 2,
-        borderRadius:15,
+        borderRadius: 15,
         flex: 0,
         paddingVertical: 10,
         paddingHorizontal: 10,
         marginHorizontal: 5,
         justifyContent: "center"
-    },curfewButton: {
+    }, curfewButton: {
         backgroundColor: "rgba(255, 165, 0, .1)",
         borderColor: "#000000",
         borderWidth: 2,
-        borderRadius:15,
+        borderRadius: 15,
         flex: 0,
         paddingVertical: 10,
         paddingHorizontal: 10,
         marginHorizontal: 5,
         justifyContent: "center"
-    },groundedButton: {
+    }, groundedButton: {
         backgroundColor: "rgba(255, 0, 0, .1)",
         borderColor: "#000000",
         borderWidth: 2,
-        borderRadius:15,
+        borderRadius: 15,
         flex: 0,
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
         width: null,
         height: null,
         resizeMode: 'contain'
-      },
+    },
     logo: {
         width: 150,
         height: 123
@@ -313,19 +313,19 @@ const styles = StyleSheet.create({
         borderRadius: 19,
         alignItems: "center",
         //justifyContent: "center"
-  },
-  text: {
-    fontFamily: "Montserrat",
-    color: "black",
-    fontSize: 16,
-    paddingTop: 5,
-    justifyContent: "center",
-    textAlign: "center",
-    alignItems: "center",
-    paddingHorizontal:25,
-    flex: 1,
-  
-  },
+    },
+    text: {
+        fontFamily: "Montserrat",
+        color: "black",
+        fontSize: 16,
+        paddingTop: 5,
+        justifyContent: "center",
+        textAlign: "center",
+        alignItems: "center",
+        paddingHorizontal: 25,
+        flex: 1,
+
+    },
     loginButton: {
         width: 261,
         height: 40,
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 10,
         alignItems: "center",
-        justifyContent: "center",        
+        justifyContent: "center",
     },
     registerButton: {
         width: 261,
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
     backButtonUnselected: {
         width: 121,
         height: 40,
@@ -406,28 +406,28 @@ const styles = StyleSheet.create({
         backgroundColor: "#C4D9B3",
         borderRightColor: "#F3F3F5",
         borderLeftColor: "#F3F3F5",
-        borderTopColor:"#F3F3F5",
-        borderBottomColor:"#C4D9B3",
+        borderTopColor: "#F3F3F5",
+        borderBottomColor: "#C4D9B3",
         paddingBottom: 15,
-        paddingTop:15,
+        paddingTop: 15,
         flex: 1,
         borderWidth: 1,
-        height: 90, 
-        alignItems: "center", 
+        height: 90,
+        alignItems: "center",
         justifyContent: "center"
     },
     startButtonSelected: {
         backgroundColor: "rgba(95, 128, 59,255)",
         borderRightColor: "#F3F3F5",
         borderLeftColor: "#F3F3F5",
-        borderTopColor:"#F3F3F5",
-        borderBottomColor:"rgba(95, 128, 59, 255)",
-        paddingBottom: 15,    
-        paddingTop:15,
+        borderTopColor: "#F3F3F5",
+        borderBottomColor: "rgba(95, 128, 59, 255)",
+        paddingBottom: 15,
+        paddingTop: 15,
         flex: 1,
         borderWidth: 1,
-        height: 90, 
-        alignItems: "center", 
+        height: 90,
+        alignItems: "center",
         justifyContent: "center"
     },
     startText: {
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 20,
         //paddingTop: 10
-    },historyContainer: {
+    }, historyContainer: {
         backgroundColor: "white",
         width: 350,
         borderRadius: 5,
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         alignItems: "center",
         //paddingTop: 10
-    },historyContainerSelected: {
+    }, historyContainerSelected: {
         backgroundColor: "rgba(135, 178, 88, 0.2)",
         width: 350,
         borderRadius: 5,

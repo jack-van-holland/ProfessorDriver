@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight, Button, AppState } from "react-native";
 
 import QRCode from 'react-native-qrcode-svg';
 import colors from "../config/colors";
@@ -10,7 +10,7 @@ import KeepAwake from 'react-native-keep-awake';
 
 
 import axios from 'axios';
-import sizeof from 'object-sizeof'; 
+import sizeof from 'object-sizeof';
 
 
 import {
@@ -18,147 +18,153 @@ import {
     gyroscope,
     setUpdateIntervalForType,
     SensorTypes
-  } from "react-native-sensors";
+} from "react-native-sensors";
 
 import {
     combineLatest
-  } from "rxjs";
-  
+} from "rxjs";
+
 
 
 class Drive extends Component {
     constructor(props) {
         super(props);
-        this.state = {startTime: "", apiRequests: 0, lastRoad: {lat: 0, lon: 0, roadType: "", roadSpeed: ""}, data: [], appState: "active"};
+        this.state = { startTime: "", apiRequests: 0, lastRoad: { lat: 0, lon: 0, roadType: "", roadSpeed: "" }, data: [], appState: "active" };
     }
-    
-      componentWillUnmount() {
+
+    componentWillUnmount() {
         AppState.removeEventListener("change", this._handleAppStateChange);
-      }
-    
-      _handleAppStateChange = nextAppState => {
-          console.log(nextAppState);
+    }
+
+    _handleAppStateChange = nextAppState => {
+        console.log(nextAppState);
         this.setState({ appState: nextAppState });
-      };
+    };
 
     startDrive = () => {
         KeepAwake.activate();
-        this.setState({startTime: new Date().getTime()});
+        this.setState({ startTime: new Date().getTime() });
         Geolocation.requestAuthorization("always").then((result) => {
-            if(result === "granted") {
+            if (result === "granted") {
 
                 setUpdateIntervalForType(SensorTypes.accelerometer, 250);
                 setUpdateIntervalForType(SensorTypes.gyroscope, 250);
                 const mySensors = combineLatest(accelerometer, gyroscope);
-                this.subscription = mySensors.subscribe( ([accel, gyro]) => {
-                
+                this.subscription = mySensors.subscribe(([accel, gyro]) => {
+
                     //console.log("started");
                     Geolocation.getCurrentPosition(
                         (position) => {
-                            if (this.checkPosition(position.coords.latitude, 
-                                position.coords.longitude, this.state.lastRoad.lat, 
+                            if (this.checkPosition(position.coords.latitude,
+                                position.coords.longitude, this.state.lastRoad.lat,
                                 this.state.lastRoad.lon)) {
-                                    this.learnRoad(position.coords.latitude, position.coords.longitude);
+                                this.learnRoad(position.coords.latitude, position.coords.longitude);
                             }
-                          this.setState(state => {
-                              const data = state.data.concat({loc: {accuracy: position.coords.accuracy, 
-                            latitude: position.coords.latitude, longitude: position.coords.longitude, 
-                            heading: position.coords.heading, speed: position.coords.speed, 
-                            time: position.timestamp, roadType: this.state.lastRoad.roadType, 
-                            roadSpeed: this.state.lastRoad.roadSpeed}, 
-                                acc: {x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp},
-                                gyro: {x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp}, phone: {using: this.state.appState}});
-                               
-                              return {
-                                data,
-                              };
+                            this.setState(state => {
+                                const data = state.data.concat({
+                                    loc: {
+                                        accuracy: position.coords.accuracy,
+                                        latitude: position.coords.latitude, longitude: position.coords.longitude,
+                                        heading: position.coords.heading, speed: position.coords.speed,
+                                        time: position.timestamp, roadType: this.state.lastRoad.roadType,
+                                        roadSpeed: this.state.lastRoad.roadSpeed
+                                    },
+                                    acc: { x: accel.x, y: accel.y, z: accel.z, t: accel.timestamp },
+                                    gyro: { x: gyro.x, y: gyro.y, z: gyro.z, t: gyro.timestamp }, phone: { using: this.state.appState }
+                                });
+
+                                return {
+                                    data,
+                                };
                             });
-                          
-                          //console.log(position);
-                          //console.log(accel.x, accel.y, accel.z, accel.timestamp);
+
+                            //console.log(position);
+                            //console.log(accel.x, accel.y, accel.z, accel.timestamp);
                         },
                         (error) => {
-                          // See error code charts below.
-                          console.log(error.code, error.message);
+                            // See error code charts below.
+                            console.log(error.code, error.message);
                         },
-                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0}
-                    ); });
-                
-        }}
-          );
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                    );
+                });
+
+            }
+        }
+        );
     };
 
     stopDrive = () => {
         this.subscription.unsubscribe();
         KeepAwake.deactivate();
-        this.props.navigation.navigate("Reflection", {data: this.state.data, apiRequests: this.state.apiRequests, startTime: this.state.startTime})
+        this.props.navigation.navigate("Reflection", { data: this.state.data, apiRequests: this.state.apiRequests, startTime: this.state.startTime })
     };
-    
+
 
     learnRoad = (lat, lon) => {
         this.setState((prevState, props) => ({
             apiRequests: prevState.apiRequests + 1
-        })); 
-        const nomUrl = "https://nominatim.openstreetmap.org/reverse?lat=" + 
-                          String(lat)+ "&lon=" +  String(lon) 
-                          + "&zoom=17&format=json";
-                          axios.get(nomUrl).then( (nomResponse) => {
-                            const road = nomResponse.data.osm_id;
-                            const osmUrl = "https://openstreetmap.org/api/0.6/way/" + road + "/full.json";
-                            axios.get(osmUrl).then((osmResponse) => {
-                                const roadTags = osmResponse.data.elements.find((element) => element.type === "way").tags;
-                                const roadType = roadTags.highway;
-                                const roadSpeed = roadTags.maxSpeed;
-                                console.log(roadType + " " + roadSpeed);
-                                this.setState({lastRoad: {lat: lat, lon:lon, roadType:roadType, roadSpeed:roadSpeed}})
-                            }).catch((error) => {
-                                console.log(error + ": " + osmUrl);
-                                //this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
-                             });
+        }));
+        const nomUrl = "https://nominatim.openstreetmap.org/reverse?lat=" +
+            String(lat) + "&lon=" + String(lon)
+            + "&zoom=17&format=json";
+        axios.get(nomUrl).then((nomResponse) => {
+            const road = nomResponse.data.osm_id;
+            const osmUrl = "https://openstreetmap.org/api/0.6/way/" + road + "/full.json";
+            axios.get(osmUrl).then((osmResponse) => {
+                const roadTags = osmResponse.data.elements.find((element) => element.type === "way").tags;
+                const roadType = roadTags.highway;
+                const roadSpeed = roadTags.maxSpeed;
+                console.log(roadType + " " + roadSpeed);
+                this.setState({ lastRoad: { lat: lat, lon: lon, roadType: roadType, roadSpeed: roadSpeed } })
+            }).catch((error) => {
+                console.log(error + ": " + osmUrl);
+                //this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
+            });
 
-                          }).catch((error) => {
-                              console.log(error + ": " + nomUrl);
-                              //this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
-                            }); 
+        }).catch((error) => {
+            console.log(error + ": " + nomUrl);
+            //this.setState({lastRoad: {lat: lat, lon:lon, roadType:"", roadSpeed:""}});
+        });
     }
-    checkPosition = (lat1, lon1, lat2, lon2) =>  {
-        const deltaLat = (lat2-lat1) * (Math.PI/180); 
-        const deltaLon = (lon2-lon1) * (Math.PI/180); 
-        const a = 
-          Math.pow(Math.sin(deltaLat/2),2) +
-          Math.cos(lat1 * (Math.PI/180)) * Math.cos(lat2 * (Math.PI/180)) * 
-          Math.pow(Math.sin(deltaLon/2),2)
-          ; 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        var d = 6371 * c; 
+    checkPosition = (lat1, lon1, lat2, lon2) => {
+        const deltaLat = (lat2 - lat1) * (Math.PI / 180);
+        const deltaLon = (lon2 - lon1) * (Math.PI / 180);
+        const a =
+            Math.pow(Math.sin(deltaLat / 2), 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+            Math.pow(Math.sin(deltaLon / 2), 2)
+            ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = 6371 * c;
         console.log(d);
         return d * 1000 > 30;
-      }
-      componentDidMount() {
+    }
+    componentDidMount() {
         AppState.addEventListener("change", this._handleAppStateChange);
         this.startDrive();
-      }
+    }
 
     render() {
         return (
-            <View style={{ flex: 1, justifyContent:"space-around" }}>
-                <View style={{ flex: 2, alignItems: "center", paddingTop: 50}}>
-                        <TouchableHighlight onPress={() => { this.stopDrive(); this.props.navigation.navigate("Accident"); }} style={styles.emergencyButtonSelected}>
-                            <View style={{flexDirection:"row"}}>
+            <View style={{ flex: 1, justifyContent: "space-around" }}>
+                <View style={{ flex: 2, alignItems: "center", paddingTop: 50 }}>
+                    <TouchableHighlight onPress={() => { this.stopDrive(); this.props.navigation.navigate("Accident"); }} style={styles.emergencyButtonSelected}>
+                        <View style={{ flexDirection: "row" }}>
                             <Image source={require("../assets/images/emergency.png")}></Image>
                             <Text style={styles.emergencyText}>I was in an accident.</Text>
-                            </View>
-                        </TouchableHighlight>
+                        </View>
+                    </TouchableHighlight>
                 </View>
-                <Text style={[styles.title, { flex: 3, alignItems:"center" }]}>Keep your eyes on the road!</Text>
-                
-                    
-                    <View style={{ flex: 1, alignItems: "center" }}>
-                        <TouchableHighlight onPress={() => { this.stopDrive(); }}
-                            style={styles.backButtonSelected}
-                        >
-                            <Text style={styles.nexttext}>Finish Drive</Text>
-                        </TouchableHighlight>
+                <Text style={[styles.title, { flex: 3, alignItems: "center" }]}>Keep your eyes on the road!</Text>
+
+
+                <View style={{ flex: 1, alignItems: "center" }}>
+                    <TouchableHighlight onPress={() => { this.stopDrive(); }}
+                        style={styles.backButtonSelected}
+                    >
+                        <Text style={styles.nexttext}>Finish Drive</Text>
+                    </TouchableHighlight>
                 </View>
             </View>);
     }
@@ -368,7 +374,7 @@ const styles = StyleSheet.create({
         color: "#F3F3F5",
         fontWeight: "bold",
         fontSize: 22,
-        paddingTop:15
+        paddingTop: 15
     },
 });
 

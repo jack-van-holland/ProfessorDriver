@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {StyleSheet, View, Image, Text, TextInput, TouchableHighlight} from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, Image, Text, TextInput, TouchableHighlight } from "react-native";
 
 import colors from "../../config/colors";
 
@@ -9,48 +9,50 @@ const SignupExperience = ({ navigation }) => {
     return (
         <View style={styles.background}>
             <View style={styles.logoContainer}>
-                <Image style={styles.logo} source={require("../../assets/images/icon.png")}/>
+                <Image style={styles.logo} source={require("../../assets/images/icon.png")} />
             </View>
 
             <View>
                 <Text style={styles.titletext}>My driving level is...</Text>
             </View>
-            
-            <TouchableHighlight onPress={() => {setExp("novice");}}
-            style={exp === "novice" ? styles.buttonSelected :styles.buttonUnselected}
-            underlayColor="rgba(135, 178, 88, 0.2)">
+
+            <TouchableHighlight onPress={() => { setExp("novice"); }}
+                style={exp === "novice" ? styles.buttonSelected : styles.buttonUnselected}
+                underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Novice (less than a month of experience)</Text>
             </TouchableHighlight>
-            <TouchableHighlight onPress={() => {setExp("beginning")}}
-            style={exp === "beginning" ? styles.buttonSelected : styles.buttonUnselected}
-            underlayColor="rgba(135, 178, 88, 0.2)">
+            <TouchableHighlight onPress={() => { setExp("beginning") }}
+                style={exp === "beginning" ? styles.buttonSelected : styles.buttonUnselected}
+                underlayColor="rgba(135, 178, 88, 0.2)">
                 <Text style={styles.text}>Beginning (1-6 months of experience)</Text>
             </TouchableHighlight>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {setExp("intermediate")}}
-            style={exp === "intermediate" ? styles.buttonSelected : styles.buttonUnselected}>
+                onPress={() => { setExp("intermediate") }}
+                style={exp === "intermediate" ? styles.buttonSelected : styles.buttonUnselected}>
                 <Text style={styles.text}>Intermediate (6-12 months of experience)</Text>
             </TouchableHighlight>
             <TouchableHighlight underlayColor="rgba(135, 178, 88, 0.2)"
-            onPress={() => {setExp("advanced")}}
-            style={exp === "advanced" ? styles.buttonSelected : styles.buttonUnselected}>
+                onPress={() => { setExp("advanced") }}
+                style={exp === "advanced" ? styles.buttonSelected : styles.buttonUnselected}>
                 <Text style={styles.text}>Advanced Driver (More than 12 months of experience)</Text>
             </TouchableHighlight>
 
-            <View style={{flexDirection: "row"}}>
-                <View style={{flex: 1, alignItems: "center"}}>
+            <View style={{ flexDirection: "row" }}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight onPress={() => navigation.goBack()}
-                    style={styles.backButtonSelected}>
+                        style={styles.backButtonSelected}>
                         <Text style={styles.nexttext}>Back</Text>
                     </TouchableHighlight>
                 </View>
-                <View style={{flex: 1, alignItems: "center"}}>
+                <View style={{ flex: 1, alignItems: "center" }}>
                     <TouchableHighlight onPress={() => {
-                        navigation.navigate("SignupContact", {role: "driver", level: exp === "novice" ? 1
-                         : exp === "beginning" ? 3 : exp === "intermediate" ? 5 : 8, child : ""})
+                        navigation.navigate("SignupContact", {
+                            role: "driver", level: exp === "novice" ? 1
+                                : exp === "beginning" ? 3 : exp === "intermediate" ? 5 : 8, child: ""
+                        })
                     }}
-                    style={exp ? styles.nextButtonSelected : styles.nextButtonUnselected}
-                    disabled={exp ? false : true}>
+                        style={exp ? styles.nextButtonSelected : styles.nextButtonUnselected}
+                        disabled={exp ? false : true}>
                         <Text style={styles.nexttext}>Next</Text>
                     </TouchableHighlight>
                 </View>
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: "Montserrat",
         fontWeight: "bold",
-        fontSize: 33, 
+        fontSize: 33,
         lineHeight: 100,
         letterSpacing: 0.015
     },
@@ -86,8 +88,8 @@ const styles = StyleSheet.create({
         color: colors.PDgreen,
         fontWeight: "bold",
         fontSize: 18,
-        paddingLeft:10,
-        paddingRight:10
+        paddingLeft: 10,
+        paddingRight: 10
     },
     nexttext: {
         fontFamily: "Montserrat",
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
         borderColor: "#87B258",
         borderWidth: 1.5,
         borderRadius: 10,
-    
+
     },
     registerButton: {
         width: 261,
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-    }, 
+    },
 })
 
 export default SignupExperience;

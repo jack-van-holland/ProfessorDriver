@@ -47,9 +47,9 @@ const LogStats = ({ navigation, route }) => {
 
   return (
     log ?
-      <View style={{flex:1}}>
+      <View style={{ flex: 1 }}>
         <View style={[styles.background, { flex: 2, paddingTop: 50 }]}>
-          <View style={[styles.container, { flex:   1 }]}>
+          <View style={[styles.container, { flex: 1 }]}>
             <Text style={styles.title}>{new Date(route.params.timestamp * 1).toUTCString()}</Text>
 
             <Text style={styles.logText}>Score: {log.score.toFixed(0)}</Text>
@@ -108,12 +108,12 @@ const LogStats = ({ navigation, route }) => {
         //transparentCircleColor={processColor('#f0f0f088')}
 
         />
-      <TouchableHighlight onPress={() => {navigation.goBack();}}
-            style={styles.backButtonSelected}>
-                <Text style={styles.nexttext}>Back</Text>
-            </TouchableHighlight>
+        <TouchableHighlight onPress={() => { navigation.goBack(); }}
+          style={styles.backButtonSelected}>
+          <Text style={styles.nexttext}>Back</Text>
+        </TouchableHighlight>
       </View>
-      
+
       :
       <View style={styles.bottomBackground}>
         <View style={styles.logoContainer}>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     //paddingTop: 10
   },
   logText: {
-    flex:1,
+    flex: 1,
     fontFamily: "Montserrat",
     color: "black",
     fontSize: 18,
