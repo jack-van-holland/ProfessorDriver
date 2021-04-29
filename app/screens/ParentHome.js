@@ -25,6 +25,7 @@ import {
     StackedBarChart
   } from "react-native-chart-kit";
 import {RadarChart} from 'react-native-charts-wrapper';
+import { Alert } from 'react-native';
 
 
 class ParentHome extends React.Component {
@@ -137,7 +138,13 @@ class ParentHome extends React.Component {
                 </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("ParentReportsMain")}} style={styles.startButton}>
+                onPress={() => {
+                  firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
+                  if (parentData._data.currentChild) {
+                    this.props.navigation.navigate("ParentReportsMain");
+                  } else {
+                    Alert.alert("You must add a student before viewing reports.");
+                  }});}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>
@@ -179,7 +186,13 @@ class ParentHome extends React.Component {
                 </View>
                 </TouchableHighlight>
                 <TouchableHighlight underlayColor="rgba(95, 128, 59, .5)"
-                onPress={() => {this.props.navigation.navigate("ParentReportsMain")}} style={styles.startButton}>
+                onPress={() => {
+                  firestore().collection('users').doc(auth().currentUser.uid).get().then((parentData) => {
+                  if (parentData._data.currentChild) {
+                    this.props.navigation.navigate("ParentReportsMain");
+                  } else {
+                    Alert.alert("You must add a student before viewing reports.");
+                  }});}} style={styles.startButton}>
                     <View>
                     <Image style={styles.image} source={require("../assets/images/chart.png")}></Image>
                     <Text style={styles.startText}>Reports</Text>

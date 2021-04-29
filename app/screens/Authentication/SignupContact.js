@@ -60,6 +60,7 @@ const SignupContact = ({ navigation, route }) => {
 
                     },
                     children: [],
+                    currentChild: "",
                     parents: [],
                     parentReqs: [],
                     pendingReqs: [],
