@@ -6,6 +6,9 @@ The figma design is in Link [https://www.figma.com/file/fCGYuvnQ6OmFSPfHq5UqlM/P
 
 ## Installing / Getting started
 
+### Usage Limitations and Notes
+Theoretically it could be easily extended to Android, but currently permissions and firebase is not configrued to be supported in Android. Further, ios simulators should not be used, because they do not have hardware sensors. Finally, ideally the layouts are dynamic but testing was only able to be performed on an iPhone 12 Mini, so the layouts are optimized for this screen configuration. 
+
 ### Built With
 We are using React-native for our mobile app development.
 
