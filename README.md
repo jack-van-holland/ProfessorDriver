@@ -1,10 +1,12 @@
 # ProfessorDriver
 
-## Prototype Demo
+## Prototype Demo (turn on sound for narration)
 
 https://user-images.githubusercontent.com/60764738/138349350-eacf9dc3-dcfc-4434-bb9f-01123352b620.mov
 
 ## About
+
+Developed by Jack Van Holland, Sophia Xu, and Gongqi Huang
 
 Professor Driver is a React Native app that tracks teenage driver’s driving behavior, providing feedback and evaluation to them and their parents to allow them to learn more safely and effectively. The app uses a smartphone’s built-in hardware devices, including GPS, accelerometers, and gyroscopes to detect dangerous driving habits including hard braking, excessive acceleration, and taking corners too quickly. In addition to the raw hardware data, GPS locations are reverse geocoded using the OpenStreetMap API to estimate the speed limit and any potential speeding.  
 
